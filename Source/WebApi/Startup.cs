@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using WebApi.Models;
 
 namespace WebApi
 {
@@ -34,6 +36,9 @@ namespace WebApi
                 {
                     config.TokenValidationParameters = tokenParam;
                 });
+
+            var connection = $@"Server=(localdb)\mssqllocaldb;Database=EFGetStarted.AspNetCore.WebApi1CDB;Trusted_Connection=True;ConnectRetryCount=0";
+            services.AddDbContext<WebApiDbContext>(options => { options.UseSqlServer(connection); });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
