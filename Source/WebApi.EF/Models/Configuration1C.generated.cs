@@ -19,17 +19,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace Models
+namespace WebApi.EF.Design
 {
-   public partial class ArticleTag
+   public partial class Configuration1C
    {
       partial void Init();
 
       /// <summary>
       /// Default constructor
       /// </summary>
-      public ArticleTag()
+      public Configuration1C()
       {
+         Article = new System.Collections.Generic.HashSet<WebApi.EF.Design.Article>();
+
          Init();
       }
 
@@ -42,11 +44,11 @@ namespace Models
       [Required]
       public int Id { get; set; }
 
+      public string Name { get; set; }
+
       // Persistent navigation properties
 
-      public virtual Models.Tag Tags { get; set; }
-
-      public virtual Models.Article1С Articles { get; set; }
+      public virtual ICollection<WebApi.EF.Design.Article> Article { get; set; }
 
    }
 }

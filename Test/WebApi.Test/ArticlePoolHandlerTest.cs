@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Api.Handler;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Api.Handler;
+using WebApi.Tagirator.Parser;
 using Xunit;
 
 namespace WebApi.Test
 {
-   public class ArticlePoolHandlerTest : IDisposable
+    public class ArticlePoolHandlerTest : IDisposable
     {
         public void Dispose()
         {
@@ -15,25 +15,21 @@ namespace WebApi.Test
 
         private List<Article> Articles;
 
-
         public ArticlePoolHandlerTest()
         {
-            Articles= new List<Article>()
+            Articles = new List<Article>()
             {
                 new Article("da","да я я"),
                 new Article("da","я я он")
             };
-
         }
 
         [Fact]
         public void Can_Initialize_Pool()
         {
-
             ArticlePoolHandler pool = new ArticlePoolHandler(Articles);
-
-
         }
+
         [Fact]
         public void Can_Set_Words_rate()
         {

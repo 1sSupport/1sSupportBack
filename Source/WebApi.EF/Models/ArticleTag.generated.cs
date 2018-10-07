@@ -19,16 +19,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace Models
+namespace WebApi.EF.Design
 {
-   public partial class Tag
+   public partial class ArticleTag
    {
       partial void Init();
 
       /// <summary>
       /// Default constructor. Protected due to required properties, but present because EF needs it.
       /// </summary>
-      protected Tag()
+      protected ArticleTag()
       {
          Init();
       }
@@ -36,11 +36,15 @@ namespace Models
       /// <summary>
       /// Public constructor with required data
       /// </summary>
-      /// <param name="_articletag0"></param>
-      public Tag(Models.ArticleTag _articletag0)
+      /// <param name="_article"></param>
+      /// <param name="_tag"></param>
+      public ArticleTag(WebApi.EF.Design.Article _article, WebApi.EF.Design.Tag _tag)
       {
-         if (_articletag0 == null) throw new ArgumentNullException(nameof(_articletag0));
-         _articletag0.Tags = this;
+         if (_article == null) throw new ArgumentNullException(nameof(_article));
+         Article = _article;
+
+         if (_tag == null) throw new ArgumentNullException(nameof(_tag));
+         Tag = _tag;
 
          Init();
       }
@@ -48,10 +52,11 @@ namespace Models
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
-      /// <param name="_articletag0"></param>
-      public static Tag Create(Models.ArticleTag _articletag0)
+      /// <param name="_article"></param>
+      /// <param name="_tag"></param>
+      public static ArticleTag Create(WebApi.EF.Design.Article _article, WebApi.EF.Design.Tag _tag)
       {
-         return new Tag(_articletag0);
+         return new ArticleTag(_article, _tag);
       }
 
       // Persistent properties
@@ -61,9 +66,19 @@ namespace Models
       /// </summary>
       [Key]
       [Required]
-      public int Id { get; set; }
+      public int ID { get; internal set; }
 
       // Persistent navigation properties
+
+      /// <summary>
+      /// Required
+      /// </summary>
+      public virtual WebApi.EF.Design.Article Article { get; set; }
+
+      /// <summary>
+      /// Required
+      /// </summary>
+      public virtual WebApi.EF.Design.Tag Tag { get; set; }
 
    }
 }

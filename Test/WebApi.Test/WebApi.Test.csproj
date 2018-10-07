@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Source\Api.Handler\Api.Handler.csproj" />
+    <ProjectReference Include="..\..\Source\Api.Handler\WebApi.Tagirator.csproj" />
     <ProjectReference Include="..\..\Source\WebApi\WebApi.csproj" />
   </ItemGroup>
 

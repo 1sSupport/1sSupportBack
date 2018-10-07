@@ -5,14 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.1.3" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.3.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational.Design" Version="1.1.6" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="EFModel.tt">
+    <None Update="Design\EFDesign.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>EFModel.cs</LastGenOutput>
+      <LastGenOutput>EFDesign.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
@@ -21,10 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="EFModel.cs">
+    <Compile Update="Design\EFDesign.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>EFModel.tt</DependentUpon>
+      <DependentUpon>EFDesign.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 

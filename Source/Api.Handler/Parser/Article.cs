@@ -1,19 +1,23 @@
-﻿using System;
+﻿using Api.Handler;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace Api.Handler
+namespace WebApi.Tagirator.Parser
 {
     public class Article
     {
-        private  List<string> _tags = new List<string>();
-        private  Dictionary<string,int> _words = new Dictionary<string, int>();
-        private  readonly  Dictionary<string,double> _wordsRate = new Dictionary<string, double>();
+        private List<string> _tags = new List<string>();
+        private Dictionary<string, int> _words = new Dictionary<string, int>();
+        private readonly Dictionary<string, double> _wordsRate = new Dictionary<string, double>();
         private bool IsParsed => _words.Any();
 
-        public string Title { get;
-            private set; }
+        public string Title
+        {
+            get;
+            private set;
+        }
+
         public string Text { get; private set; }
         public IReadOnlyList<string> Tags => _tags;
 
@@ -22,19 +26,18 @@ namespace Api.Handler
             get
             {
                 if (IsParsed)
+                {
                     return _words.Keys;
+                }
                 else
                 {
                     ParseText();
                     return _words.Keys;
                 }
             }
-
         }
 
-        
         public IReadOnlyDictionary<string, double> WordsRate => _wordsRate;
-
 
         public Article(string title, string text)
         {
@@ -51,17 +54,16 @@ namespace Api.Handler
 
         public bool ParseText()
         {
-            bool result=false;
+            bool result = false;
             try
             {
                 var parsedText = FilteredText.GetWords(Text);
-            SetWordsFrequancy(parsedText);
+                SetWordsFrequancy(parsedText);
                 result = true;
             }
             catch (Exception e)
             {
                 return result;
-                
             }
 
             InitialDictionary();
@@ -70,7 +72,6 @@ namespace Api.Handler
 
         private void SetWordsFrequancy(IEnumerable<string> text)
         {
-
             foreach (string word in text)
             {
                 if (_words.ContainsKey(word))
@@ -79,14 +80,13 @@ namespace Api.Handler
                 }
                 else
                 {
-                    _words.Add(word,1);
+                    _words.Add(word, 1);
                 }
             }
         }
+
         private void InitialDictionary()
         {
-
-          
             foreach (var word in _words.Keys)
             {
                 if (!(_wordsRate.ContainsKey(word)))
@@ -132,7 +132,6 @@ namespace Api.Handler
                 var tags = (from word in dict.Keys select word).Take(10).ToList();
                 _tags = tags;
                 result = true;
-                
             }
             catch (Exception e)
             {
@@ -140,10 +139,7 @@ namespace Api.Handler
             }
 
             return result;
-
         }
-
-        
 
         public int GetRepeatFrequency(string key)
         {
@@ -152,12 +148,13 @@ namespace Api.Handler
                 ParseText();
             }
             if (_words.ContainsKey(key))
-            return _words[key];
+            {
+                return _words[key];
+            }
             else
             {
                 throw new ArgumentException();
             }
         }
-        
     }
 }

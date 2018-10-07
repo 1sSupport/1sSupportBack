@@ -19,39 +19,41 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace Models
+namespace WebApi.EF.Design
 {
-   public partial class Configuration1C
+   public partial class Tag
    {
       partial void Init();
 
       /// <summary>
       /// Default constructor. Protected due to required properties, but present because EF needs it.
       /// </summary>
-      protected Configuration1C()
+      protected Tag()
       {
+         ArticleTag = new System.Collections.Generic.HashSet<WebApi.EF.Design.ArticleTag>();
+
          Init();
       }
 
       /// <summary>
       /// Public constructor with required data
       /// </summary>
-      /// <param name="_article1с0"></param>
-      public Configuration1C(Models.Article1С _article1с0)
+      /// <param name="_value"></param>
+      public Tag(string _value)
       {
-         if (_article1с0 == null) throw new ArgumentNullException(nameof(_article1с0));
-         _article1с0.ConfigurationId = this;
-
+         if (string.IsNullOrEmpty(_value)) throw new ArgumentNullException(nameof(_value));
+         Value = _value;
+         ArticleTag = new HashSet<WebApi.EF.Design.ArticleTag>();
          Init();
       }
 
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
-      /// <param name="_article1с0"></param>
-      public static Configuration1C Create(Models.Article1С _article1с0)
+      /// <param name="_value"></param>
+      public static Tag Create(string _value)
       {
-         return new Configuration1C(_article1с0);
+         return new Tag(_value);
       }
 
       // Persistent properties
@@ -63,7 +65,15 @@ namespace Models
       [Required]
       public int Id { get; set; }
 
+      /// <summary>
+      /// Required
+      /// </summary>
+      [Required]
+      public string Value { get; set; }
+
       // Persistent navigation properties
+
+      public virtual ICollection<WebApi.EF.Design.ArticleTag> ArticleTag { get; set; }
 
    }
 }
