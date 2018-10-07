@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "Source\WebApi\Web
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Test", "Test\WebApi.Test\WebApi.Test.csproj", "{474FC431-DC8A-407B-A7A0-3D28BFE2149C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Tagirator", "Source\Api.Handler\WebApi.Tagirator.csproj", "{0AA7695E-EAF4-4CEB-AC6E-3F95664C9B08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Tagirator", "Source\WebApi.Tagirator\WebApi.Tagirator.csproj", "{0AA7695E-EAF4-4CEB-AC6E-3F95664C9B08}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi.EF", "Source\WebApi.EF\WebApi.EF.csproj", "{71695F77-F969-48FB-984E-B7B65FDFD059}"
 EndProject
