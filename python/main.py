@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import json
 
 
 pd.options.display.max_columns = 20
@@ -53,8 +54,14 @@ def decode(string: str):
 
 
 def gen_links(xls_file: str):
-    file = os.path.join(os.getcwd(), xls_file)
-    xls = pd.ExcelFile(file)
+    """
+    Reading xls file, parsing and return link formed from the IIN and login
+
+    :param xls_file:
+    :return:
+    """
+    file_g = os.path.join(os.getcwd(), xls_file)
+    xls = pd.ExcelFile(file_g)
     df = xls.parse(xls.sheet_names[0])
     INN = df.keys()[0]
     login = df.keys()[1]
@@ -76,13 +83,39 @@ def gen_links(xls_file: str):
     return link_list
 
 
+def post_and_name(xls_file: str):
+    """
+    Returning email and name
+
+    :param xls_file:
+    :return:
+    """
+    file_p = os.path.join(os.getcwd(), xls_file)
+    xls = pd.ExcelFile(file_p)
+    df = xls.parse(xls.sheet_names[0])
+    name = df.keys()[2]
+    email = df.keys()[3]
+    name_list = [x if not isinstance(x, float) else '' for x in df[name]]
+    email_list = [x if not isinstance(x, float) else '' for x in df[email]]
+
+    return name_list, email_list
+
+
 if __name__ == '__main__':
     list_end = []
 
     for x in gen_links('dannye_s_its.xlsx'):
         list_end.append(encode(x))
 
-    file = open('link.txt', 'w')
+    file = open('links.json', 'w')
+    list_data = []
+    for i in range(len(list_end)):
+        list_data.append({
+            "name": post_and_name('dannye_s_its.xlsx')[0][i],
+            "email": post_and_name('dannye_s_its.xlsx')[1][i],
+            "link_raw": gen_links('dannye_s_its.xlsx')[i],
+            "linnk_encode": list_end[i]
+        })
 
-    for x in list_end:
-        file.write(f'{x}\n')
+    json_list = json.dumps(list_data, sort_keys=True, indent=4, ensure_ascii=False)
+    file.write(json_list)
