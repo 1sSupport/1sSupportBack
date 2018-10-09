@@ -23,9 +23,15 @@ namespace WebApi.EF.Design
    {
       #region DbSets
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Design.Article> Article { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Design.ArticleDependencies> ArticleDependencies { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Design.ArticleTag> ArticleTag { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Design.Configuration1C> Configuration1C { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Design.OpenedArticle> OpenedArticle { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Design.Provider> Provider { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Design.SearchingQuery> SearchingQuery { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Design.Session> Session { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Design.Tag> Tag { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Design.User> User { get; set; }
       #endregion DbSets
 
       /// <inheritdoc />
@@ -74,6 +80,20 @@ namespace WebApi.EF.Design
                      .HasOne(x => x.ParentArticle)
                      .WithOne()
                      .IsRequired();
+         modelBuilder.Entity<WebApi.EF.Design.Article>()
+                     .HasOne(x => x.ArticleDependencies)
+                     .WithMany(x => x.Article);
+
+         modelBuilder.Entity<WebApi.EF.Design.ArticleDependencies>()
+                     .ToTable("ArticleDependencies")
+                     .HasKey(t => t.Id);
+         modelBuilder.Entity<WebApi.EF.Design.ArticleDependencies>()
+                     .Property(t => t.Id)
+                     .IsRequired()
+                     .ValueGeneratedOnAdd();
+         modelBuilder.Entity<WebApi.EF.Design.ArticleDependencies>()
+                     .HasOne(x => x.Configuration1C)
+                     .WithMany(x => x.ArticleDependencies);
 
          modelBuilder.Entity<WebApi.EF.Design.ArticleTag>()
                      .ToTable("ArticleTag")
@@ -96,10 +116,50 @@ namespace WebApi.EF.Design
                      .Property(t => t.Id)
                      .IsRequired()
                      .ValueGeneratedOnAdd();
-         modelBuilder.Entity<WebApi.EF.Design.Configuration1C>()
-                     .HasMany(x => x.Article)
-                     .WithOne(x => x.Configuration1C)
-                     .HasForeignKey("Configuration1C_Id");
+
+         modelBuilder.Entity<WebApi.EF.Design.OpenedArticle>()
+                     .ToTable("OpenedArticle")
+                     .HasKey(t => t.Id);
+         modelBuilder.Entity<WebApi.EF.Design.OpenedArticle>()
+                     .Property(t => t.Id)
+                     .IsRequired()
+                     .ValueGeneratedOnAdd();
+         modelBuilder.Entity<WebApi.EF.Design.OpenedArticle>()
+                     .HasOne(x => x.Article)
+                     .WithMany(x => x.OpenedArticle);
+         modelBuilder.Entity<WebApi.EF.Design.OpenedArticle>()
+                     .HasOne(x => x.SearchingQuery)
+                     .WithMany(x => x.OpenedArticle);
+
+         modelBuilder.Entity<WebApi.EF.Design.Provider>()
+                     .ToTable("Provider")
+                     .HasKey(t => t.Id);
+         modelBuilder.Entity<WebApi.EF.Design.Provider>()
+                     .Property(t => t.Id)
+                     .IsRequired()
+                     .ValueGeneratedOnAdd();
+
+         modelBuilder.Entity<WebApi.EF.Design.SearchingQuery>()
+                     .ToTable("SearchingQuery")
+                     .HasKey(t => t.Id);
+         modelBuilder.Entity<WebApi.EF.Design.SearchingQuery>()
+                     .Property(t => t.Id)
+                     .IsRequired()
+                     .ValueGeneratedOnAdd();
+         modelBuilder.Entity<WebApi.EF.Design.SearchingQuery>()
+                     .HasOne(x => x.Session)
+                     .WithMany(x => x.SearchingQuery);
+
+         modelBuilder.Entity<WebApi.EF.Design.Session>()
+                     .ToTable("Session")
+                     .HasKey(t => t.Id);
+         modelBuilder.Entity<WebApi.EF.Design.Session>()
+                     .Property(t => t.Id)
+                     .IsRequired()
+                     .ValueGeneratedOnAdd();
+         modelBuilder.Entity<WebApi.EF.Design.Session>()
+                     .HasOne(x => x.User)
+                     .WithMany(x => x.Session);
 
          modelBuilder.Entity<WebApi.EF.Design.Tag>()
                      .ToTable("Tag")
@@ -111,6 +171,17 @@ namespace WebApi.EF.Design
          modelBuilder.Entity<WebApi.EF.Design.Tag>()
                      .Property(t => t.Value)
                      .IsRequired();
+
+         modelBuilder.Entity<WebApi.EF.Design.User>()
+                     .ToTable("User")
+                     .HasKey(t => t.Id);
+         modelBuilder.Entity<WebApi.EF.Design.User>()
+                     .Property(t => t.Id)
+                     .IsRequired()
+                     .ValueGeneratedOnAdd();
+         modelBuilder.Entity<WebApi.EF.Design.User>()
+                     .HasOne(x => x.Provider)
+                     .WithMany(x => x.User);
 
          OnModelCreatedImpl(modelBuilder);
       }

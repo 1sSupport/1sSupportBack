@@ -21,17 +21,15 @@ using System.Runtime.CompilerServices;
 
 namespace WebApi.EF.Design
 {
-   public partial class Article
+   public partial class SearchingQuery
    {
       partial void Init();
 
       /// <summary>
       /// Default constructor. Protected due to required properties, but present because EF needs it.
       /// </summary>
-      protected Article()
+      protected SearchingQuery()
       {
-         EditDate = DateTime.Now;
-         ArticleTag = new System.Collections.Generic.HashSet<WebApi.EF.Design.ArticleTag>();
          OpenedArticle = new System.Collections.Generic.HashSet<WebApi.EF.Design.OpenedArticle>();
 
          Init();
@@ -40,19 +38,12 @@ namespace WebApi.EF.Design
       /// <summary>
       /// Public constructor with required data
       /// </summary>
-      /// <param name="_title"></param>
-      /// <param name="_text"></param>
-      /// <param name="_article0"></param>
-      public Article(string _title, string _text, WebApi.EF.Design.Article _article0)
+      /// <param name="_session"></param>
+      public SearchingQuery(WebApi.EF.Design.Session _session)
       {
-         if (string.IsNullOrEmpty(_title)) throw new ArgumentNullException(nameof(_title));
-         Title = _title;
-         if (string.IsNullOrEmpty(_text)) throw new ArgumentNullException(nameof(_text));
-         Text = _text;
-         if (_article0 == null) throw new ArgumentNullException(nameof(_article0));
-         _article0.ParentArticle = this;
+         if (_session == null) throw new ArgumentNullException(nameof(_session));
+         Session = _session;
 
-         ArticleTag = new HashSet<WebApi.EF.Design.ArticleTag>();
          OpenedArticle = new HashSet<WebApi.EF.Design.OpenedArticle>();
          Init();
       }
@@ -60,12 +51,10 @@ namespace WebApi.EF.Design
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
-      /// <param name="_title"></param>
-      /// <param name="_text"></param>
-      /// <param name="_article0"></param>
-      public static Article Create(string _title, string _text, WebApi.EF.Design.Article _article0)
+      /// <param name="_session"></param>
+      public static SearchingQuery Create(WebApi.EF.Design.Session _session)
       {
-         return new Article(_title, _text, _article0);
+         return new SearchingQuery(_session);
       }
 
       // Persistent properties
@@ -77,36 +66,18 @@ namespace WebApi.EF.Design
       [Required]
       public int Id { get; set; }
 
-      /// <summary>
-      /// Required
-      /// </summary>
-      [Required]
-      public string Title { get; set; }
-
-      /// <summary>
-      /// Required
-      /// </summary>
-      [Required]
       public string Text { get; set; }
 
-      /// <summary>
-      /// Default value = DateTime.Now
-      /// </summary>
-      public DateTime? EditDate { get; set; }
-
-      public double? SignificanceCoefficient { get; set; }
-
-      public bool? IsDeleted { get; set; }
+      public string Time { get; set; }
 
       // Persistent navigation properties
 
-      public virtual WebApi.EF.Design.Article ParentArticle { get; set; }
-
-      public virtual ICollection<WebApi.EF.Design.ArticleTag> ArticleTag { get; set; }
-
       public virtual ICollection<WebApi.EF.Design.OpenedArticle> OpenedArticle { get; set; }
 
-      public virtual WebApi.EF.Design.ArticleDependencies ArticleDependencies { get; set; }
+      /// <summary>
+      /// Required
+      /// </summary>
+      public virtual WebApi.EF.Design.Session Session { get; set; }
 
    }
 }

@@ -21,16 +21,16 @@ using System.Runtime.CompilerServices;
 
 namespace WebApi.EF.Design
 {
-   public partial class Configuration1C
+   public partial class Provider
    {
       partial void Init();
 
       /// <summary>
       /// Default constructor
       /// </summary>
-      public Configuration1C()
+      public Provider()
       {
-         ArticleDependencies = new System.Collections.Generic.HashSet<WebApi.EF.Design.ArticleDependencies>();
+         User = new System.Collections.Generic.HashSet<WebApi.EF.Design.User>();
 
          Init();
       }
@@ -46,9 +46,13 @@ namespace WebApi.EF.Design
 
       public string Name { get; set; }
 
+      public string LogoUrl { get; set; }
+
+      public string ContractEndTime { get; set; }
+
       // Persistent navigation properties
 
-      public virtual ICollection<WebApi.EF.Design.ArticleDependencies> ArticleDependencies { get; set; }
+      public virtual ICollection<WebApi.EF.Design.User> User { get; set; }
 
    }
 }
