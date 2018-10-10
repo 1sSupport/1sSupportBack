@@ -19,7 +19,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace WebApi.EF.Design
+namespace WebApi.EF.Models
 {
    public partial class User
    {
@@ -30,7 +30,7 @@ namespace WebApi.EF.Design
       /// </summary>
       protected User()
       {
-         Session = new System.Collections.Generic.HashSet<WebApi.EF.Design.Session>();
+         Session = new System.Collections.Generic.HashSet<WebApi.EF.Models.Session>();
 
          Init();
       }
@@ -38,23 +38,35 @@ namespace WebApi.EF.Design
       /// <summary>
       /// Public constructor with required data
       /// </summary>
+      /// <param name="_login"></param>
+      /// <param name="_email"></param>
+      /// <param name="_inn"></param>
       /// <param name="_provider"></param>
-      public User(WebApi.EF.Design.Provider _provider)
+      public User(string _login, string _email, string _inn, WebApi.EF.Models.Provider _provider)
       {
+         if (string.IsNullOrEmpty(_login)) throw new ArgumentNullException(nameof(_login));
+         Login = _login;
+         if (string.IsNullOrEmpty(_email)) throw new ArgumentNullException(nameof(_email));
+         Email = _email;
+         if (string.IsNullOrEmpty(_inn)) throw new ArgumentNullException(nameof(_inn));
+         INN = _inn;
          if (_provider == null) throw new ArgumentNullException(nameof(_provider));
          Provider = _provider;
 
-         Session = new HashSet<WebApi.EF.Design.Session>();
+         Session = new HashSet<WebApi.EF.Models.Session>();
          Init();
       }
 
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
+      /// <param name="_login"></param>
+      /// <param name="_email"></param>
+      /// <param name="_inn"></param>
       /// <param name="_provider"></param>
-      public static User Create(WebApi.EF.Design.Provider _provider)
+      public static User Create(string _login, string _email, string _inn, WebApi.EF.Models.Provider _provider)
       {
-         return new User(_provider);
+         return new User(_login, _email, _inn, _provider);
       }
 
       // Persistent properties
@@ -66,20 +78,33 @@ namespace WebApi.EF.Design
       [Required]
       public int Id { get; set; }
 
+      /// <summary>
+      /// Required, Min length = 1
+      /// </summary>
+      [Required]
       public string Login { get; set; }
 
+      /// <summary>
+      /// Required, Min length = 1
+      /// </summary>
+      [Required]
       public string Email { get; set; }
 
+      /// <summary>
+      /// Required, Min length = 1, Max length = 12
+      /// </summary>
+      [Required]
+      [MaxLength(12)]
       public string INN { get; set; }
 
       // Persistent navigation properties
 
-      public virtual ICollection<WebApi.EF.Design.Session> Session { get; set; }
+      public virtual ICollection<WebApi.EF.Models.Session> Session { get; set; }
 
       /// <summary>
       /// Required
       /// </summary>
-      public virtual WebApi.EF.Design.Provider Provider { get; set; }
+      public virtual WebApi.EF.Models.Provider Provider { get; set; }
 
    }
 }

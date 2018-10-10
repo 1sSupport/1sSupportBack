@@ -19,7 +19,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace WebApi.EF.Design
+namespace WebApi.EF.Models
 {
    public partial class Tag
    {
@@ -30,7 +30,7 @@ namespace WebApi.EF.Design
       /// </summary>
       protected Tag()
       {
-         ArticleTag = new System.Collections.Generic.HashSet<WebApi.EF.Design.ArticleTag>();
+         ArticleTag = new System.Collections.Generic.HashSet<WebApi.EF.Models.ArticleTag>();
 
          Init();
       }
@@ -43,7 +43,7 @@ namespace WebApi.EF.Design
       {
          if (string.IsNullOrEmpty(_value)) throw new ArgumentNullException(nameof(_value));
          Value = _value;
-         ArticleTag = new HashSet<WebApi.EF.Design.ArticleTag>();
+         ArticleTag = new HashSet<WebApi.EF.Models.ArticleTag>();
          Init();
       }
 
@@ -66,14 +66,15 @@ namespace WebApi.EF.Design
       public int Id { get; set; }
 
       /// <summary>
-      /// Required
+      /// Required, Min length = 1, Max length = 120
       /// </summary>
       [Required]
+      [MaxLength(120)]
       public string Value { get; set; }
 
       // Persistent navigation properties
 
-      public virtual ICollection<WebApi.EF.Design.ArticleTag> ArticleTag { get; set; }
+      public virtual ICollection<WebApi.EF.Models.ArticleTag> ArticleTag { get; set; }
 
    }
 }

@@ -19,7 +19,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace WebApi.EF.Design
+namespace WebApi.EF.Models
 {
    public partial class Session
    {
@@ -30,7 +30,7 @@ namespace WebApi.EF.Design
       /// </summary>
       protected Session()
       {
-         SearchingQuery = new System.Collections.Generic.HashSet<WebApi.EF.Design.SearchingQuery>();
+         SearchingQuery = new System.Collections.Generic.HashSet<WebApi.EF.Models.SearchingQuery>();
 
          Init();
       }
@@ -39,12 +39,12 @@ namespace WebApi.EF.Design
       /// Public constructor with required data
       /// </summary>
       /// <param name="_user"></param>
-      public Session(WebApi.EF.Design.User _user)
+      public Session(WebApi.EF.Models.User _user)
       {
          if (_user == null) throw new ArgumentNullException(nameof(_user));
          User = _user;
 
-         SearchingQuery = new HashSet<WebApi.EF.Design.SearchingQuery>();
+         SearchingQuery = new HashSet<WebApi.EF.Models.SearchingQuery>();
          Init();
       }
 
@@ -52,7 +52,7 @@ namespace WebApi.EF.Design
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
       /// <param name="_user"></param>
-      public static Session Create(WebApi.EF.Design.User _user)
+      public static Session Create(WebApi.EF.Models.User _user)
       {
          return new Session(_user);
       }
@@ -66,18 +66,22 @@ namespace WebApi.EF.Design
       [Required]
       public int Id { get; set; }
 
-      public string OpenTime { get; set; }
+      /// <summary>
+      /// Required
+      /// </summary>
+      [Required]
+      public DateTime OpenTime { get; protected set; }
 
-      public string CloseTime { get; set; }
+      public DateTime? CloseTime { get; set; }
 
       // Persistent navigation properties
 
-      public virtual ICollection<WebApi.EF.Design.SearchingQuery> SearchingQuery { get; set; }
+      public virtual ICollection<WebApi.EF.Models.SearchingQuery> SearchingQuery { get; set; }
 
       /// <summary>
       /// Required
       /// </summary>
-      public virtual WebApi.EF.Design.User User { get; set; }
+      public virtual WebApi.EF.Models.User User { get; set; }
 
    }
 }

@@ -19,7 +19,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace WebApi.EF.Design
+namespace WebApi.EF.Models
 {
    public partial class ArticleTag
    {
@@ -38,7 +38,7 @@ namespace WebApi.EF.Design
       /// </summary>
       /// <param name="_article"></param>
       /// <param name="_tag"></param>
-      public ArticleTag(WebApi.EF.Design.Article _article, WebApi.EF.Design.Tag _tag)
+      public ArticleTag(WebApi.EF.Models.Article _article, WebApi.EF.Models.Tag _tag)
       {
          if (_article == null) throw new ArgumentNullException(nameof(_article));
          Article = _article;
@@ -54,7 +54,7 @@ namespace WebApi.EF.Design
       /// </summary>
       /// <param name="_article"></param>
       /// <param name="_tag"></param>
-      public static ArticleTag Create(WebApi.EF.Design.Article _article, WebApi.EF.Design.Tag _tag)
+      public static ArticleTag Create(WebApi.EF.Models.Article _article, WebApi.EF.Models.Tag _tag)
       {
          return new ArticleTag(_article, _tag);
       }
@@ -73,12 +73,12 @@ namespace WebApi.EF.Design
       /// <summary>
       /// Required
       /// </summary>
-      public virtual WebApi.EF.Design.Article Article { get; set; }
+      public virtual WebApi.EF.Models.Article Article { get; set; }
 
       /// <summary>
       /// Required
       /// </summary>
-      public virtual WebApi.EF.Design.Tag Tag { get; set; }
+      public virtual WebApi.EF.Models.Tag Tag { get; set; }
 
    }
 }

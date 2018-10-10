@@ -19,7 +19,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace WebApi.EF.Design
+namespace WebApi.EF.Models
 {
    public partial class Article
    {
@@ -30,9 +30,8 @@ namespace WebApi.EF.Design
       /// </summary>
       protected Article()
       {
-         EditDate = DateTime.Now;
-         ArticleTag = new System.Collections.Generic.HashSet<WebApi.EF.Design.ArticleTag>();
-         OpenedArticle = new System.Collections.Generic.HashSet<WebApi.EF.Design.OpenedArticle>();
+         ArticleTag = new System.Collections.Generic.HashSet<WebApi.EF.Models.ArticleTag>();
+         OpenedArticle = new System.Collections.Generic.HashSet<WebApi.EF.Models.OpenedArticle>();
 
          Init();
       }
@@ -41,19 +40,15 @@ namespace WebApi.EF.Design
       /// Public constructor with required data
       /// </summary>
       /// <param name="_title"></param>
-      /// <param name="_text"></param>
-      /// <param name="_article0"></param>
-      public Article(string _title, string _text, WebApi.EF.Design.Article _article0)
+      /// <param name="_source"></param>
+      public Article(string _title, string _source)
       {
          if (string.IsNullOrEmpty(_title)) throw new ArgumentNullException(nameof(_title));
          Title = _title;
-         if (string.IsNullOrEmpty(_text)) throw new ArgumentNullException(nameof(_text));
-         Text = _text;
-         if (_article0 == null) throw new ArgumentNullException(nameof(_article0));
-         _article0.ParentArticle = this;
-
-         ArticleTag = new HashSet<WebApi.EF.Design.ArticleTag>();
-         OpenedArticle = new HashSet<WebApi.EF.Design.OpenedArticle>();
+         if (string.IsNullOrEmpty(_source)) throw new ArgumentNullException(nameof(_source));
+         Source = _source;
+         ArticleTag = new HashSet<WebApi.EF.Models.ArticleTag>();
+         OpenedArticle = new HashSet<WebApi.EF.Models.OpenedArticle>();
          Init();
       }
 
@@ -61,11 +56,10 @@ namespace WebApi.EF.Design
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
       /// <param name="_title"></param>
-      /// <param name="_text"></param>
-      /// <param name="_article0"></param>
-      public static Article Create(string _title, string _text, WebApi.EF.Design.Article _article0)
+      /// <param name="_source"></param>
+      public static Article Create(string _title, string _source)
       {
-         return new Article(_title, _text, _article0);
+         return new Article(_title, _source);
       }
 
       // Persistent properties
@@ -78,35 +72,34 @@ namespace WebApi.EF.Design
       public int Id { get; set; }
 
       /// <summary>
-      /// Required
+      /// Required, Min length = 1
       /// </summary>
       [Required]
       public string Title { get; set; }
 
       /// <summary>
+      /// Required, Min length = 1
+      /// </summary>
+      [Required]
+      public string Source { get; set; }
+
+      /// <summary>
       /// Required
       /// </summary>
       [Required]
-      public string Text { get; set; }
+      public DateTime EditDate { get; protected set; }
 
-      /// <summary>
-      /// Default value = DateTime.Now
-      /// </summary>
-      public DateTime? EditDate { get; set; }
-
-      public double? SignificanceCoefficient { get; set; }
+      public double? Weight { get; set; }
 
       public bool? IsDeleted { get; set; }
 
       // Persistent navigation properties
 
-      public virtual WebApi.EF.Design.Article ParentArticle { get; set; }
+      public virtual ICollection<WebApi.EF.Models.ArticleTag> ArticleTag { get; set; }
 
-      public virtual ICollection<WebApi.EF.Design.ArticleTag> ArticleTag { get; set; }
+      public virtual ICollection<WebApi.EF.Models.OpenedArticle> OpenedArticle { get; set; }
 
-      public virtual ICollection<WebApi.EF.Design.OpenedArticle> OpenedArticle { get; set; }
-
-      public virtual WebApi.EF.Design.ArticleDependencies ArticleDependencies { get; set; }
+      public virtual WebApi.EF.Models.ArticleDependencies ArticleDependencies { get; set; }
 
    }
 }

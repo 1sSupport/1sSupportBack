@@ -19,20 +19,41 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace WebApi.EF.Design
+namespace WebApi.EF.Models
 {
    public partial class Configuration1C
    {
       partial void Init();
 
       /// <summary>
-      /// Default constructor
+      /// Default constructor. Protected due to required properties, but present because EF needs it.
       /// </summary>
-      public Configuration1C()
+      protected Configuration1C()
       {
-         ArticleDependencies = new System.Collections.Generic.HashSet<WebApi.EF.Design.ArticleDependencies>();
+         ArticleDependencies = new System.Collections.Generic.HashSet<WebApi.EF.Models.ArticleDependencies>();
 
          Init();
+      }
+
+      /// <summary>
+      /// Public constructor with required data
+      /// </summary>
+      /// <param name="_name"></param>
+      public Configuration1C(string _name)
+      {
+         if (string.IsNullOrEmpty(_name)) throw new ArgumentNullException(nameof(_name));
+         Name = _name;
+         ArticleDependencies = new HashSet<WebApi.EF.Models.ArticleDependencies>();
+         Init();
+      }
+
+      /// <summary>
+      /// Static create function (for use in LINQ queries, etc.)
+      /// </summary>
+      /// <param name="_name"></param>
+      public static Configuration1C Create(string _name)
+      {
+         return new Configuration1C(_name);
       }
 
       // Persistent properties
@@ -44,11 +65,15 @@ namespace WebApi.EF.Design
       [Required]
       public int Id { get; set; }
 
+      /// <summary>
+      /// Required, Min length = 1
+      /// </summary>
+      [Required]
       public string Name { get; set; }
 
       // Persistent navigation properties
 
-      public virtual ICollection<WebApi.EF.Design.ArticleDependencies> ArticleDependencies { get; set; }
+      public virtual ICollection<WebApi.EF.Models.ArticleDependencies> ArticleDependencies { get; set; }
 
    }
 }

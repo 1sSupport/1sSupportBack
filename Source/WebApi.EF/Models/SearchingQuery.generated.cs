@@ -19,7 +19,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace WebApi.EF.Design
+namespace WebApi.EF.Models
 {
    public partial class SearchingQuery
    {
@@ -30,7 +30,7 @@ namespace WebApi.EF.Design
       /// </summary>
       protected SearchingQuery()
       {
-         OpenedArticle = new System.Collections.Generic.HashSet<WebApi.EF.Design.OpenedArticle>();
+         OpenedArticle = new System.Collections.Generic.HashSet<WebApi.EF.Models.OpenedArticle>();
 
          Init();
       }
@@ -38,23 +38,27 @@ namespace WebApi.EF.Design
       /// <summary>
       /// Public constructor with required data
       /// </summary>
+      /// <param name="_text"></param>
       /// <param name="_session"></param>
-      public SearchingQuery(WebApi.EF.Design.Session _session)
+      public SearchingQuery(string _text, WebApi.EF.Models.Session _session)
       {
+         if (string.IsNullOrEmpty(_text)) throw new ArgumentNullException(nameof(_text));
+         Text = _text;
          if (_session == null) throw new ArgumentNullException(nameof(_session));
          Session = _session;
 
-         OpenedArticle = new HashSet<WebApi.EF.Design.OpenedArticle>();
+         OpenedArticle = new HashSet<WebApi.EF.Models.OpenedArticle>();
          Init();
       }
 
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
+      /// <param name="_text"></param>
       /// <param name="_session"></param>
-      public static SearchingQuery Create(WebApi.EF.Design.Session _session)
+      public static SearchingQuery Create(string _text, WebApi.EF.Models.Session _session)
       {
-         return new SearchingQuery(_session);
+         return new SearchingQuery(_text, _session);
       }
 
       // Persistent properties
@@ -66,18 +70,26 @@ namespace WebApi.EF.Design
       [Required]
       public int Id { get; set; }
 
+      /// <summary>
+      /// Required
+      /// </summary>
+      [Required]
       public string Text { get; set; }
-
-      public string Time { get; set; }
-
-      // Persistent navigation properties
-
-      public virtual ICollection<WebApi.EF.Design.OpenedArticle> OpenedArticle { get; set; }
 
       /// <summary>
       /// Required
       /// </summary>
-      public virtual WebApi.EF.Design.Session Session { get; set; }
+      [Required]
+      public string Time { get; internal set; }
+
+      // Persistent navigation properties
+
+      public virtual ICollection<WebApi.EF.Models.OpenedArticle> OpenedArticle { get; set; }
+
+      /// <summary>
+      /// Required
+      /// </summary>
+      public virtual WebApi.EF.Models.Session Session { get; set; }
 
    }
 }

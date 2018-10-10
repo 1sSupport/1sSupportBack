@@ -19,20 +19,44 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace WebApi.EF.Design
+namespace WebApi.EF.Models
 {
    public partial class Provider
    {
       partial void Init();
 
       /// <summary>
-      /// Default constructor
+      /// Default constructor. Protected due to required properties, but present because EF needs it.
       /// </summary>
-      public Provider()
+      protected Provider()
       {
-         User = new System.Collections.Generic.HashSet<WebApi.EF.Design.User>();
+         User = new System.Collections.Generic.HashSet<WebApi.EF.Models.User>();
 
          Init();
+      }
+
+      /// <summary>
+      /// Public constructor with required data
+      /// </summary>
+      /// <param name="_name"></param>
+      /// <param name="_contractendtime"></param>
+      public Provider(string _name, DateTime _contractendtime)
+      {
+         if (string.IsNullOrEmpty(_name)) throw new ArgumentNullException(nameof(_name));
+         Name = _name;
+         ContractEndTime = _contractendtime;
+         User = new HashSet<WebApi.EF.Models.User>();
+         Init();
+      }
+
+      /// <summary>
+      /// Static create function (for use in LINQ queries, etc.)
+      /// </summary>
+      /// <param name="_name"></param>
+      /// <param name="_contractendtime"></param>
+      public static Provider Create(string _name, DateTime _contractendtime)
+      {
+         return new Provider(_name, _contractendtime);
       }
 
       // Persistent properties
@@ -44,15 +68,27 @@ namespace WebApi.EF.Design
       [Required]
       public int Id { get; set; }
 
+      /// <summary>
+      /// Required, Min length = 1
+      /// </summary>
+      [Required]
       public string Name { get; set; }
 
+      /// <summary>
+      /// Min length = 1, Max length = 300
+      /// </summary>
+      [MaxLength(300)]
       public string LogoUrl { get; set; }
 
-      public string ContractEndTime { get; set; }
+      /// <summary>
+      /// Required
+      /// </summary>
+      [Required]
+      public DateTime ContractEndTime { get; set; }
 
       // Persistent navigation properties
 
-      public virtual ICollection<WebApi.EF.Design.User> User { get; set; }
+      public virtual ICollection<WebApi.EF.Models.User> User { get; set; }
 
    }
 }

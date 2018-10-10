@@ -19,7 +19,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace WebApi.EF.Design
+namespace WebApi.EF.Models
 {
    public partial class OpenedArticle
    {
@@ -30,16 +30,22 @@ namespace WebApi.EF.Design
       /// </summary>
       protected OpenedArticle()
       {
+         OpenedNumber = 0;
+
          Init();
       }
 
       /// <summary>
       /// Public constructor with required data
       /// </summary>
+      /// <param name="_openednumber"></param>
+      /// <param name="_time"></param>
       /// <param name="_article"></param>
       /// <param name="_searchingquery"></param>
-      public OpenedArticle(WebApi.EF.Design.Article _article, WebApi.EF.Design.SearchingQuery _searchingquery)
+      public OpenedArticle(DateTime _time, WebApi.EF.Models.Article _article, WebApi.EF.Models.SearchingQuery _searchingquery, int _openednumber = 0)
       {
+         OpenedNumber = _openednumber;
+         Time = _time;
          if (_article == null) throw new ArgumentNullException(nameof(_article));
          Article = _article;
 
@@ -52,11 +58,13 @@ namespace WebApi.EF.Design
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
+      /// <param name="_openednumber"></param>
+      /// <param name="_time"></param>
       /// <param name="_article"></param>
       /// <param name="_searchingquery"></param>
-      public static OpenedArticle Create(WebApi.EF.Design.Article _article, WebApi.EF.Design.SearchingQuery _searchingquery)
+      public static OpenedArticle Create(DateTime _time, WebApi.EF.Models.Article _article, WebApi.EF.Models.SearchingQuery _searchingquery, int _openednumber = 0)
       {
-         return new OpenedArticle(_article, _searchingquery);
+         return new OpenedArticle(_time, _article, _searchingquery, _openednumber);
       }
 
       // Persistent properties
@@ -68,27 +76,35 @@ namespace WebApi.EF.Design
       [Required]
       public int Id { get; set; }
 
-      public string OpenedNumber { get; set; }
+      /// <summary>
+      /// Required, Default value = 0
+      /// </summary>
+      [Required]
+      public int OpenedNumber { get; set; }
 
-      public string ListNumber { get; set; }
+      public int? ListNumber { get; set; }
 
-      public string IsLastOpened { get; set; }
+      public bool? IsLastOpened { get; set; }
 
-      public string Time { get; set; }
+      /// <summary>
+      /// Required
+      /// </summary>
+      [Required]
+      public DateTime Time { get; set; }
 
-      public string Mark { get; set; }
+      public int? Mark { get; set; }
 
       // Persistent navigation properties
 
       /// <summary>
       /// Required
       /// </summary>
-      public virtual WebApi.EF.Design.Article Article { get; set; }
+      public virtual WebApi.EF.Models.Article Article { get; set; }
 
       /// <summary>
       /// Required
       /// </summary>
-      public virtual WebApi.EF.Design.SearchingQuery SearchingQuery { get; set; }
+      public virtual WebApi.EF.Models.SearchingQuery SearchingQuery { get; set; }
 
    }
 }

@@ -19,7 +19,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace WebApi.EF.Design
+namespace WebApi.EF.Models
 {
    public partial class ArticleDependencies
    {
@@ -30,7 +30,7 @@ namespace WebApi.EF.Design
       /// </summary>
       protected ArticleDependencies()
       {
-         Article = new System.Collections.Generic.HashSet<WebApi.EF.Design.Article>();
+         Article = new System.Collections.Generic.HashSet<WebApi.EF.Models.Article>();
 
          Init();
       }
@@ -39,12 +39,12 @@ namespace WebApi.EF.Design
       /// Public constructor with required data
       /// </summary>
       /// <param name="_configuration1c"></param>
-      public ArticleDependencies(WebApi.EF.Design.Configuration1C _configuration1c)
+      public ArticleDependencies(WebApi.EF.Models.Configuration1C _configuration1c)
       {
          if (_configuration1c == null) throw new ArgumentNullException(nameof(_configuration1c));
          Configuration1C = _configuration1c;
 
-         Article = new HashSet<WebApi.EF.Design.Article>();
+         Article = new HashSet<WebApi.EF.Models.Article>();
          Init();
       }
 
@@ -52,7 +52,7 @@ namespace WebApi.EF.Design
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
       /// <param name="_configuration1c"></param>
-      public static ArticleDependencies Create(WebApi.EF.Design.Configuration1C _configuration1c)
+      public static ArticleDependencies Create(WebApi.EF.Models.Configuration1C _configuration1c)
       {
          return new ArticleDependencies(_configuration1c);
       }
@@ -68,12 +68,12 @@ namespace WebApi.EF.Design
 
       // Persistent navigation properties
 
-      public virtual ICollection<WebApi.EF.Design.Article> Article { get; set; }
+      public virtual ICollection<WebApi.EF.Models.Article> Article { get; set; }
 
       /// <summary>
       /// Required
       /// </summary>
-      public virtual WebApi.EF.Design.Configuration1C Configuration1C { get; set; }
+      public virtual WebApi.EF.Models.Configuration1C Configuration1C { get; set; }
 
    }
 }
