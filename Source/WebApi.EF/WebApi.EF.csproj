@@ -28,4 +28,8 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Generated\" />
+  </ItemGroup>
+
 </Project>

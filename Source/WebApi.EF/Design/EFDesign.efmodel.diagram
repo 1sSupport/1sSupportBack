@@ -13,7 +13,7 @@
       <modelClassMoniker Id="8d7da13b-894c-413b-870d-4f5f7de9b300" />
       <nestedChildShapes>
         <elementListCompartment Id="8bcfb8c6-7f11-48f0-bd0f-21347a168c7f" absoluteBounds="4.1400000000000006, 3.31, 1.4700000000000002, 0.63399251302083326" name="AttributesCompartment" titleTextColor="Black" itemTextColor="Black" />
-        <elementListCompartment Id="5adb9e43-8540-4b5c-abd9-8a73743b040a" absoluteBounds="4.1400000000000006, 3.9539925130208333, 1.4700000000000002, 0.44169108072916663" name="AssociationsCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="5adb9e43-8540-4b5c-abd9-8a73743b040a" absoluteBounds="4.14, 3.9539925130208333, 1.4700000000000002, 0.44169108072916674" name="AssociationsCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
     <classShape Id="81934d1c-ecbf-4202-810f-122cda523d1c" absoluteBounds="7.75, 2.875, 1.5, 1.111080729166666" fillColor="0, 122, 204" textColor="White" outlineColor="Black" outlineDashStyle="Solid" visible="true" outlineThickness="0.01">
