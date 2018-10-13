@@ -24,7 +24,7 @@ namespace WebApi.EF.Models
       #region DbSets
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Article> Articles { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.ArticleDependencies> ArticleDependencies { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.ArticleTag> ArticleTag { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.ArticleTag> ArticleTags { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Configuration1C> Configurations1C { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.OpenedArticle> OpenedArticles { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Provider> Providers { get; set; }
