@@ -9,11 +9,11 @@ namespace WebApi.Tagirator
     {
         private static readonly ICollection<TagirationArticle> TagirationArticles = new List<TagirationArticle>();
 
-        private static EFContext Context;
+        private static EFContext _context;
 
         public static void AddContextForTagging(EFContext context)
         {
-            Context = context ?? throw new NullReferenceException();
+            _context = context ?? throw new NullReferenceException();
         }
 
         private static bool IsArticlesNullOrEmpty(IEnumerable<Article> articles)
@@ -23,12 +23,13 @@ namespace WebApi.Tagirator
 
         private static void AddArticlesFromContext()
         {
-            if (IsArticlesNullOrEmpty(Context.Articles))
+            if (IsArticlesNullOrEmpty(_context.Articles))
             {
                 throw new ArgumentException("Необходимо добавить стать в БД");
             }
             /*add range*/
-            var tagirationArticles = Context.Articles.Select(article => new TagirationArticle(article)).ToList();
+            var tagirationArticles = _context.Articles.Select(article => new TagirationArticle(article)).ToList();
+
             foreach (var tagirationArticle in tagirationArticles)
             {
                 TagirationArticles.Add(tagirationArticle);
@@ -102,6 +103,11 @@ namespace WebApi.Tagirator
 
         public static void SetTagsInArticle()
         {
+            if (_context == null)
+            {
+                throw new NullReferenceException("Необходимо сначала добавить EFContext со статьями. Воспользуйтесь методом AddContextForTagging");
+            }
+
             AddArticlesFromContext();
 
             SetGlobalWords();
@@ -115,18 +121,18 @@ namespace WebApi.Tagirator
         {
             foreach (var tagirationArticle in TagirationArticles)
             {
-                var tagsAndRate = tagirationArticle.GetTagsInArticle().Take(10);
+                var tagsInArticle = tagirationArticle.GetTagsInArticle().Take(10);
 
-                foreach (var pair in tagsAndRate)
+                foreach (var tag in tagsInArticle)
                 {
-                    var dbTag = (from tag in Context.Tags where tag.Value == pair.Key select tag).FirstOrDefault();
-                    SetTagInArticle(tagirationArticle.Article, dbTag ?? new Tag(pair.Key));
+                    var dbTag = (from t in _context.Tags where t.Value == tag select t).FirstOrDefault();
+                    SetTagInArticle(tagirationArticle.Article, dbTag ?? new Tag(tag));
                 }
             }
         }
     }
 
-    public class WordInfo
+    internal class WordInfo
     {
         public int Freq { get; set; }
 

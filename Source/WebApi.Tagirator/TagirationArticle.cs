@@ -7,29 +7,27 @@ namespace WebApi.Tagirator
 {
     public class TagirationArticle
     {
-        private readonly Article _article;
-
-        public Article Article => _article;
+        public Article Article { get; }
 
         public TagirationArticle(Article article)
         {
-            _article = article;
+            Article = article;
         }
 
-        private IEnumerable<string> _cleanWords;
+        private IEnumerable<string> _allWords;
 
         private IEnumerable<string> AllWords
         {
             get
             {
-                if (_cleanWords != null)
+                if (_allWords != null)
                 {
-                    return _cleanWords;
+                    return _allWords;
                 }
                 else
                 {
-                    _cleanWords = GetCleanWords();
-                    return _cleanWords;
+                    _allWords = GetCleanAllWords();
+                    return _allWords;
                 }
             }
         }
@@ -38,9 +36,9 @@ namespace WebApi.Tagirator
 
         public IEnumerable<string> CleanWords => _hasSetWord ?? (_hasSetWord = new HashSet<string>(AllWords));
 
-        private IEnumerable<string> GetCleanWords()
+        private IEnumerable<string> GetCleanAllWords()
         {
-            var words = FilteredText.GetWords(_article.Text);
+            var words = FilteredText.GetWords(Article.Text);
             return words;
         }
 
@@ -80,11 +78,11 @@ namespace WebApi.Tagirator
             _wordsInfo = _wordsInfo.OrderByDescending(p => p.Value.Rate).ToDictionary(p => p.Key, p => p.Value);
         }
 
-        public IDictionary<string, WordInfo> GetTagsInArticle()
+        public ICollection<string> GetTagsInArticle()
         {
             SortByRate();
 
-            return _wordsInfo;
+            return _wordsInfo.Keys;
         }
 
         public int GetWordFrequancy(string word)

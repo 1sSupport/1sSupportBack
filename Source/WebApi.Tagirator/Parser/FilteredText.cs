@@ -12,16 +12,10 @@ namespace WebApi.Tagirator.Parser
 
             var uniqueValues = new List<string>();
             // remove endings of words
+
             foreach (var word in words)
             {
-                //words[i] = Regex.Replace(words[i].ToLower(), @"[.,\/#!$%\^&\*;:{}=\-_`~()]", "");
-                // if (Regex.Match(words[i].ToLower(), @"[А-яЁё]").Success || Regex.Match(words[i].ToLower(), @"[A-z]").Success)
                 if (!Regex.Match(word.ToLower(), @"[а-яА-ЯЁёa-zA-Z]").Success)
-                {
-                    continue;
-                }
-
-                if (uniqueValues.Contains(word))
                 {
                     continue;
                 }
