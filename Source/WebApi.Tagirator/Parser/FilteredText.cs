@@ -1,33 +1,43 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using NeuroGus.Core.Parser;
 
-namespace Api.Handler
+namespace WebApi.Tagirator.Parser
 {
-    public static class FilteredText
+    internal static class FilteredText
     {
         public static IEnumerable<string> GetWords(string text)
         {
             // get all significant words
             var words = Regex.Split(Clean(text), $@"[ \n\t\r$+<>№=]");
 
+            var uniqueValues = new List<string>();
             // remove endings of words
-            for (int i = 0; i < words.Length; i++)
+
+            foreach (var word in words)
             {
-                words[i] = PorterStemmer.TransformingWord(words[i]);
+                if (!Regex.Match(word.ToLower(), @"[а-яА-ЯЁёa-zA-Z]").Success)
+                {
+                    continue;
+                }
+
+                uniqueValues.Add(PorterStemmer.TransformingWord(word));
             }
 
-            var uniqueValues = new List<string>(words);
-            uniqueValues.RemoveAll((s)=>s.Equals(""));
+            uniqueValues.RemoveAll((s) => s.Equals(""));
 
             return uniqueValues;
         }
+
         private static string Clean(string text)
         {
-            
             // remove all digits and punctuation marks
-            if (text == null) return "";
+            if (text == null)
+            {
+                return "";
+            }
+
             var fixtext = Regex.Replace(text.ToLower(), @"[\\pP\\d]", " ");
+            fixtext = Regex.Replace(fixtext, @"[.,\/#!$%\^&\*;:{}=\-_`~()]", " ");
             return fixtext;
         }
     }

@@ -40,13 +40,13 @@ namespace WebApi.EF.Models
       /// Public constructor with required data
       /// </summary>
       /// <param name="_title"></param>
-      /// <param name="_source"></param>
-      public Article(string _title, string _source)
+      /// <param name="_text"></param>
+      public Article(string _title, string _text)
       {
          if (string.IsNullOrEmpty(_title)) throw new ArgumentNullException(nameof(_title));
          Title = _title;
-         if (string.IsNullOrEmpty(_source)) throw new ArgumentNullException(nameof(_source));
-         Source = _source;
+         if (string.IsNullOrEmpty(_text)) throw new ArgumentNullException(nameof(_text));
+         Text = _text;
          ArticleTag = new HashSet<WebApi.EF.Models.ArticleTag>();
          OpenedArticle = new HashSet<WebApi.EF.Models.OpenedArticle>();
          Init();
@@ -56,10 +56,10 @@ namespace WebApi.EF.Models
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
       /// <param name="_title"></param>
-      /// <param name="_source"></param>
-      public static Article Create(string _title, string _source)
+      /// <param name="_text"></param>
+      public static Article Create(string _title, string _text)
       {
-         return new Article(_title, _source);
+         return new Article(_title, _text);
       }
 
       // Persistent properties
@@ -81,7 +81,7 @@ namespace WebApi.EF.Models
       /// Required, Min length = 1
       /// </summary>
       [Required]
-      public string Source { get; set; }
+      public string Text { get; set; }
 
       /// <summary>
       /// Required

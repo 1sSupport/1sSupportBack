@@ -22,16 +22,16 @@ namespace WebApi.EF.Models
    public partial class EFContext : Microsoft.EntityFrameworkCore.DbContext
    {
       #region DbSets
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Article> Article { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Article> Articles { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.ArticleDependencies> ArticleDependencies { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.ArticleTag> ArticleTag { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Configuration1C> Configuration1C { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.OpenedArticle> OpenedArticle { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Provider> Provider { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.SearchingQuery> SearchingQuery { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Session> Session { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Tag> Tag { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.User> User { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Configuration1C> Configurations1C { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.OpenedArticle> OpenedArticles { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Provider> Providers { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.SearchingQuery> SearchingQueries { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Session> Sessions { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Tag> Tags { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.User> Users { get; set; }
       #endregion DbSets
 
       /// <inheritdoc />
@@ -74,7 +74,7 @@ namespace WebApi.EF.Models
                      .Property(t => t.Title)
                      .IsRequired();
          modelBuilder.Entity<WebApi.EF.Models.Article>()
-                     .Property(t => t.Source)
+                     .Property(t => t.Text)
                      .IsRequired();
          modelBuilder.Entity<WebApi.EF.Models.Article>()
                      .Property(t => t.EditDate)

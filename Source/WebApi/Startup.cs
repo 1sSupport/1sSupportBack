@@ -6,8 +6,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
-using WebApi.Models;
 
 namespace WebApi
 {
@@ -36,7 +34,7 @@ namespace WebApi
                 {
                     config.TokenValidationParameters = tokenParam;
                 });
-
+            // services.AddDbContext<EFContext>(options => { options.UseInMemoryDatabase(); });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
