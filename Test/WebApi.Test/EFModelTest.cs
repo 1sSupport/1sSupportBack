@@ -71,11 +71,12 @@ namespace WebApi.Test
             var tag = new Tag(_tagText);
             var article = new Article(_articleTitle, _articleText);
 
-            var articleTag = new ArticleTag(article, tag);
+            var articleTag = new ArticleTag(5, article, tag);
 
             Assert.NotNull(articleTag);
             Assert.Equal(tag, articleTag.Tag);
             Assert.Equal(article, articleTag.Article);
+            Assert.Equal(5, articleTag.Weight);
         }
 
         [Fact]

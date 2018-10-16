@@ -16,14 +16,14 @@
         <elementListCompartment Id="5adb9e43-8540-4b5c-abd9-8a73743b040a" absoluteBounds="4.14, 3.9539925130208333, 1.4700000000000002, 0.44169108072916674" name="AssociationsCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="81934d1c-ecbf-4202-810f-122cda523d1c" absoluteBounds="7.75, 2.875, 1.5, 1.111080729166666" fillColor="0, 122, 204" textColor="White" outlineColor="Black" outlineDashStyle="Solid" visible="true" outlineThickness="0.01">
+    <classShape Id="81934d1c-ecbf-4202-810f-122cda523d1c" absoluteBounds="7.75, 2.875, 1.5, 1.303382161458333" fillColor="0, 122, 204" textColor="White" outlineColor="Black" outlineDashStyle="Solid" visible="true" outlineThickness="0.01">
       <modelClassMoniker Id="8d328683-1dba-408c-8a37-bb6020e3d826" />
       <nestedChildShapes>
-        <elementListCompartment Id="af6c074f-7588-4147-b342-75e0708ee0a5" absoluteBounds="7.765, 3.185, 1.4700000000000002, 0.44169108072916663" name="AttributesCompartment" titleTextColor="Black" itemTextColor="Black" />
-        <elementListCompartment Id="5a17f19b-689d-4cf4-9d32-353b3c67bbfe" absoluteBounds="7.765, 3.6366910807291664, 1.4700000000000002, 0.2493896484375" name="AssociationsCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="af6c074f-7588-4147-b342-75e0708ee0a5" absoluteBounds="7.765, 3.185, 1.4700000000000002, 0.63399251302083326" name="AttributesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="5a17f19b-689d-4cf4-9d32-353b3c67bbfe" absoluteBounds="7.765, 3.8289925130208333, 1.4700000000000002, 0.2493896484375" name="AssociationsCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <bidirectionalConnector Id="31ed26ca-422b-45f0-ba87-beb54cb54012" edgePoints="[(11.375 : 3.80554036458333); (9.25 : 3.80554036458333)]" fixedFrom="NotFixed" fixedTo="NotFixed" color="Black" dashStyle="Solid">
+    <bidirectionalConnector Id="31ed26ca-422b-45f0-ba87-beb54cb54012" edgePoints="[(11.375 : 3.90169108072917); (9.25 : 3.90169108072917)]" fixedFrom="Algorithm" fixedTo="Algorithm" color="Black" dashStyle="Solid">
       <bidirectionalAssociationMoniker Id="d4390191-335f-431c-b88c-bdc8aafa72c9" />
       <relativeChildShapes />
       <nodes>
@@ -31,7 +31,7 @@
         <classShapeMoniker Id="81934d1c-ecbf-4202-810f-122cda523d1c" />
       </nodes>
     </bidirectionalConnector>
-    <bidirectionalConnector Id="e35152d4-c21e-4951-bfc5-8fcaa3e04570" edgePoints="[(5.625 : 3.49304036458333); (7.75 : 3.49304036458333)]" fixedFrom="NotFixed" fixedTo="NotFixed" color="Black" dashStyle="Solid">
+    <bidirectionalConnector Id="e35152d4-c21e-4951-bfc5-8fcaa3e04570" edgePoints="[(5.625 : 3.58919108072917); (7.75 : 3.58919108072917)]" fixedFrom="Algorithm" fixedTo="Algorithm" color="Black" dashStyle="Solid">
       <bidirectionalAssociationMoniker Id="b182f232-aaba-47e8-a42e-d6c59f67d2a9" />
       <relativeChildShapes />
       <nodes>
