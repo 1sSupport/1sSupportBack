@@ -96,9 +96,9 @@ namespace WebApi.Tagirator
             }
         }
 
-        private static void SetTagInArticle(Article article, Tag tag)
+        private static void SetTagInArticle(Article article, Tag tag, double weight)
         {
-            article.ArticleTag.Add(new ArticleTag(article, tag));
+            article.ArticleTag.Add(new ArticleTag(weight, article, tag));
         }
 
         public static void SetTagsInArticle()
@@ -117,16 +117,26 @@ namespace WebApi.Tagirator
             SetCurrentTag();
         }
 
+        private static void ClearArticleTagTable()
+        {
+            var articletags = (from at in _context.ArticleTags select at).ToList();
+            _context.ArticleTags.RemoveRange(articletags);
+        }
+
         private static void SetCurrentTag()
         {
+            ClearArticleTagTable();
+
             foreach (var tagirationArticle in TagirationArticles)
             {
-                var tagsInArticle = tagirationArticle.GetTagsInArticle().Take(10);
+                tagirationArticle.Article.ArticleTag.Clear();
 
-                foreach (var tag in tagsInArticle)
+                var tagsAndRate = tagirationArticle.GetTagsAndWeight().Take(10);
+
+                foreach (var pair in tagsAndRate)
                 {
-                    var dbTag = (from t in _context.Tags where t.Value == tag select t).FirstOrDefault();
-                    SetTagInArticle(tagirationArticle.Article, dbTag ?? new Tag(tag));
+                    var dbTag = (from t in _context.Tags where t.Value == pair.Key select t).FirstOrDefault();
+                    SetTagInArticle(tagirationArticle.Article, dbTag ?? new Tag(pair.Key), pair.Value);
                 }
             }
         }

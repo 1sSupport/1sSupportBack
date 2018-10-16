@@ -36,10 +36,12 @@ namespace WebApi.EF.Models
       /// <summary>
       /// Public constructor with required data
       /// </summary>
+      /// <param name="_weight"></param>
       /// <param name="_article"></param>
       /// <param name="_tag"></param>
-      public ArticleTag(WebApi.EF.Models.Article _article, WebApi.EF.Models.Tag _tag)
+      public ArticleTag(double _weight, WebApi.EF.Models.Article _article, WebApi.EF.Models.Tag _tag)
       {
+         Weight = _weight;
          if (_article == null) throw new ArgumentNullException(nameof(_article));
          Article = _article;
 
@@ -52,11 +54,12 @@ namespace WebApi.EF.Models
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
+      /// <param name="_weight"></param>
       /// <param name="_article"></param>
       /// <param name="_tag"></param>
-      public static ArticleTag Create(WebApi.EF.Models.Article _article, WebApi.EF.Models.Tag _tag)
+      public static ArticleTag Create(double _weight, WebApi.EF.Models.Article _article, WebApi.EF.Models.Tag _tag)
       {
-         return new ArticleTag(_article, _tag);
+         return new ArticleTag(_weight, _article, _tag);
       }
 
       // Persistent properties
@@ -67,6 +70,12 @@ namespace WebApi.EF.Models
       [Key]
       [Required]
       public int ID { get; internal set; }
+
+      /// <summary>
+      /// Required
+      /// </summary>
+      [Required]
+      public double Weight { get; set; }
 
       // Persistent navigation properties
 

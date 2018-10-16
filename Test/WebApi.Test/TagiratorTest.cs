@@ -57,6 +57,10 @@ namespace WebApi.Test
             Tagirator.Tagirator.SetTagsInArticle();
             _context.SaveChanges();
 
+            Tagirator.Tagirator.AddContextForTagging(_context);
+            Tagirator.Tagirator.SetTagsInArticle();
+            _context.SaveChanges();
+
             Assert.NotEmpty(_context.Articles);
             Assert.NotNull(_context.Articles.FirstOrDefault());
             Assert.NotEmpty(_context.Tags);

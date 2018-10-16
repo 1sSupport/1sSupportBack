@@ -102,6 +102,9 @@ namespace WebApi.EF.Models
                      .IsRequired()
                      .ValueGeneratedOnAdd();
          modelBuilder.Entity<WebApi.EF.Models.ArticleTag>()
+                     .Property(t => t.Weight)
+                     .IsRequired();
+         modelBuilder.Entity<WebApi.EF.Models.ArticleTag>()
                      .HasOne(x => x.Article)
                      .WithMany(x => x.ArticleTag);
          modelBuilder.Entity<WebApi.EF.Models.ArticleTag>()

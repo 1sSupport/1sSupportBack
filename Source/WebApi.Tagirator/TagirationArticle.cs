@@ -78,11 +78,16 @@ namespace WebApi.Tagirator
             _wordsInfo = _wordsInfo.OrderByDescending(p => p.Value.Rate).ToDictionary(p => p.Key, p => p.Value);
         }
 
-        public ICollection<string> GetTagsInArticle()
+        public IDictionary<string, double> GetTagsAndWeight()
         {
             SortByRate();
 
-            return _wordsInfo.Keys;
+            return (from tw in _wordsInfo
+                    select new
+                    {
+                        Key = tw.Key,
+                        Value = tw.Value.Rate
+                    }).ToDictionary(p => p.Key, p => p.Value);
         }
 
         public int GetWordFrequancy(string word)

@@ -41,11 +41,10 @@ namespace WebApi.Test
             var tagirationArticle = new TagirationArticle(article);
             tagirationArticle.SetWordRate("я", 1);
 
-            var tag = tagirationArticle.GetTagsInArticle();
+            var tag = tagirationArticle.GetTagsAndWeight();
             var key = tag.FirstOrDefault();
 
-            Assert.NotNull(key);
-            Assert.Equal("я", key);
+            Assert.Equal("я", key.Key);
         }
 
         [Fact]
@@ -57,11 +56,10 @@ namespace WebApi.Test
 
             tagirationArticle.SetWordRate("ло", 1);
 
-            var tag = tagirationArticle.GetTagsInArticle();
+            var tag = tagirationArticle.GetTagsAndWeight();
             var key = tag.FirstOrDefault();
 
-            Assert.NotNull(key);
-            Assert.Equal("ло", key);
+            Assert.Equal("ло", key.Key);
         }
 
         [Fact]
@@ -69,7 +67,7 @@ namespace WebApi.Test
         {
             Article Article = new Article(title, text);
 
-            var test = new TagirationArticle(Article).GetTagsInArticle();
+            var test = new TagirationArticle(Article).GetTagsAndWeight();
 
             Assert.NotNull(test);
         }
