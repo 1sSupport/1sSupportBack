@@ -5,13 +5,13 @@ using WebApi.EF.Models;
 
 namespace WebApi.Tagirator
 {
-    public static class Tagirator
+    public class Tagirator
     {
-        private static readonly ICollection<TagirationArticle> TagirationArticles = new List<TagirationArticle>();
+        private readonly ICollection<TagirationArticle> _tagirationArticles = new List<TagirationArticle>();
 
-        private static EFContext _context;
+        private readonly EFContext _context;
 
-        public static void AddContextForTagging(EFContext context)
+        public Tagirator(EFContext context)
         {
             _context = context ?? throw new NullReferenceException();
         }
@@ -21,7 +21,7 @@ namespace WebApi.Tagirator
             return articles == null || !articles.Any();
         }
 
-        private static void AddArticlesFromContext()
+        private void AddArticlesFromContext()
         {
             if (IsArticlesNullOrEmpty(_context.Articles))
             {
@@ -32,66 +32,66 @@ namespace WebApi.Tagirator
 
             foreach (var tagirationArticle in tagirationArticles)
             {
-                TagirationArticles.Add(tagirationArticle);
+                _tagirationArticles.Add(tagirationArticle);
             }
         }
 
-        private static readonly IDictionary<string, WordInfo> GlobalWordsObject = new Dictionary<string, WordInfo>();
+        private readonly IDictionary<string, WordInfo> _globalWordsObject = new Dictionary<string, WordInfo>();
 
-        private static void SetGlobalWords()
+        private void SetGlobalWords()
         {
-            foreach (var article in TagirationArticles)
+            foreach (var article in _tagirationArticles)
             {
                 foreach (var word in article.CleanWords)
                 {
-                    if (GlobalWordsObject.ContainsKey(word))
+                    if (_globalWordsObject.ContainsKey(word))
                     {
                         var value = article.GetWordFrequancy(word);
-                        GlobalWordsObject[word].Freq += value;
+                        _globalWordsObject[word].Freq += value;
                     }
                     else
                     {
                         var wordObject = new WordInfo { Freq = article.GetWordFrequancy(word) };
 
-                        GlobalWordsObject.Add(word, wordObject);
+                        _globalWordsObject.Add(word, wordObject);
                     }
                 }
             }
         }
 
-        private static double GetRatioFreq(string key)
+        private double GetRatioFreq(string key)
         {
-            if (!GlobalWordsObject.ContainsKey(key))
+            if (!_globalWordsObject.ContainsKey(key))
             {
                 return 0;
             }
 
             // ReSharper disable once PossibleLossOfFraction
-            double v = GlobalWordsObject[key].Freq / TagirationArticles.Count;
+            double v = _globalWordsObject[key].Freq / _tagirationArticles.Count;
             return v;
         }
 
-        private static void SetGlobalWordsRate()
+        private void SetGlobalWordsRate()
         {
-            if (!GlobalWordsObject.Any())
+            if (!_globalWordsObject.Any())
             {
                 SetGlobalWords();
             }
 
-            foreach (var key in GlobalWordsObject.Keys)
+            foreach (var key in _globalWordsObject.Keys)
             {
-                var wordObject = GlobalWordsObject[key];
+                var wordObject = _globalWordsObject[key];
                 wordObject.Rate = GetRatioFreq(key);
             }
         }
 
-        private static void SetLocalRate()
+        private void SetLocalRate()
         {
-            foreach (var article in TagirationArticles)
+            foreach (var article in _tagirationArticles)
             {
                 foreach (var word in article.CleanWords)
                 {
-                    article.SetWordRate(word, GlobalWordsObject[word].Rate);
+                    article.SetWordRate(word, _globalWordsObject[word].Rate);
                 }
             }
         }
@@ -101,7 +101,7 @@ namespace WebApi.Tagirator
             article.ArticleTag.Add(new ArticleTag(weight, article, tag));
         }
 
-        public static void SetTagsInArticle()
+        public void SetTagsInArticle()
         {
             if (_context == null)
             {
@@ -117,17 +117,17 @@ namespace WebApi.Tagirator
             SetCurrentTag();
         }
 
-        private static void ClearArticleTagTable()
+        private void ClearArticleTagTable()
         {
             var articletags = (from at in _context.ArticleTags select at).ToList();
             _context.ArticleTags.RemoveRange(articletags);
         }
 
-        private static void SetCurrentTag()
+        private void SetCurrentTag()
         {
             ClearArticleTagTable();
 
-            foreach (var tagirationArticle in TagirationArticles)
+            foreach (var tagirationArticle in _tagirationArticles)
             {
                 tagirationArticle.Article.ArticleTag.Clear();
 

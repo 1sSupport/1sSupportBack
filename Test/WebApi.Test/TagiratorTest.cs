@@ -53,12 +53,12 @@ namespace WebApi.Test
         [Fact]
         public void Can_Initialize_Tagirator()
         {
-            Tagirator.Tagirator.AddContextForTagging(_context);
-            Tagirator.Tagirator.SetTagsInArticle();
+            var tagirator = new Tagirator.Tagirator(_context);
+            tagirator.SetTagsInArticle();
             _context.SaveChanges();
 
-            Tagirator.Tagirator.AddContextForTagging(_context);
-            Tagirator.Tagirator.SetTagsInArticle();
+            tagirator = new Tagirator.Tagirator(_context);
+            tagirator.SetTagsInArticle();
             _context.SaveChanges();
 
             Assert.NotEmpty(_context.Articles);
