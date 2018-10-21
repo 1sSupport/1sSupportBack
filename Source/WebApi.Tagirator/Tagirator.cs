@@ -99,6 +99,7 @@ namespace WebApi.Tagirator
         private static void SetTagInArticle(Article article, Tag tag, double weight)
         {
             article.ArticleTag.Add(new ArticleTag(weight, article, tag));
+            article.EditDate = DateTime.Now;
         }
 
         public void SetTagsInArticle()

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace WebApi.Tagirator.Parser
 {
-    internal static class FilteredText
+   public static class FilteredText
     {
         public static IEnumerable<string> GetWords(string text)
         {

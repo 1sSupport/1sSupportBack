@@ -77,9 +77,6 @@ namespace WebApi.EF.Models
                      .Property(t => t.Text)
                      .IsRequired();
          modelBuilder.Entity<WebApi.EF.Models.Article>()
-                     .Property(t => t.EditDate)
-                     .IsRequired();
-         modelBuilder.Entity<WebApi.EF.Models.Article>()
                      .HasOne(x => x.ArticleDependencies)
                      .WithMany(x => x.Article);
 

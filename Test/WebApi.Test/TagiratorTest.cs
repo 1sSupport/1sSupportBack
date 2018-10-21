@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using WebApi.EF.Models;
+using  WebApi.Infrastructer;
 using Xunit;
 
 namespace WebApi.Test
@@ -67,6 +68,18 @@ namespace WebApi.Test
             Assert.NotEmpty(_context.ArticleTags);
         }
 
+        [Fact]
+        public void Can_get_article_in_query()
+        {
+            Can_Initialize_Tagirator();
+            var query = new QueryHandler(_context);
+            var articles =query.GetArticlesByQuery("Врата да да я");
+            Assert.NotEmpty(articles);
+            
+            
+
+
+        }
         //[Fact]
         //public void Can_Set_Words_rate()
         //{
