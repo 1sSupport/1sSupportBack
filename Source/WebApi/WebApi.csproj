@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>1d5a315d-a923-45ef-8a02-13e9c5f3a358</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,8 +12,14 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="NETCore.MailKit" Version="2.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="NLog" Version="4.5.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WebApi.EF\WebApi.EF.csproj" />
+    <ProjectReference Include="..\WebApi.Tagirator\WebApi.Tagirator.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,18 +5,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using NETCore.MailKit.Extensions;
+using NETCore.MailKit.Infrastructure.Internal;
+using System;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
-using WebApi.Models;
 
 namespace WebApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
+
+        public IHostingEnvironment Environment { get; }
 
         public IConfiguration Configuration { get; }
 
@@ -37,13 +41,37 @@ namespace WebApi
                     config.TokenValidationParameters = tokenParam;
                 });
 
+            if (Environment.IsDevelopment())
+            {
+                Console.WriteLine($"{Configuration["Email:Server"]}:{Configuration["Email:Port"]}");
+                services.AddMailKit(optionBuilder =>
+                {
+                    optionBuilder.UseMailKit(new MailKitOptions()
+                    {
+                        //get options from sercets.json
+                        Server = Configuration["Email:Server"],
+                        Port = Convert.ToInt32(Configuration["Email:Port"]),
+                        SenderName = Configuration["Email:SenderName"],
+                        SenderEmail = Configuration["Email:SenderEmail"],
+
+                        // can be optional with no authentication
+                        Account = Configuration["Email:Account"],
+                        Password = Configuration["Email:Password"],
+                        // enable ssl or tls
+                        Security = true
+                    });
+                });
+            }
+
+            // services.AddDbContext<EFContext>(options => { options.UseInMemoryDatabase(); });
+            services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -52,6 +80,7 @@ namespace WebApi
                 app.UseHsts();
             }
 
+            app.UseCors();
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvcWithDefaultRoute();

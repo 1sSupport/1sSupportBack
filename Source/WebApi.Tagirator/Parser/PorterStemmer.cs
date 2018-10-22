@@ -1,8 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace NeuroGus.Core.Parser
+namespace WebApi.Tagirator.Parser
 {
-    public static class PorterStemmer
+    internal static class PorterStemmer
     {
         private static readonly Regex Perfectiveground =
             new Regex("((ив|ивши|ившись|ыв|ывши|ывшись)|((<;=[ая])(в|вши|вшись)))$");
@@ -39,15 +39,18 @@ namespace NeuroGus.Core.Parser
             word = word.ToLower();
             word = word.Replace('ё', 'е');
             var m = Rvre.Matches(word);
-            if (m.Count <= 0) return word;
-            var match = m[0]; // only one match in this case 
+            if (m.Count <= 0)
+            {
+                return word;
+            }
+
+            var match = m[0]; // only one match in this case
             var groupCollection = match.Groups;
             var pre = groupCollection[1].ToString();
             var rv = groupCollection[2].ToString();
 
             var temp = Perfectiveground.Matches(rv);
             var stringTemp = ReplaceFirst(temp, rv);
-
 
             if (stringTemp.Equals(rv))
             {
@@ -110,13 +113,20 @@ namespace NeuroGus.Core.Parser
 
         public static string ReplaceFirst(MatchCollection collection, string part)
         {
-            if (collection.Count == 0) return part;
+            if (collection.Count == 0)
+            {
+                return part;
+            }
 
             var stringTemp = part;
             for (var i = 0; i < collection.Count; i++)
             {
                 var groupCollection = collection[i].Groups;
-                if (!stringTemp.Contains(groupCollection[i].ToString())) continue;
+                if (!stringTemp.Contains(groupCollection[i].ToString()))
+                {
+                    continue;
+                }
+
                 var deletePart = groupCollection[i].ToString();
                 stringTemp = stringTemp.Replace(deletePart, "");
             }

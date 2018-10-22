@@ -19,32 +19,38 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace WebApi.EF.Design
+namespace WebApi.EF.Models
 {
-   public partial class ArticleTag
+   public partial class OpenedArticle
    {
       partial void Init();
 
       /// <summary>
       /// Default constructor. Protected due to required properties, but present because EF needs it.
       /// </summary>
-      protected ArticleTag()
+      protected OpenedArticle()
       {
+         OpenedNumber = 0;
+
          Init();
       }
 
       /// <summary>
       /// Public constructor with required data
       /// </summary>
+      /// <param name="_openednumber"></param>
+      /// <param name="_time"></param>
       /// <param name="_article"></param>
-      /// <param name="_tag"></param>
-      public ArticleTag(WebApi.EF.Design.Article _article, WebApi.EF.Design.Tag _tag)
+      /// <param name="_searchingquery"></param>
+      public OpenedArticle(DateTime _time, WebApi.EF.Models.Article _article, WebApi.EF.Models.SearchingQuery _searchingquery, int _openednumber = 0)
       {
+         OpenedNumber = _openednumber;
+         Time = _time;
          if (_article == null) throw new ArgumentNullException(nameof(_article));
          Article = _article;
 
-         if (_tag == null) throw new ArgumentNullException(nameof(_tag));
-         Tag = _tag;
+         if (_searchingquery == null) throw new ArgumentNullException(nameof(_searchingquery));
+         SearchingQuery = _searchingquery;
 
          Init();
       }
@@ -52,11 +58,13 @@ namespace WebApi.EF.Design
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
+      /// <param name="_openednumber"></param>
+      /// <param name="_time"></param>
       /// <param name="_article"></param>
-      /// <param name="_tag"></param>
-      public static ArticleTag Create(WebApi.EF.Design.Article _article, WebApi.EF.Design.Tag _tag)
+      /// <param name="_searchingquery"></param>
+      public static OpenedArticle Create(DateTime _time, WebApi.EF.Models.Article _article, WebApi.EF.Models.SearchingQuery _searchingquery, int _openednumber = 0)
       {
-         return new ArticleTag(_article, _tag);
+         return new OpenedArticle(_time, _article, _searchingquery, _openednumber);
       }
 
       // Persistent properties
@@ -66,19 +74,37 @@ namespace WebApi.EF.Design
       /// </summary>
       [Key]
       [Required]
-      public int ID { get; internal set; }
+      public int Id { get; set; }
+
+      /// <summary>
+      /// Required, Default value = 0
+      /// </summary>
+      [Required]
+      public int OpenedNumber { get; set; }
+
+      public int? ListNumber { get; set; }
+
+      public bool? IsLastOpened { get; set; }
+
+      /// <summary>
+      /// Required
+      /// </summary>
+      [Required]
+      public DateTime Time { get; set; }
+
+      public int? Mark { get; set; }
 
       // Persistent navigation properties
 
       /// <summary>
       /// Required
       /// </summary>
-      public virtual WebApi.EF.Design.Article Article { get; set; }
+      public virtual WebApi.EF.Models.Article Article { get; set; }
 
       /// <summary>
       /// Required
       /// </summary>
-      public virtual WebApi.EF.Design.Tag Tag { get; set; }
+      public virtual WebApi.EF.Models.SearchingQuery SearchingQuery { get; set; }
 
    }
 }

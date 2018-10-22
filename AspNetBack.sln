@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Test", "Test\WebApi.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.Tagirator", "Source\WebApi.Tagirator\WebApi.Tagirator.csproj", "{0AA7695E-EAF4-4CEB-AC6E-3F95664C9B08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi.EF", "Source\WebApi.EF\WebApi.EF.csproj", "{71695F77-F969-48FB-984E-B7B65FDFD059}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.EF", "Source\WebApi.EF\WebApi.EF.csproj", "{71695F77-F969-48FB-984E-B7B65FDFD059}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

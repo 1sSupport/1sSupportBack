@@ -19,41 +19,47 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace WebApi.EF.Design
+namespace WebApi.EF.Models
 {
-   public partial class Tag
+   public partial class ArticleTag
    {
       partial void Init();
 
       /// <summary>
       /// Default constructor. Protected due to required properties, but present because EF needs it.
       /// </summary>
-      protected Tag()
+      protected ArticleTag()
       {
-         ArticleTag = new System.Collections.Generic.HashSet<WebApi.EF.Design.ArticleTag>();
-
          Init();
       }
 
       /// <summary>
       /// Public constructor with required data
       /// </summary>
-      /// <param name="_value"></param>
-      public Tag(string _value)
+      /// <param name="_weight"></param>
+      /// <param name="_article"></param>
+      /// <param name="_tag"></param>
+      public ArticleTag(double _weight, WebApi.EF.Models.Article _article, WebApi.EF.Models.Tag _tag)
       {
-         if (string.IsNullOrEmpty(_value)) throw new ArgumentNullException(nameof(_value));
-         Value = _value;
-         ArticleTag = new HashSet<WebApi.EF.Design.ArticleTag>();
+         Weight = _weight;
+         if (_article == null) throw new ArgumentNullException(nameof(_article));
+         Article = _article;
+
+         if (_tag == null) throw new ArgumentNullException(nameof(_tag));
+         Tag = _tag;
+
          Init();
       }
 
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
-      /// <param name="_value"></param>
-      public static Tag Create(string _value)
+      /// <param name="_weight"></param>
+      /// <param name="_article"></param>
+      /// <param name="_tag"></param>
+      public static ArticleTag Create(double _weight, WebApi.EF.Models.Article _article, WebApi.EF.Models.Tag _tag)
       {
-         return new Tag(_value);
+         return new ArticleTag(_weight, _article, _tag);
       }
 
       // Persistent properties
@@ -63,17 +69,25 @@ namespace WebApi.EF.Design
       /// </summary>
       [Key]
       [Required]
-      public int Id { get; set; }
+      public int ID { get; internal set; }
 
       /// <summary>
       /// Required
       /// </summary>
       [Required]
-      public string Value { get; set; }
+      public double Weight { get; set; }
 
       // Persistent navigation properties
 
-      public virtual ICollection<WebApi.EF.Design.ArticleTag> ArticleTag { get; set; }
+      /// <summary>
+      /// Required
+      /// </summary>
+      public virtual WebApi.EF.Models.Article Article { get; set; }
+
+      /// <summary>
+      /// Required
+      /// </summary>
+      public virtual WebApi.EF.Models.Tag Tag { get; set; }
 
    }
 }
