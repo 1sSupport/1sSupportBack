@@ -1,0 +1,368 @@
+swagger: '2.0'
+info:
+  description: >-
+    API for 1SAspNetBack
+  version: 1.0.0
+  title: AspNetBack
+  termsOfService: 'http://swagger.io/terms/'
+host: AspNetBack.swagger.io
+basePath: /v2
+tags:
+  - name: Article
+  - name: Session
+schemes:
+  - https
+paths:
+  '/Article/GetArticles/{query}':
+    get:
+      tags:
+        - Article
+      summary: Find article list by query
+      description: Returns an article list
+      operationId: GetArseticles
+      produces:
+        - application/json
+      parameters:
+        - name: query
+          in: path
+          description: user's query
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Article'
+        '404':
+          description: Articles are not found
+  '/Article/GetArticleById/{id}':
+    get:
+      tags:
+        - Article
+      summary: Find article by Id
+      description: Returns an article by Id
+      operationId: GetArseticleById
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: article id
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Article'
+        '404':
+          description: Article is not found  
+          
+  /Session/StartSession/:    
+    post:
+      tags:
+        - Session
+      summary: Start session
+      description: Start session and return it's Id
+      operationId: StartSession
+      produces:
+        - application/json  
+      parameters:
+        - name: Parametrs
+          in: body
+          description: user's parametrs
+          required: true
+          schema:
+            $ref: '#/definitions/StartSessionParam'
+      responses:
+        '201':
+          description: Session Id
+          schema:
+            $ref: '#/definitions/Session'
+        '401':
+          description: Unauthorized
+          
+  /Session/EndSession/:    
+    post:
+      tags:
+        - Session
+      summary: End session
+      description: End session
+      operationId: EndSession
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: id
+          in: body
+          description: session id
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Session is closed
+        '401':
+          description: Unauthorized    
+
+  /Session/AddArticleMark/:    
+    post:
+      tags:
+        - Session
+      summary: Add artice mark
+      description: Add artice mark
+      operationId: AddArticleMark
+      consumes:
+        - application/json
+      produces:
+        - application/json  
+      parameters:
+        - name: AddArticleMarkParametrs
+          in: body
+          description: ArticleId, SessionId, mark
+          required: true
+          schema:
+            $ref: '#/definitions/AddArticleMarkParam'
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not found              
+        
+      
+    
+  
+
+definitions:
+
+      
+  StartSessionParam:
+    type: object
+    properties:
+      INN:
+        type: string
+        format: string[12]
+      Login:
+        type: string
+        format: string     
+    xml:
+      name: StartSessionParam    
+      
+  AddArticleMarkParam:
+    type: object
+    properties:
+      SessionId:
+        type: integer
+        format: int32
+      ArticleId:
+        type: integer
+        format: int32
+      Mark:
+        type: integer
+        format: int32
+    xml:
+      name: AddArticleMarkParam  
+      
+  Tag:
+    type: object
+    properties:
+      Id:
+        type: integer
+        format: int32
+      Value:
+        type: string
+        format: string[120]
+        description: tag word
+      ArticleTags:
+        type: array
+        items:
+          $ref: '#/definitions/ArticleTag'      
+    xml:
+      name: Tag
+      
+  ArticleTag:
+    type: object
+    properties:
+      Id:
+        type: integer
+        format: int32
+      Weight:
+        type: number
+      Article:
+          $ref: '#/definitions/Article'  
+      Tag:
+          $ref: '#/definitions/Tag'  
+    xml:
+      name: ArticleTag
+  Article:
+    type: object
+    properties:
+      Id:
+        type: integer
+        format: int32
+      Title:
+        type: string
+      Text:
+        type: string
+      EditDate:
+        type: string
+        description: format DateTime?
+      Weight:
+        type: number
+        format: nullable
+      IsDeleted:
+        type: boolean
+        format: nullable
+      OpenedArticles:
+        type: array
+        items:
+          $ref: '#/definitions/OpenedArticle'    
+      ArticleTags:
+        type: array
+        items:
+          $ref: '#/definitions/ArticleTag'   
+      ArticleDependencies:
+          $ref: '#/definitions/ArticleDependencies'    
+    xml:
+      name: Article
+  ArticleDependencies:
+    type: object
+    properties:
+      Id:
+        type: integer
+        format: int32
+      Articles:
+        type: array
+        items:
+          $ref: '#/definitions/Article'      
+      Configuration1C:
+          $ref: '#/definitions/Configuration1C'     
+    xml:
+      name: ArticleDependencies
+  Configuration1C:
+    type: object
+    properties:
+      Id:
+        type: integer
+        format: int32
+      Name:
+        type: string
+      ArticleDependencies:
+        type: array
+        items:
+          $ref: '#/definitions/ArticleDependencies'        
+    xml:
+      name: Configuration1C   
+  OpenedArticle:
+    type: object
+    properties:
+      Id:
+        type: integer
+        format: int32
+      OpenedNumber:
+        type: integer
+        format: int32
+      ListNumber:
+        type: integer
+        format: int32
+      IsLastOpened:
+        type: boolean
+        format: nullable
+      Time:
+        type: string
+        description: format DateTime?
+      Mark:
+        type: integer
+        format: nullable, int32
+      SearchingQuery:
+          $ref: '#/definitions/SearchingQuery' 
+      Article:
+          $ref: '#/definitions/Article'    
+    xml:
+      name: OpenedArticle 
+  SearchingQuery:
+    type: object
+    properties:
+      Id:
+        type: integer
+        format: int32
+      Text:
+        type: string
+      Time:
+        type: string
+        description: format DateTime?  
+      OpenedArticles:
+        type: array
+        items:
+          $ref: '#/definitions/OpenedArticle'  
+      Session:
+          $ref: '#/definitions/Session'      
+    xml:
+      name: SearchingQuery   
+  Session:
+    type: object
+    properties:
+      Id:
+        type: integer
+        format: int32
+      OpenTime:
+        type: string
+        description: format DateTime?  
+      CloseTime:
+        type: string
+        format: nullable
+        description: format DateTime?  
+      SearchingQueries:
+        type: array
+        items:
+          $ref: '#/definitions/SearchingQuery'  
+      User:
+          $ref: '#/definitions/User'       
+    xml:
+      name: Session  
+  User:
+    type: object
+    properties:
+      Id:
+        type: integer
+        format: int32
+      Login:
+        type: string    
+      Email:
+        type: string
+      INN:
+        type: string 
+        format: string[12]
+      Sessions:
+        type: array
+        items:
+          $ref: '#/definitions/Session'  
+      Provider:
+          $ref: '#/definitions/Provider'     
+    xml:
+      name: User  
+  Provider:
+    type: object
+    properties:
+      Id:
+        type: integer
+        format: int32
+      Name:
+        type: string    
+      LogoURL:
+        type: string
+        format: nullable
+      ContractEndTime:
+        type: string
+        description: format DateTime?
+      Users:
+        type: array
+        items:
+          $ref: '#/definitions/User'
+    xml:
+      name: Provider   
