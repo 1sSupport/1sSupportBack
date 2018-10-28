@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace WebApi.Tagirator.Parser
+namespace WebApi.Tools.Parser
 {
-   public static class FilteredText
+    public static class FilteredText
     {
         public static IEnumerable<string> GetWords(string text)
         {

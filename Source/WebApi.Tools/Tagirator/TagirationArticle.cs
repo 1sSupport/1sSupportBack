@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WebApi.EF.Models;
-using WebApi.Tagirator.Parser;
+using WebApi.Tools.Parser;
 
-namespace WebApi.Tagirator
+namespace WebApi.Tools
 {
     public class TagirationArticle
     {

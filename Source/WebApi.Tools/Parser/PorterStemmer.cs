@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace WebApi.Tagirator.Parser
+namespace WebApi.Tools.Parser
 {
     internal static class PorterStemmer
     {
