@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 using WebApi.EF.Models;
-using  WebApi.Infrastructer;
+using WebApi.Tools.Finder;
 using Xunit;
 
 namespace WebApi.Test
@@ -54,11 +54,11 @@ namespace WebApi.Test
         [Fact]
         public void Can_Initialize_Tagirator()
         {
-            var tagirator = new Tagirator.Tagirator(_context);
+            var tagirator = new Tools.Tagirator(_context);
             tagirator.SetTagsInArticle();
             _context.SaveChanges();
 
-            tagirator = new Tagirator.Tagirator(_context);
+            tagirator = new Tools.Tagirator(_context);
             tagirator.SetTagsInArticle();
             _context.SaveChanges();
 
@@ -72,14 +72,11 @@ namespace WebApi.Test
         public void Can_get_article_in_query()
         {
             Can_Initialize_Tagirator();
-            var query = new QueryHandler(_context);
-            var articles =query.GetArticlesByQuery("Врата да да я");
+            var query = new ArticleFinder(_context);
+            var articles = query.GetArticlesByQuery("Врата да да я");
             Assert.NotEmpty(articles);
-            
-            
-
-
         }
+
         //[Fact]
         //public void Can_Set_Words_rate()
         //{
