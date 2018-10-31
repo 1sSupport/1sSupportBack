@@ -1,47 +1,152 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
+﻿//// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="TokenController.cs" company="1CHelp">
+//
+// </copyright>
+// <summary>
+//   Defines the TokenController type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace WebApi.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.IdentityModel.Tokens;
+    using System;
+    using System.Collections.Generic;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading.Tasks;
+    using WebApi.EF.Models;
+    using WebApi.Models;
+
+    /// <inheritdoc />
+    /// <summary>
+    /// The token controller.
+    /// </summary>
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class TokenController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
+        /// <summary>
+        /// The configuration.
+        /// </summary>
+        private readonly IConfiguration configuration;
 
-        public TokenController(IConfiguration config)
+        /// <summary>
+        /// The Context.
+        /// </summary>
+        private readonly EFContext context;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TokenController"/> class.
+        /// </summary>
+        /// <param name="config">
+        /// The config.
+        /// </param>
+        /// <param name="context">
+        /// The context.
+        /// </param>
+        public TokenController(IConfiguration config, EFContext context)
         {
-            _configuration = config;
+            configuration = config;
+            this.context = context;
         }
 
-        [HttpGet("{inn:maxlength(12):minlength(12)?}/{login?}")]
+        /// <summary>
+        /// The create token.
+        /// </summary>
+        /// <param name="info">
+        /// The info.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IActionResult"/>.
+        /// </returns>
+        [HttpPost]
         [ProducesResponseType(404)]
-        public IActionResult CreateToken(string inn, string login = "")
+        public async Task<IActionResult> CreateToken(UserInfo info)
         {
-            if (string.IsNullOrEmpty(login) || string.IsNullOrWhiteSpace(login))
+            if (!ModelState.IsValid)
             {
                 return NoContent();
             }
 
             IActionResult response = Unauthorized();
-            if (inn.Equals(inn))
+
+            var identity = await GetUserIdentity(info);
+
+            if (identity == null)
             {
-                var token = JwtTokenBuilder();
-                response = Ok(new { access_token = token });
+                return response;
             }
+
+            var token = await JwtTokenBuilderAsync(identity.Claims);
+            response = Ok(new { access_token = token });
             return response;
         }
 
-        private string JwtTokenBuilder()
+        /// <summary>
+        /// The get user identity.
+        /// </summary>
+        /// <param name="info">
+        /// The info.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        private async Task<ClaimsIdentity> GetUserIdentity(UserInfo info)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:key"]));
-            var credantials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(issuer: _configuration["JWT:issuer"], audience: _configuration["JWT:audience"], signingCredentials: credantials, expires: DateTime.Now.AddDays(3));
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var user = await (from u in context.Users
+                              where string.Equals(u.INN, info.Inn, StringComparison.OrdinalIgnoreCase) && string.Equals(
+                                        u.Login,
+                                        info.Login,
+                                        StringComparison.OrdinalIgnoreCase)
+                              select u).FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            var claims = new List<Claim> { new Claim("Login", user.Login), new Claim("Inn", user.INN) };
+
+            var claimsIdentity = new ClaimsIdentity(
+                claims,
+                "JWT",
+                ClaimsIdentity.DefaultNameClaimType,
+                ClaimsIdentity.DefaultRoleClaimType);
+            return claimsIdentity;
+        }
+
+        /// /// <summary>
+        /// The jwt token builder.
+        /// </summary>
+        /// <param name="claims">
+        /// The claims.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        private Task<string> JwtTokenBuilderAsync(IEnumerable<Claim> claims)
+        {
+            return Task.Run(
+                () =>
+                    {
+                        var now = DateTime.UtcNow;
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:key"]));
+                        var credantials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                        var token = new JwtSecurityToken(
+                            claims: claims,
+                            issuer: configuration["JWT:issuer"],
+                            audience: configuration["JWT:audience"],
+                            signingCredentials: credantials,
+                            notBefore: now,
+                            expires: now.AddMonths(3));
+                        return new JwtSecurityTokenHandler().WriteToken(token);
+                    });
         }
     }
 }

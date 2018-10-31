@@ -1,60 +1,119 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
-using WebApi.EF.Models;
-using WebApi.Tools.Finder;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ArticleController.cs" company="">
+//
+// </copyright>
+// <summary>
+//   The article controller.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace WebApi.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using WebApi.EF.Models;
+    using WebApi.Tools.Finder;
+
+    /// <inheritdoc />
+    /// <summary>
+    /// The article controller.
+    /// </summary>
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
     public class ArticleController : ControllerBase
     {
-        private readonly EFContext _context;
+        /// <summary>
+        /// The _context.
+        /// </summary>
+        private readonly EFContext context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ArticleController"/> class.
+        /// </summary>
+        /// <param name="context">
+        /// The context.
+        /// </param>
         public ArticleController(EFContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
-        [HttpGet("{id:int:min(1)}")]
+        /// <summary>
+        /// The get article.
+        /// </summary>
+        /// <param name="id">
+        /// The id.
+        /// </param>
+        /// <param name="query">
+        /// The query.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        [HttpGet]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetArticle(int id)
+        public async Task<IActionResult> GetArticle(
+            [FromQuery] [Range(1, int.MaxValue)] int id,
+            [FromQuery] string query)
         {
-            var article = await (from a in _context.Articles where a.Id == id select new { a.Id, a.Title, a.Text }).FirstOrDefaultAsync();
+            var article = await (from a in context.Articles where a.Id == id select a).FirstOrDefaultAsync();
+            var queryDB =
+                await (from q in context.SearchingQueries where q.Text == query select q).FirstOrDefaultAsync();
 
-            if (article == null)
+            if (article == null || queryDB == null)
             {
                 return NotFound(id);
             }
 
-            return Ok(article);
+            var openedArticle = new OpenedArticle(DateTime.UtcNow, article, queryDB);
+
+            context.OpenedArticles.Add(openedArticle);
+            context.SaveChangesAsync();
+
+            return Ok(new { article.Id, article.Title, article.Text });
         }
 
+        /// <summary>
+        /// The get articles by query.
+        /// </summary>
+        /// <param name="query">
+        /// The query.
+        /// </param>
+        /// <param name="sessionId">
+        /// The session Id.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
         [HttpGet]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetArticle([FromQuery]string query)
+        public async Task<IActionResult> GetArticlesByQuery([FromQuery] string query, [FromQuery] int sessionId)
         {
-            var articles = await Task.Run(() =>
-             {
-                 var finder = new ArticleFinder(_context);
-                 return finder.GetArticlesByQuery(query);
-             });
+            var articles = await Task.Run(
+                               () =>
+                                   {
+                                       var finder = new ArticleFinder(context);
+                                       return finder.GetArticlesByQuery(query);
+                                   });
 
             if (articles == null || !articles.Any())
             {
                 return NotFound();
             }
 
-            return Ok(from a in articles select new { a.Id, a.Title, Text = a.Text.Substring(0, 75) });
-        }
-    }
+            var session = await (from s in context.Sessions where s.Id == sessionId select s).FirstOrDefaultAsync();
 
-    public class TestPost
-    {
-        public string Text { get; set; }
+            context.SearchingQueries.Add(new SearchingQuery(query, session));
+
+            context.SaveChangesAsync();
+
+            return Ok((from a in articles select new { a.Id, a.Title, Text = a.Text.Substring(0, 75) }).ToList());
+        }
     }
 }

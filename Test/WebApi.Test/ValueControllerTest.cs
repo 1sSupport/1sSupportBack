@@ -1,7 +1,7 @@
-using Xunit;
-
 namespace WebApi.Test
 {
+    using Xunit;
+
     public class ValueControllerTest
     {
         [Fact]
