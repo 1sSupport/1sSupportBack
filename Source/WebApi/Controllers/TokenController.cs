@@ -1,57 +1,152 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using NETCore.MailKit.Core;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
+﻿//// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="TokenController.cs" company="1CHelp">
+//
+// </copyright>
+// <summary>
+//   Defines the TokenController type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace WebApi.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.IdentityModel.Tokens;
+    using System;
+    using System.Collections.Generic;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Text;
+    using System.Threading.Tasks;
+    using WebApi.EF.Models;
+    using WebApi.Models;
+
+    /// <inheritdoc />
+    /// <summary>
+    /// The token controller.
+    /// </summary>
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class TokenController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
-        private readonly IEmailService _emailService;
+        /// <summary>
+        /// The configuration.
+        /// </summary>
+        private readonly IConfiguration configuration;
 
-        public TokenController(IConfiguration config, IEmailService emailService)
+        /// <summary>
+        /// The Context.
+        /// </summary>
+        private readonly EFContext context;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TokenController"/> class.
+        /// </summary>
+        /// <param name="config">
+        /// The config.
+        /// </param>
+        /// <param name="context">
+        /// The context.
+        /// </param>
+        public TokenController(IConfiguration config, EFContext context)
         {
-            _configuration = config;
-            _emailService = emailService;
+            configuration = config;
+            this.context = context;
         }
 
-        [HttpGet()]
-        public IActionResult CreateToken(string username = "admin", string password = "admin")
+        /// <summary>
+        /// The create token.
+        /// </summary>
+        /// <param name="info">
+        /// The info.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IActionResult"/>.
+        /// </returns>
+        [HttpPost]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> CreateToken(UserInfo info)
         {
-            IActionResult response = Unauthorized();
-            if (username.Equals(password))
+            if (!ModelState.IsValid)
             {
-                var token = JwtTokenBuilder();
-                response = Ok(new { access_token = token });
+                return NoContent();
             }
+
+            IActionResult response = Unauthorized();
+
+            var identity = await GetUserIdentity(info);
+
+            if (identity == null)
+            {
+                return response;
+            }
+
+            var token = await JwtTokenBuilderAsync(identity.Claims);
+            response = Ok(new { access_token = token });
             return response;
         }
 
-        //[HttpGet("{email}")]
-        //public async Task<IActionResult> SendEmail(string email)
-        //{
-        //    //var list = new List<string>() { "stepmolostov@gmail.com", "dartweder7@gmail.com", "krumih@mail.ru", "Krentorr@gmail.com", "ibigcall@gmail.com", "mkruglov239@gmail.com", "vilkovaliza@gmail.com", "gteliaeva@gmail.com", "Bigcall9287006@gmail.com", govjadkoilja@yandex.ru };
-
-        //    //foreach (var em in list)
-        //    //{
-        //    //    await _emailService.SendAsync(em, "Возникли проблемы с вашим заказом!", @"Необходимо подтвердить корректность выполнения на сайте https://trello.com/b/keauAEbE/%D0%B7%D0%B0%D0%B4%D0%B0%D1%87%D0%B8");
-        //    //}
-
-        //    //return Ok();
-        //}
-
-        private string JwtTokenBuilder()
+        /// <summary>
+        /// The get user identity.
+        /// </summary>
+        /// <param name="info">
+        /// The info.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        private async Task<ClaimsIdentity> GetUserIdentity(UserInfo info)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:key"]));
-            var credantials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(issuer: _configuration["JWT:issuer"], audience: _configuration["JWT:audience"], signingCredentials: credantials, expires: DateTime.Now.AddDays(3));
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var user = await (from u in context.Users
+                              where string.Equals(u.INN, info.Inn, StringComparison.OrdinalIgnoreCase) && string.Equals(
+                                        u.Login,
+                                        info.Login,
+                                        StringComparison.OrdinalIgnoreCase)
+                              select u).FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            var claims = new List<Claim> { new Claim("Login", user.Login), new Claim("Inn", user.INN) };
+
+            var claimsIdentity = new ClaimsIdentity(
+                claims,
+                "JWT",
+                ClaimsIdentity.DefaultNameClaimType,
+                ClaimsIdentity.DefaultRoleClaimType);
+            return claimsIdentity;
+        }
+
+        /// /// <summary>
+        /// The jwt token builder.
+        /// </summary>
+        /// <param name="claims">
+        /// The claims.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        private Task<string> JwtTokenBuilderAsync(IEnumerable<Claim> claims)
+        {
+            return Task.Run(
+                () =>
+                    {
+                        var now = DateTime.UtcNow;
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:key"]));
+                        var credantials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                        var token = new JwtSecurityToken(
+                            claims: claims,
+                            issuer: configuration["JWT:issuer"],
+                            audience: configuration["JWT:audience"],
+                            signingCredentials: credantials,
+                            notBefore: now,
+                            expires: now.AddMonths(3));
+                        return new JwtSecurityTokenHandler().WriteToken(token);
+                    });
         }
     }
 }

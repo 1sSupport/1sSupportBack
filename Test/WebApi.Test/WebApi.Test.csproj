@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Source\WebApi.EF\WebApi.EF.csproj" />
-    <ProjectReference Include="..\..\Source\WebApi.Tagirator\WebApi.Tagirator.csproj" />
+    <ProjectReference Include="..\..\Source\WebApi.Tools\WebApi.Tools.csproj" />
     <ProjectReference Include="..\..\Source\WebApi\WebApi.csproj" />
   </ItemGroup>
 

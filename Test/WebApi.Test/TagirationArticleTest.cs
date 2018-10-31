@@ -1,40 +1,101 @@
-﻿using System;
-using System.Linq;
-using WebApi.EF.Models;
-using WebApi.Tagirator;
-using Xunit;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="TagirationArticleTest.cs" company="">
+//
+// </copyright>
+// <summary>
+//   The tagiration article test.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace WebApi.Test
 {
+    using System;
+    using System.Linq;
+
+    using WebApi.EF.Models;
+    using WebApi.Tools.Tagirator;
+
+    using Xunit;
+
+    /// <summary>
+    /// The tagiration article test.
+    /// </summary>
     public class TagirationArticleTest : IDisposable
     {
-        [Fact]
-        public void Can_Initial()
+        /// <summary>
+        /// The k.
+        /// </summary>
+        private readonly string k;
+
+        private readonly string nullText;
+
+        /// <summary>
+        /// The text.
+        /// </summary>
+        private readonly string text;
+
+        /// <summary>
+        /// The title.
+        /// </summary>
+        private readonly string title;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TagirationArticleTest"/> class.
+        /// </summary>
+        public TagirationArticleTest()
         {
-            var article = new Article(title, text);
+            title = "dad";
+            text = "Жопа я я";
+            nullText = string.Empty;
+            k = "я";
+        }
 
-            TagirationArticle Article = new TagirationArticle(article);
+        /// <summary>
+        /// The can_ get_ repeat_ freq.
+        /// </summary>
+        [Fact]
+        public void CanGetRepeatFreq()
+        {
+            Article Article = new Article(title, text);
 
-            Assert.NotNull(Article);
+            var test = new TagirationArticle(Article).GetWordFrequancy("я");
 
-            Assert.NotNull(Article.Article);
+            Assert.Equal(2, test);
+        }
 
-            Assert.Equal(Article.Article.Title, title);
-            Assert.Equal(Article.Article.Text, text);
+        /// <summary>
+        /// The can get tags.
+        /// </summary>
+        [Fact]
+        public void CanGetTags()
+        {
+            Article article = new Article(title, text);
+
+            var test = new TagirationArticle(article).GetTagsAndWeight();
+
+            Assert.NotNull(test);
         }
 
         [Fact]
-        public void Not_Empty_Words()
+        public void CanInitial()
         {
             var article = new Article(title, text);
 
-            var tagirationArticle = new TagirationArticle(article);
+            TagirationArticle tagirationArticle = new TagirationArticle(article);
 
-            Assert.NotEmpty(tagirationArticle.CleanWords);
+            Assert.NotNull(tagirationArticle);
+
+            Assert.NotNull(tagirationArticle.Article);
+
+            Assert.Equal(tagirationArticle.Article.Title, title);
+            Assert.Equal(tagirationArticle.Article.Text, text);
         }
 
+        /// <summary>
+        /// The can set current rate.
+        /// </summary>
         [Fact]
-        public void Can_Set_Current_Rate()
+        public void CanSetCurrentRate()
         {
             Article article = new Article(title, text);
 
@@ -43,12 +104,14 @@ namespace WebApi.Test
 
             var tag = tagirationArticle.GetTagsAndWeight();
             var key = tag.FirstOrDefault();
-
             Assert.Equal("я", key.Key);
         }
 
+        /// <summary>
+        /// The can set current rate with more text.
+        /// </summary>
         [Fact]
-        public void Can_Set_Current_Rate_With_More_Text()
+        public void CanSetCurrentRateWithMoreText()
         {
             Article article = new Article(title, text + "я я жопа да ло ло ло ло ло");
 
@@ -62,41 +125,25 @@ namespace WebApi.Test
             Assert.Equal("ло", key.Key);
         }
 
-        [Fact]
-        public void Can_Get_Tags()
-        {
-            Article Article = new Article(title, text);
-
-            var test = new TagirationArticle(Article).GetTagsAndWeight();
-
-            Assert.NotNull(test);
-        }
-
-        [Fact]
-        public void Can_Get_Repeat_Freq()
-        {
-            Article Article = new Article(title, text);
-
-            var test = new TagirationArticle(Article).GetWordFrequancy("я");
-
-            Assert.Equal(2, test);
-        }
-
+        /// <inheritdoc />
+        /// <summary>
+        /// The dispose.
+        /// </summary>
         public void Dispose()
         {
         }
 
-        private readonly string text;
-        private readonly string title;
-        private readonly string NullText;
-        private readonly string k;
-
-        public TagirationArticleTest()
+        /// <summary>
+        /// The not empty words.
+        /// </summary>
+        [Fact]
+        public void NotEmptyWords()
         {
-            title = "dad";
-            text = "Жопа я я";
-            NullText = "";
-            k = "я";
+            var article = new Article(title, text);
+
+            var tagirationArticle = new TagirationArticle(article);
+
+            Assert.NotEmpty(tagirationArticle.CleanWords);
         }
     }
 }

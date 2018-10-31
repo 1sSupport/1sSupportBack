@@ -83,11 +83,7 @@ namespace WebApi.EF.Models
       [Required]
       public string Text { get; set; }
 
-      /// <summary>
-      /// Required
-      /// </summary>
-      [Required]
-      public DateTime EditDate { get; protected set; }
+      public DateTime? EditDate { get; set; }
 
       public double? Weight { get; set; }
 

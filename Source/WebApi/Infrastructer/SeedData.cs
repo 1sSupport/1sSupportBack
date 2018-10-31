@@ -1,30 +1,24 @@
-﻿namespace WebApi.Test
+﻿namespace WebApi.Infrastructer
 {
-    using Microsoft.EntityFrameworkCore;
-    using System;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.Extensions.DependencyInjection;
     using System.Linq;
     using WebApi.EF.Models;
-    using WebApi.Tools.Finder;
     using WebApi.Tools.Tagirator;
-    using Xunit;
 
-    /// <inheritdoc />
-    /// <summary>
-    /// The tagirator test.
-    /// </summary>
-    public class TagiratorTest : IDisposable
+    public static class SeedData
     {
-        /// <summary>
-        /// The context.
-        /// </summary>
-        private readonly EFContext context;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TagiratorTest"/> class.
-        /// </summary>
-        public TagiratorTest()
+        public static void EnsurePopulated(IApplicationBuilder app)
         {
-            context = new EFContext(new DbContextOptionsBuilder<EFContext>().UseInMemoryDatabase("Test_BD").Options);
+            var context = app.ApplicationServices.GetRequiredService<EFContext>();
+            if (context.Articles.Any())
+            {
+                return;
+            }
+
+            context.Users.Add(new User("test", "test", "000000000000"));
+            context.Users.Add(new User("admin", "admin", "000000000000"));
+
             context.Articles.Add(
                 new Article(
                     "Да да Заглавие",
@@ -67,47 +61,11 @@
                     "Да да Заглавие1",
                     "ывааываукпеукпукфцуц фыавпапкцпцупкцыукуепе фывваолрорлфыварполфывапроауцфакпролнапросывмя олрфвыпарололфвпарлгподукфаагнпшелкфвупапролвам"));
             context.SaveChanges();
-        }
 
-        /// <summary>
-        /// The can get article in query.
-        /// </summary>
-        [Fact]
-        public void CanGetArticleInQuery()
-        {
-            CanInitializeTagirator();
-            var query = new ArticleFinder(context);
-            var articles = query.GetArticlesByQuery("Врата да да я");
-            Assert.NotEmpty(articles);
-        }
-
-        /// <summary>
-        /// The can initialize tagirator.
-        /// </summary>
-        [Fact]
-        public void CanInitializeTagirator()
-        {
             var tagirator = new Tagirator(context);
             tagirator.SetTagsInArticle();
+
             context.SaveChanges();
-
-            tagirator = new Tagirator(context);
-            tagirator.SetTagsInArticle();
-            context.SaveChanges();
-
-            Assert.NotEmpty(context.Articles);
-            Assert.NotNull(context.Articles.FirstOrDefault());
-            Assert.NotEmpty(context.Tags);
-            Assert.NotEmpty(context.ArticleTags);
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// The dispose.
-        /// </summary>
-        public void Dispose()
-        {
-            context.Dispose();
         }
     }
 }

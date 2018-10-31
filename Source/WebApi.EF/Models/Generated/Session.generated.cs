@@ -38,9 +38,11 @@ namespace WebApi.EF.Models
       /// <summary>
       /// Public constructor with required data
       /// </summary>
+      /// <param name="_opentime"></param>
       /// <param name="_user"></param>
-      public Session(WebApi.EF.Models.User _user)
+      public Session(DateTime _opentime, WebApi.EF.Models.User _user)
       {
+         OpenTime = _opentime;
          if (_user == null) throw new ArgumentNullException(nameof(_user));
          User = _user;
 
@@ -51,10 +53,11 @@ namespace WebApi.EF.Models
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
+      /// <param name="_opentime"></param>
       /// <param name="_user"></param>
-      public static Session Create(WebApi.EF.Models.User _user)
+      public static Session Create(DateTime _opentime, WebApi.EF.Models.User _user)
       {
-         return new Session(_user);
+         return new Session(_opentime, _user);
       }
 
       // Persistent properties
@@ -70,9 +73,9 @@ namespace WebApi.EF.Models
       /// Required
       /// </summary>
       [Required]
-      public DateTime OpenTime { get; protected set; }
+      public DateTime OpenTime { get; set; }
 
-      public DateTime? CloseTime { get; set; }
+      public DateTime? CloseTime { get; protected set; }
 
       // Persistent navigation properties
 
