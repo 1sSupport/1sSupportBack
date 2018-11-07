@@ -10,7 +10,7 @@ namespace WebApi.Tools.UserValidationChecker
     {
         private readonly string _token;
         private readonly string _server;
-        private const string ValidCode = "107";
+        private const string ValidCode = "1";
 
         public UserValidationChecker(string login, string password, string server)
         {
