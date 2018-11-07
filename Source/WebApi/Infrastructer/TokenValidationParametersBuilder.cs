@@ -9,27 +9,28 @@
 
 namespace WebApi.Infrastructer
 {
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.IdentityModel.Tokens;
     using System.Text;
 
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.IdentityModel.Tokens;
+
     /// <summary>
-    /// The token validation parameters builder.
+    ///     The token validation parameters builder.
     /// </summary>
     public static class TokenValidationParametersBuilder
     {
         /// <summary>
-        /// The get token validation parameters.
+        ///     The get token validation parameters.
         /// </summary>
         /// <param name="configuration">
-        /// The configuration.
+        ///     The configuration.
         /// </param>
         /// <returns>
-        /// The <see cref="TokenValidationParameters"/>.
+        ///     The <see cref="TokenValidationParameters" />.
         /// </returns>
         public static TokenValidationParameters GetTokenValidationParameters(IConfiguration configuration)
         {
-            return new TokenValidationParameters()
+            return new TokenValidationParameters
                        {
                            ValidateIssuer = true,
                            ValidateAudience = true,

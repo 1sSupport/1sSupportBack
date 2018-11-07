@@ -9,15 +9,18 @@
 
 namespace WebApi.Controllers
 {
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+
     using WebApi.EF.Models;
     using WebApi.Models;
 
+    /// <inheritdoc />
     /// <summary>
     /// The session controller.
     /// </summary>
@@ -55,15 +58,15 @@ namespace WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> EndSession([FromBody] int id)
         {
-            var user = await GetUserFromBd();
+            var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
 
             var session =
-                await (from s in context.Sessions where s.Id == id && s.User.Login.Equals(user.Login) select s)
-                    .FirstOrDefaultAsync();
+                await (from s in this.context.Sessions where s.Id == id && s.User.Login.Equals(user.Login) select s)
+                    .FirstOrDefaultAsync().ConfigureAwait(false);
 
-            if (session == null)
+            if (session == null || session.CloseTime != null)
             {
-                return BadRequest();
+                return BadRequest("Сессия была не создана либо уже закрыта");
             }
 
             session.EndSession();
@@ -86,17 +89,18 @@ namespace WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> SetMark([FromBody] MarkArticle markedArticle)
         {
-            var user = await GetUserFromBd();
-            var openArticle = await (from s in context.Sessions
+            var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
+
+            var openArticle = await (from s in this.context.Sessions
                                      where s.Id == markedArticle.SessionId && s.User.Id == user.Id
                                      from sq in s.SearchingQuery
                                      from oa in sq.OpenedArticle
                                      where oa.Article.Id == markedArticle.ArticleId
-                                     select oa).FirstOrDefaultAsync();
+                                     select oa).FirstOrDefaultAsync().ConfigureAwait(false);
 
             if (openArticle == null)
             {
-                return NotFound();
+                return NotFound("Не было найденно открытой статьи и таким ID");
             }
 
             openArticle.Mark = markedArticle.Mark;
@@ -117,7 +121,7 @@ namespace WebApi.Controllers
         {
             var date = DateTime.UtcNow;
 
-            var user = await GetUserFromBd();
+            var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
 
             var session = new Session(date, user);
 
@@ -127,16 +131,17 @@ namespace WebApi.Controllers
 
             return Ok(new { SessionId = session.Id, User = user.Login });
         }
-
+        
         /// <summary>
-        /// The get user from bd.
+        /// The get user from http context.
         /// </summary>
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        private Task<User> GetUserFromBd()
+        private Task<User> GetUserFromHttpContext()
         {
             var userInfo = new UserInfo() { Inn = User.FindFirst("Inn").Value, Login = User.FindFirst("Login").Value };
+
             return (from u in context.Users where u.INN == userInfo.Inn && u.Login == userInfo.Login select u)
                 .FirstOrDefaultAsync();
         }

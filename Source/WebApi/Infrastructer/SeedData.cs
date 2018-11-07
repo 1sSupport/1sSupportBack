@@ -1,16 +1,36 @@
-﻿namespace WebApi.Infrastructer
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="SeedData.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   Defines the SeedData type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+
+
+namespace WebApi.Infrastructer
 {
+    using System.Linq;
+
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.DependencyInjection;
-    using System.Linq;
+
     using WebApi.EF.Models;
     using WebApi.Tools.Tagirator;
 
     public static class SeedData
     {
+        /// <summary>
+        /// The ensure populated.
+        /// </summary>
+        /// <param name="app">
+        /// The app.
+        /// </param>
         public static void EnsurePopulated(IApplicationBuilder app)
         {
             var context = app.ApplicationServices.GetRequiredService<EFContext>();
+
             if (context.Articles.Any())
             {
                 return;

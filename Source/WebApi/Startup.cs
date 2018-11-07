@@ -9,6 +9,10 @@
 
 namespace WebApi
 {
+    using System;
+    using System.Text.Encodings.Web;
+    using System.Text.Unicode;
+
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -18,59 +22,58 @@ namespace WebApi
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.WebEncoders;
+
     using NETCore.MailKit.Extensions;
     using NETCore.MailKit.Infrastructure.Internal;
-    using System;
-    using System.Text.Encodings.Web;
-    using System.Text.Unicode;
+
     using WebApi.EF.Models;
     using WebApi.Infrastructer;
 
     /// <summary>
-    /// The startup.
+    ///     The startup.
     /// </summary>
     public class Startup
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Startup"/> class.
+        ///     Initializes a new instance of the <see cref="Startup" /> class.
         /// </summary>
         /// <param name="configuration">
-        /// The configuration.
+        ///     The configuration.
         /// </param>
         /// <param name="environment">
-        /// The environment.
+        ///     The environment.
         /// </param>
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
-            Configuration = configuration;
-            Environment = environment;
+            this.Configuration = configuration;
+            this.Environment = environment;
         }
 
         /// <summary>
-        /// Gets the configuration.
+        ///     Gets the configuration.
         /// </summary>
         public IConfiguration Configuration { get; }
 
         /// <summary>
-        /// Gets the environment.
+        ///     Gets the environment.
         /// </summary>
         public IHostingEnvironment Environment { get; }
 
         /// <summary>
-        /// The configure.
-        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        ///     The configure.
+        ///     This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         /// </summary>
         /// <param name="app">
-        /// The app.
+        ///     The app.
         /// </param>
         /// <param name="env">
-        /// The env.
+        ///     The env.
         /// </param>
         /// <param name="loggerFactory">
-        /// The logger factory.
+        ///     The logger factory.
         /// </param>
         /// <param name="serviceProvider">
-        /// The service provider.
+        ///     The service provider.
         /// </param>
         public void Configure(
             IApplicationBuilder app,
@@ -83,61 +86,56 @@ namespace WebApi
             app.UseAuthentication();
             app.UseMvc();
             app.UseRequestLocalization();
-            if (Environment.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
+            if (this.Environment.IsDevelopment()) app.UseDeveloperExceptionPage();
+            else app.UseHsts();
 
             SeedData.EnsurePopulated(app);
         }
 
         /// <summary>
-        /// The configure services.
-        /// This method gets called by the runtime. Use this method to add services to the container.
+        ///     The configure services.
+        ///     This method gets called by the runtime. Use this method to add services to the container.
         /// </summary>
         /// <param name="services">
-        /// The services.
+        ///     The services.
         /// </param>
         /// <returns>
-        /// The <see cref="IServiceProvider"/>.
+        ///     The <see cref="IServiceProvider" />.
         /// </returns>
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            var tokenParams = TokenValidationParametersBuilder.GetTokenValidationParameters(this.Configuration);
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
-                config =>
-                    {
-                        config.TokenValidationParameters =
-                            TokenValidationParametersBuilder.GetTokenValidationParameters(Configuration);
-                    });
+                config => { config.TokenValidationParameters = tokenParams; });
 
             services.AddDbContext<EFContext>(options => { options.UseInMemoryDatabase("MyDatabase"); });
+
+            services.AddSingleton(tokenParams);
+
             services.AddCors();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
 
             services.Configure<WebEncoderOptions>(
                 options => options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All));
 
-            Console.WriteLine($"{Configuration["Email:Server"]}:{Configuration["Email:Port"]}");
+            Console.WriteLine($"{this.Configuration["Email:Server"]}:{this.Configuration["Email:Port"]}");
 
             services.AddMailKit(
                 optionBuilder =>
                     {
                         optionBuilder.UseMailKit(
-                            new MailKitOptions()
+                            new MailKitOptions
                                 {
                                     // get options from sercets.json
-                                    Server = Configuration["Email:Server"],
-                                    Port = Convert.ToInt32(Configuration["Email:Port"]),
-                                    SenderName = Configuration["Email:SenderName"],
-                                    SenderEmail = Configuration["Email:SenderEmail"],
+                                    Server = this.Configuration["Email:Server"],
+                                    Port = Convert.ToInt32(this.Configuration["Email:Port"]),
+                                    SenderName = this.Configuration["Email:SenderName"],
+                                    SenderEmail = this.Configuration["Email:SenderEmail"],
 
                                     // can be optional with no authentication
-                                    Account = Configuration["Email:Account"],
-                                    Password = Configuration["Email:Password"],
+                                    Account = this.Configuration["Email:Account"],
+                                    Password = this.Configuration["Email:Password"],
 
                                     // enable ssl or tls
                                     Security = true

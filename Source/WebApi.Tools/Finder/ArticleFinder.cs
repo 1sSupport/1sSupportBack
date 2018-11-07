@@ -62,6 +62,7 @@ namespace WebApi.Tools.Finder
             {
                 return null;
             }
+
             {
                 foreach (var tag in tags)
                 {
@@ -70,10 +71,10 @@ namespace WebApi.Tools.Finder
 
                     Parallel.ForEach(articles, article => { articleswithcoef.Add(GetWeightedArticle(article, tags)); });
 
-                    foreach (var article in articles)
-                    {
-                        articleswithcoef.Add(GetWeightedArticle(article, tags));
-                    }
+                    //foreach (var article in articles)
+                    //{
+                    //    articleswithcoef.Add(GetWeightedArticle(article, tags));
+                    //}
                 }
             }
 
