@@ -91,10 +91,6 @@
             tagirator.SetTagsInArticle();
             context.SaveChanges();
 
-            tagirator = new Tagirator(context);
-            tagirator.SetTagsInArticle();
-            context.SaveChanges();
-
             Assert.NotEmpty(context.Articles);
             Assert.NotNull(context.Articles.FirstOrDefault());
             Assert.NotEmpty(context.Tags);

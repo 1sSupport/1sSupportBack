@@ -158,7 +158,19 @@
                 foreach (var pair in tagsAndRate)
                 {
                     var tag = (from t in context.Tags where t.Value == pair.Key select t).FirstOrDefault();
-                    SetTagInArticle(tagirationArticle.Article, tag ?? new Tag(pair.Key), pair.Value);
+                    if (tag == null)
+                    {
+                        
+
+                        SetTagInArticle(tagirationArticle.Article,  new Tag(pair.Key), pair.Value);
+
+                        this.context.SaveChanges();
+                    }
+                    else
+                    {
+                        SetTagInArticle(tagirationArticle.Article, tag, pair.Value);
+                    }
+                    
                 }
             }
         }
