@@ -26,6 +26,7 @@
         /// </summary>
         private readonly ICollection<TagirationArticle> tagirationArticles = new List<TagirationArticle>();
 
+        private readonly IDictionary<string, Tag> localTagsDictionary = new Dictionary<string, Tag>();
         /// <summary>
         /// Initializes a new instance of the <see cref="Tagirator"/> class.
         /// </summary>
@@ -156,20 +157,13 @@
                 var tagsAndRate = tagirationArticle.GetTagsAndWeight().Take(10);
 
                 foreach (var pair in tagsAndRate)
-                {
-                    var tag = (from t in context.Tags where t.Value == pair.Key select t).FirstOrDefault();
-                    if (tag == null)
+                {             
+                    if (!localTagsDictionary.ContainsKey(pair.Key))
                     {
-                        
-
-                        SetTagInArticle(tagirationArticle.Article,  new Tag(pair.Key), pair.Value);
-
-                        this.context.SaveChanges();
+                        localTagsDictionary.Add(pair.Key,new Tag(pair.Key));            
                     }
-                    else
-                    {
-                        SetTagInArticle(tagirationArticle.Article, tag, pair.Value);
-                    }
+                       SetTagInArticle(tagirationArticle.Article, localTagsDictionary[pair.Key], pair.Value);
+                    
                     
                 }
             }
