@@ -40,10 +40,10 @@ namespace WebApi.Infrastructer
             var path = @"D:\Загрузки\dumpsNewFormat";
             var serializator = new ArticleDeserializer(path, context) { ThreadCount = 16 };
 
-            await serializator.DeserializeAsync().ConfigureAwait(false);
+            await serializator.DeserializeAsync().ConfigureAwait(true);
 
             context.Users.Add(new User("test", "test", "000000000000"));
-            context.Users.Add(new User("admin", "admin", "000000000000"));
+            context.Users.Add(new User("admin", "admin", "999999999999"));
 
 //            context.Articles.Add(
 //                new Article(

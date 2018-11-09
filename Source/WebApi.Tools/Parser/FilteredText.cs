@@ -24,6 +24,9 @@ namespace WebApi.Tools.Parser
         /// <param name="text">
         /// The text.
         /// </param>
+        /// <param name="useEnglish">
+        /// The use English.
+        /// </param>
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
@@ -41,6 +44,7 @@ namespace WebApi.Tools.Parser
 
             // remove endings of words
             uniqueValues.RemoveAll((s) => s.Equals(string.Empty));
+            uniqueValues.RemoveAll((s) => s.Length <= 2);
 
             return uniqueValues;
         }

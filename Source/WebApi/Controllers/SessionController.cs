@@ -22,7 +22,7 @@ namespace WebApi.Controllers
 
     /// <inheritdoc />
     /// <summary>
-    /// The session controller.
+    ///     The session controller.
     /// </summary>
     [Route("api/[controller]/[action]")]
     [ApiController]
@@ -30,15 +30,15 @@ namespace WebApi.Controllers
     public class SessionController : ControllerBase
     {
         /// <summary>
-        /// The context.
+        ///     The context.
         /// </summary>
         private readonly EFContext context;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SessionController"/> class.
+        ///     Initializes a new instance of the <see cref="SessionController" /> class.
         /// </summary>
         /// <param name="context">
-        /// The context.
+        ///     The context.
         /// </param>
         public SessionController(EFContext context)
         {
@@ -46,13 +46,13 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// The end session.
+        ///     The end session.
         /// </summary>
         /// <param name="id">
-        /// The id.
+        ///     The id.
         /// </param>
         /// <returns>
-        /// The <see cref="Task"/>.
+        ///     The <see cref="Task" />.
         /// </returns>
         [HttpPost]
         [ProducesResponseType(404)]
@@ -65,25 +65,23 @@ namespace WebApi.Controllers
                     .FirstOrDefaultAsync().ConfigureAwait(false);
 
             if (session == null || session.CloseTime != null)
-            {
-                return BadRequest("Сессия была не создана либо уже закрыта");
-            }
+                return this.BadRequest(new { message = "Сессия была не создана либо уже закрыта" });
 
             session.EndSession();
 
-            context.SaveChangesAsync();
+            await this.context.SaveChangesAsync().ConfigureAwait(false);
 
-            return Ok(id);
+            return this.Ok(id);
         }
 
         /// <summary>
-        /// The set mark.
+        ///     The set mark.
         /// </summary>
         /// <param name="markedArticle">
-        /// The marked article.
+        ///     The marked article.
         /// </param>
         /// <returns>
-        /// The <see cref="Task"/>.
+        ///     The <see cref="Task" />.
         /// </returns>
         [HttpPost]
         [ProducesResponseType(404)]
@@ -99,21 +97,19 @@ namespace WebApi.Controllers
                                      select oa).FirstOrDefaultAsync().ConfigureAwait(false);
 
             if (openArticle == null)
-            {
-                return NotFound("Не было найденно открытой статьи и таким ID");
-            }
+                return this.NotFound(new { message = "Не было найденно открытой статьи и таким ID" });
 
             openArticle.Mark = markedArticle.Mark;
 
-            context.SaveChangesAsync();
-            return Ok();
+            await this.context.SaveChangesAsync().ConfigureAwait(false);
+            return this.Ok();
         }
 
         /// <summary>
-        /// The start session.
+        ///     The start session.
         /// </summary>
         /// <returns>
-        /// The <see cref="Task"/>.
+        ///     The <see cref="Task" />.
         /// </returns>
         [HttpPost]
         [ProducesResponseType(404)]
@@ -125,24 +121,27 @@ namespace WebApi.Controllers
 
             var session = new Session(date, user);
 
-            context.Sessions.Add(session);
+            this.context.Sessions.Add(session);
 
-            context.SaveChangesAsync();
+            await this.context.SaveChangesAsync().ConfigureAwait(false);
 
-            return Ok(new { SessionId = session.Id, User = user.Login });
+            return this.Ok(new { SessionId = session.Id, User = user.Login });
         }
-        
+
         /// <summary>
-        /// The get user from http context.
+        ///     The get user from http context.
         /// </summary>
         /// <returns>
-        /// The <see cref="Task"/>.
+        ///     The <see cref="Task" />.
         /// </returns>
         private Task<User> GetUserFromHttpContext()
         {
-            var userInfo = new UserInfo() { Inn = User.FindFirst("Inn").Value, Login = User.FindFirst("Login").Value };
+            var userInfo = new UserInfo
+                               {
+                                   Inn = this.User.FindFirst("Inn").Value, Login = this.User.FindFirst("Login").Value
+                               };
 
-            return (from u in context.Users where u.INN == userInfo.Inn && u.Login == userInfo.Login select u)
+            return (from u in this.context.Users where u.INN == userInfo.Inn || u.Login == userInfo.Login select u)
                 .FirstOrDefaultAsync();
         }
     }
