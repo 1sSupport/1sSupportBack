@@ -58,9 +58,13 @@ namespace WebApi.Test
         {
             Article Article = new Article(title, text);
 
-            var test = new TagirationArticle(Article).GetWordFrequancy("я");
+            var test = new TagirationArticle(Article);
 
-            Assert.Equal(2, test);
+            var testValue1 = test.GetWordFrequancy("жоп");
+            var testValue2 = test.GetWordFrequancy("я");
+
+            Assert.Equal(1, testValue1);
+            Assert.Equal(0, testValue2);
         }
 
         /// <summary>
@@ -100,11 +104,11 @@ namespace WebApi.Test
             Article article = new Article(title, text);
 
             var tagirationArticle = new TagirationArticle(article);
-            tagirationArticle.SetWordRate("я", 1);
+            tagirationArticle.SetWordRate("жоп", 1);
 
             var tag = tagirationArticle.GetTagsAndWeight();
             var key = tag.FirstOrDefault();
-            Assert.Equal("я", key.Key);
+            Assert.Equal("жоп", key.Key);
         }
 
         /// <summary>
@@ -117,12 +121,12 @@ namespace WebApi.Test
 
             var tagirationArticle = new TagirationArticle(article);
 
-            tagirationArticle.SetWordRate("ло", 1);
+            tagirationArticle.SetWordRate("жоп", 1);
 
             var tag = tagirationArticle.GetTagsAndWeight();
             var key = tag.FirstOrDefault();
 
-            Assert.Equal("ло", key.Key);
+            Assert.Equal("жоп", key.Key);
         }
 
         /// <inheritdoc />
