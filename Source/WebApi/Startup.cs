@@ -88,7 +88,6 @@ namespace WebApi
             app.UseRequestLocalization();
             if (this.Environment.IsDevelopment()) app.UseDeveloperExceptionPage();
             else app.UseHsts();
-
             SeedData.EnsurePopulated(app);
         }
 

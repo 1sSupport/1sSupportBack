@@ -29,6 +29,11 @@ namespace WebApi.Tools.Deserializer
         private readonly EFContext context;
 
         /// <summary>
+        /// The thread count.
+        /// </summary>
+        private int threadCount = 16;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ArticleDeserializer"/> class.
         /// </summary>
         /// <param name="pathToFolderWithPath">
@@ -44,10 +49,13 @@ namespace WebApi.Tools.Deserializer
         }
 
         /// <summary>
-        /// Gets or sets the thread count.
+        /// Gets or sets the thread count. Default 16 threads use. Min value is 1.
         /// </summary>
-        public int ThreadCount { get; set; } = 16;
-
+        public int ThreadCount
+        {
+            get => this.threadCount;
+            set => this.threadCount = value <= 0 ? 1 : value;
+        }
 
         /// <summary>
         /// Gets the directory.

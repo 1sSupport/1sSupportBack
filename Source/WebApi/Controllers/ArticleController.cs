@@ -68,13 +68,13 @@ namespace WebApi.Controllers
 
            if (article == null || queryDB == null)
             {
-                return NotFound(id);
+                return NotFound(new { message = $"Не найденно {id} || {query}" });
             }
 
             var openedArticle = new OpenedArticle(DateTime.UtcNow, article, queryDB);
 
             context.OpenedArticles.Add(openedArticle);
-            context.SaveChangesAsync();
+            await this.context.SaveChangesAsync().ConfigureAwait(false);
 
             return Ok(new { article.Id, article.Title, article.Text });
         }
@@ -104,14 +104,14 @@ namespace WebApi.Controllers
 
             if (articles == null || !articles.Any())
             {
-                return NotFound("Cтатей по такому запросу не было обнаруженно");
+                return NotFound(new { message = "Cтатей по такому запросу не было обнаруженно" });
             }
 
             var session = await (from s in this.context.Sessions where s.Id == sessionId select s).FirstOrDefaultAsync().ConfigureAwait(false);
 
             context.SearchingQueries.Add(new SearchingQuery(query, session));
 
-            context.SaveChangesAsync();
+            await this.context.SaveChangesAsync().ConfigureAwait(false);
 
             return Ok((from a in articles select new { a.Id, a.Title, Text = a.Text.Substring(0, 75) }).ToList());
         }
