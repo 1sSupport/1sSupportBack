@@ -202,7 +202,7 @@ namespace WebApi.Test
         {
             var provider = new Provider(providerName, dateProviderEnd);
             var user = new User(userLogin, userEmail, userInn) { Provider = provider };
-            var session = new Session(DateTime.Now,user);
+            var session = new Session(DateTime.Now, user);
 
             var query = new SearchingQuery(queryText, session);
 
@@ -220,7 +220,7 @@ namespace WebApi.Test
             var provider = new Provider(providerName, dateProviderEnd);
             var user = new User(userLogin, userEmail, userInn) { Provider = provider };
 
-            var session = new Session(DateTime.Now,user);
+            var session = new Session(DateTime.Now, user);
 
             Assert.NotNull(session);
             Assert.Equal(session.User, user);

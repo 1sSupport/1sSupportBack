@@ -62,19 +62,19 @@ namespace WebApi.Controllers
             [FromQuery] [Range(1, int.MaxValue)] int id,
             [FromQuery] string query)
         {
-            var article = await (from a in context.Articles where a.Id == id select a).FirstOrDefaultAsync();
+            var article = await (from a in this.context.Articles where a.Id == id select a).FirstOrDefaultAsync().ConfigureAwait(false);
             var queryDB =
-                await (from q in context.SearchingQueries where q.Text == query select q).FirstOrDefaultAsync();
+                await (from q in this.context.SearchingQueries where q.Text == query select q).FirstOrDefaultAsync().ConfigureAwait(false);
 
-            if (article == null || queryDB == null)
+           if (article == null || queryDB == null)
             {
-                return NotFound(id);
+                return NotFound(new { message = $"Не найденно {id} || {query}" });
             }
 
             var openedArticle = new OpenedArticle(DateTime.UtcNow, article, queryDB);
 
             context.OpenedArticles.Add(openedArticle);
-            context.SaveChangesAsync();
+            await this.context.SaveChangesAsync().ConfigureAwait(false);
 
             return Ok(new { article.Id, article.Title, article.Text });
         }
@@ -98,20 +98,20 @@ namespace WebApi.Controllers
             var articles = await Task.Run(
                                () =>
                                    {
-                                       var finder = new ArticleFinder(context);
+                                       var finder = new ArticleFinder(this.context);
                                        return finder.GetArticlesByQuery(query);
-                                   });
+                                   }).ConfigureAwait(false);
 
             if (articles == null || !articles.Any())
             {
-                return NotFound();
+                return NotFound(new { message = "Cтатей по такому запросу не было обнаруженно" });
             }
 
-            var session = await (from s in context.Sessions where s.Id == sessionId select s).FirstOrDefaultAsync();
+            var session = await (from s in this.context.Sessions where s.Id == sessionId select s).FirstOrDefaultAsync().ConfigureAwait(false);
 
             context.SearchingQueries.Add(new SearchingQuery(query, session));
 
-            context.SaveChangesAsync();
+            await this.context.SaveChangesAsync().ConfigureAwait(false);
 
             return Ok((from a in articles select new { a.Id, a.Title, Text = a.Text.Substring(0, 75) }).ToList());
         }

@@ -13,18 +13,18 @@ namespace WebApi
     using Microsoft.AspNetCore.Hosting;
 
     /// <summary>
-    /// The program.
+    ///     The program.
     /// </summary>
     public class Program
     {
         /// <summary>
-        /// The create web host builder.
+        ///     The create web host builder.
         /// </summary>
         /// <param name="args">
-        /// The args.
+        ///     The args.
         /// </param>
         /// <returns>
-        /// The <see cref="IWebHostBuilder"/>.
+        ///     The <see cref="IWebHostBuilder" />.
         /// </returns>
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
@@ -32,10 +32,10 @@ namespace WebApi
         }
 
         /// <summary>
-        /// The main.
+        ///     The main.
         /// </summary>
         /// <param name="args">
-        /// The args.
+        ///     The args.
         /// </param>
         public static void Main(string[] args)
         {

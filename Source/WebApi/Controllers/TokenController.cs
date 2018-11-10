@@ -11,14 +11,12 @@ namespace WebApi.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Tokens;
     using System;
     using System.Collections.Generic;
     using System.IdentityModel.Tokens.Jwt;
     using System.Linq;
     using System.Security.Claims;
-    using System.Text;
     using System.Threading.Tasks;
     using WebApi.EF.Models;
     using WebApi.Models;
@@ -32,27 +30,27 @@ namespace WebApi.Controllers
     public class TokenController : ControllerBase
     {
         /// <summary>
-        /// The configuration.
-        /// </summary>
-        private readonly IConfiguration configuration;
-
-        /// <summary>
         /// The Context.
         /// </summary>
         private readonly EFContext context;
 
         /// <summary>
+        /// The configuration.
+        /// </summary>
+        private readonly TokenValidationParameters tokenParameters;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TokenController"/> class.
         /// </summary>
-        /// <param name="config">
-        /// The config.
+        /// <param name="tokenParameters">
+        /// The token Parameters.
         /// </param>
         /// <param name="context">
         /// The context.
         /// </param>
-        public TokenController(IConfiguration config, EFContext context)
+        public TokenController(TokenValidationParameters tokenParameters, EFContext context)
         {
-            configuration = config;
+            this.tokenParameters = tokenParameters;
             this.context = context;
         }
 
@@ -76,14 +74,14 @@ namespace WebApi.Controllers
 
             IActionResult response = Unauthorized();
 
-            var identity = await GetUserIdentity(info);
+            var identity = await GetUserIdentity(info).ConfigureAwait(false);
 
             if (identity == null)
             {
                 return response;
             }
 
-            var token = await JwtTokenBuilderAsync(identity.Claims);
+            var token = await this.JwtTokenBuilderAsync(identity.Claims).ConfigureAwait(false);
             response = Ok(new { access_token = token });
             return response;
         }
@@ -99,12 +97,12 @@ namespace WebApi.Controllers
         /// </returns>
         private async Task<ClaimsIdentity> GetUserIdentity(UserInfo info)
         {
-            var user = await (from u in context.Users
+            var user = await (from u in this.context.Users
                               where string.Equals(u.INN, info.Inn, StringComparison.OrdinalIgnoreCase) && string.Equals(
                                         u.Login,
                                         info.Login,
                                         StringComparison.OrdinalIgnoreCase)
-                              select u).FirstOrDefaultAsync();
+                              select u).FirstOrDefaultAsync().ConfigureAwait(false);
 
             if (user == null)
             {
@@ -136,12 +134,12 @@ namespace WebApi.Controllers
                 () =>
                     {
                         var now = DateTime.UtcNow;
-                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:key"]));
+                        var key = this.tokenParameters.IssuerSigningKey;
                         var credantials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                         var token = new JwtSecurityToken(
                             claims: claims,
-                            issuer: configuration["JWT:issuer"],
-                            audience: configuration["JWT:audience"],
+                            issuer: this.tokenParameters.ValidIssuer,
+                            audience: this.tokenParameters.ValidAudience,
                             signingCredentials: credantials,
                             notBefore: now,
                             expires: now.AddMonths(3));
