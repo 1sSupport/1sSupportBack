@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using RestSharp;
+using RestSharp.Deserializers;
+using RestSharp.Serializers;
 
 namespace WebApi.Tools.UserValidationChecker
 {
@@ -16,13 +18,7 @@ namespace WebApi.Tools.UserValidationChecker
         {
             _server = server;
             var tokenToEncode = $"{login}:{password}";
-            byte[] encodingTokenBytes = new byte[tokenToEncode.Length];
-            for (int i = 0; i < tokenToEncode.Length; i++)
-            {
-                encodingTokenBytes[i] = Convert.ToByte(tokenToEncode[i]);
-            }
-
-            _token = Convert.ToBase64String(encodingTokenBytes);
+            _token = Convert.ToBase64String(Encoding.UTF8.GetBytes(tokenToEncode));
         }
 
         public bool GetUserValidation(string login)
@@ -36,9 +32,17 @@ namespace WebApi.Tools.UserValidationChecker
                 $"<Envelope xmlns=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n<Body>\r\n<checkItsByLogin xmlns=\"http://api.repository.onec.ru/v2\">\r\n<loginList xmlns=\"\">\r\n<loginList>{login}</loginList>\r\n</loginList>\r\n</checkItsByLogin>\r\n</Body>\r\n</Envelope>";
             request.AddParameter("text/xml", requestBody, ParameterType.RequestBody);
             IRestResponse response = client.Execute(request);
-
-            var code = GetCodeFromResponse(response.Content);
-            isValid = IsValidFromCode(code);
+            XmlDeserializer serializer = new XmlDeserializer();
+            var responseObject = serializer.Deserialize<Envelope>(response);
+            try
+            {
+                var code = responseObject.Body.CheckItsByLoginResponse.Return.Code;
+                isValid = IsValidFromCode(code);
+            }
+            catch (NullReferenceException)
+            {
+                
+            }
             return isValid;
         }
 
@@ -46,13 +50,6 @@ namespace WebApi.Tools.UserValidationChecker
         {
             if (code.Equals(ValidCode)) return true;
             return false;
-        }
-
-        private string GetCodeFromResponse(string responseContent)
-        {
-            var match = Regex.Match(responseContent, @"<code>(?<code>[0-9]*)</code>");
-            var code = match.Groups["code"].Value;
-            return code;
         }
     }
 }
