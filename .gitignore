@@ -336,3 +336,4 @@ dosbox*
 !dosbox.example.conf
 references/
 references/*
+/Test/WebApi.Test/UserValidationCheck/TestData.txt
