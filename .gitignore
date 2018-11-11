@@ -337,3 +337,4 @@ dosbox*
 references/
 references/*
 /Test/WebApi.Test/UserValidationCheck/TestData.txt
+/Test/WebApi.Test/DecoderTest/links.json
