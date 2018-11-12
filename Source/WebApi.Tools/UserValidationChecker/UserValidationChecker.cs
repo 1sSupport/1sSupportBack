@@ -41,7 +41,7 @@ namespace WebApi.Tools.UserValidationChecker
             }
             catch (NullReferenceException)
             {
-                
+                throw new Exception("Invalid server answer");
             }
             return isValid;
         }
