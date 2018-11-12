@@ -22,12 +22,7 @@ def encode(string: str):
 
     a = []
     for i in range(len(list_encode)):
-        if chr(list_encode[i]).isalpha():
-            a.append(chr(list_encode[i]+3))
-        elif chr(list_encode[i]).isdigit():
-            a.append(chr(list_encode[i] + 17))
-        else:
-            a.append(chr(list_encode[i] + 3))
+        a.append(chr(list_encode[i]+3))
     return ''.join(a)
 
 
@@ -43,13 +38,7 @@ def decode(string: str):
     list_encode = []
 
     for char in string:
-        if char.islower():
-            list_encode.append(chr(ord(char)-3))
-        elif char.isupper():
-            list_encode.append(chr(ord(char)-17))
-        else:
-            list_encode.append(chr(ord(char)-3))
-
+        list_encode.append(chr(ord(char)-3))
     return ''.join(list_encode)
 
 

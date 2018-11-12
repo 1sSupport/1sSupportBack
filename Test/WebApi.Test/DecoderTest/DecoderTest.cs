@@ -40,8 +40,8 @@ namespace WebApi.Test.DecoderTest
             foreach (var tuple in testData)
             {
                 var result = decoder.GetInnLoginFromString(tuple.Item3);
-                Assert.Equal(result.Inn, tuple.Item1);
-                Assert.Equal(result.Login, tuple.Item2);
+                Assert.Equal(tuple.Item1, result.Inn);
+                Assert.Equal(tuple.Item2, result.Login);
             }
         }
 

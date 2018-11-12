@@ -38,22 +38,7 @@ namespace WebApi.Tools.Decoder
             var i = 0;
             foreach (var symbol in encodedString)
             {
-                if (Char.IsLower(symbol))
-                {
-                    decodedCharArray[i] = Convert.ToChar(symbol - 3);
-                }
-                else
-                {
-                    if (Char.IsUpper(symbol))
-                    {
-                        decodedCharArray[i] = Convert.ToChar(symbol - 17);
-                    }
-                    else
-                    {
-                        decodedCharArray[i] = Convert.ToChar(symbol - 3);
-                    }
-                }
-
+                decodedCharArray[i] = Convert.ToChar(symbol - 3);
                 i++;
             }
 
