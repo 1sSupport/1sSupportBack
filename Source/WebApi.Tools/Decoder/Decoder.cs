@@ -1,32 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
-
-namespace WebApi.Tools.Decoder
+﻿namespace WebApi.Tools.Decoder
 {
-    public class Decoder: IDecoder
+    using System;
+    using System.Text.RegularExpressions;
+
+    public class Decoder : IDecoder
     {
         public InnLogin GetInnLoginFromString(string encodeString)
         {
-            var INN = "";
-            var Login = "";
+            var INN = string.Empty;
+            var Login = string.Empty;
             var decodedString = GetDecodedString(encodeString);
             var result = GetInnLogin(decodedString);
-            if(result == null) throw new Exception("Invalid encoding string");
-            return result;
-        }
-
-        private InnLogin GetInnLogin(string decodedString)
-        {
-            InnLogin result = null;
-            var match = Regex.Match(decodedString, @"inn=(?<inn>.*)&login=(?<login>.*)");
-            if (!match.Success) return null;
-            var inn = match.Groups["inn"].Value;
-            var login = match.Groups["login"].Value;
-            if (inn != "" && login != "")
+            if (result == null)
             {
-                result = new InnLogin(inn, login);
+                throw new Exception("Invalid encoding string");
             }
 
             return result;
@@ -43,6 +30,25 @@ namespace WebApi.Tools.Decoder
             }
 
             var result = new string(decodedCharArray);
+            return result;
+        }
+
+        private InnLogin GetInnLogin(string decodedString)
+        {
+            InnLogin result = null;
+            var match = Regex.Match(decodedString, @"inn=(?<inn>.*)&login=(?<login>.*)");
+            if (!match.Success)
+            {
+                return null;
+            }
+
+            var inn = match.Groups["inn"].Value;
+            var login = match.Groups["login"].Value;
+            if (inn != string.Empty && login != string.Empty)
+            {
+                result = new InnLogin(inn, login);
+            }
+
             return result;
         }
     }

@@ -9,10 +9,9 @@
 
 namespace WebApi.Infrastructer
 {
-    using System.Text;
-
     using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Tokens;
+    using System.Text;
 
     /// <summary>
     ///     The token validation parameters builder.

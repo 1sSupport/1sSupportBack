@@ -1,15 +1,20 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using WebApi.Tools.UserValidationChecker;
-using Xunit;
-
-namespace WebApi.Test.UserValidationCheck
+﻿namespace WebApi.Test.UserValidationCheck
 {
+    using System.Collections.Generic;
+    using System.IO;
+
+    using WebApi.Tools.ValidationChecker;
+
+    using Xunit;
+
     public class UserValidationCheckerTest
     {
-        private string _login = "";
-        private string _password = "";
+        private readonly string _login = string.Empty;
+
+        private readonly string _password = string.Empty;
+
         private List<string> _usersList = new List<string>();
+
         public UserValidationCheckerTest()
         {
             var path = @"C:\Users\Анна\source\repos\1sSupportBack\Test\WebApi.Test\UserValidationCheck\TestData.txt";
@@ -27,23 +32,18 @@ namespace WebApi.Test.UserValidationCheck
                         first = false;
                         continue;
                     }
+
                     _usersList.Add(line);
                 }
             }
         }
 
         [Fact]
-        public void UserValidationCheckerCreateTest()
-        {
-            var userValidation = new UserValidationChecker("login", "password",
-                "api");
-            Assert.NotNull(userValidation);
-        }
-
-        [Fact]
         public void CheckUserValidationByLoginIsCorrect()
         {
-            var userValidation = new UserValidationChecker(_login, _password,
+            var userValidation = new ValidationChecker(
+                _login,
+                _password,
                 "https://partner-api.1c.ru/api/ws/subscription/v2");
             foreach (var user in _usersList)
             {
@@ -55,10 +55,19 @@ namespace WebApi.Test.UserValidationCheck
         [Fact]
         public void CheckUserValidationByLoginIsInCorrect()
         {
-            var userValidation = new UserValidationChecker(_login, _password,
+            var userValidation = new ValidationChecker(
+                _login,
+                _password,
                 "https://partner-api.1c.ru/api/ws/subscription/v2");
             var isValid = userValidation.GetUserValidation("login");
             Assert.False(isValid);
+        }
+
+        [Fact]
+        public void UserValidationCheckerCreateTest()
+        {
+            var userValidation = new ValidationChecker("login", "password", "api");
+            Assert.NotNull(userValidation);
         }
     }
 }

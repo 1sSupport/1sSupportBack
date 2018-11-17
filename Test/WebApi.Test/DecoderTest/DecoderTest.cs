@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
-using WebApi.Tools.Decoder;
-using Xunit;
-
-namespace WebApi.Test.DecoderTest
+﻿namespace WebApi.Test.DecoderTest
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Text.RegularExpressions;
+
+    using WebApi.Tools.Decoder;
+
+    using Xunit;
+
     public class DecoderTest
     {
-        [Fact]
-        public void InnLoginCreationTest()
-        {
-            var innLogin = new InnLogin("inn", "login");
-            Assert.NotNull(innLogin);
-            Assert.Equal("inn", innLogin.Inn);
-            Assert.Equal("login", innLogin.Login);
-        }
-
         [Fact]
         public void DecoderCreationTest()
         {
@@ -45,6 +38,15 @@ namespace WebApi.Test.DecoderTest
             }
         }
 
+        [Fact]
+        public void InnLoginCreationTest()
+        {
+            var innLogin = new InnLogin("inn", "login");
+            Assert.NotNull(innLogin);
+            Assert.Equal("inn", innLogin.Inn);
+            Assert.Equal("login", innLogin.Login);
+        }
+
         private List<Tuple<string, string, string>> GetTestData()
         {
             var testData = new List<Tuple<string, string, string>>();
@@ -52,7 +54,10 @@ namespace WebApi.Test.DecoderTest
             using (StreamReader sr = new StreamReader(path, System.Text.Encoding.Default))
             {
                 var text = sr.ReadToEnd();
-                var matches = Regex.Matches(text, "inn=(?<inn>.*?)&login=(?<login>.*?)\".*?\"linnk_encode\": \"(?<link>.*?)\"", RegexOptions.Singleline);
+                var matches = Regex.Matches(
+                    text,
+                    "inn=(?<inn>.*?)&login=(?<login>.*?)\".*?\"linnk_encode\": \"(?<link>.*?)\"",
+                    RegexOptions.Singleline);
                 foreach (Match match in matches)
                 {
                     var inn = match.Groups["inn"].Value;
@@ -61,8 +66,8 @@ namespace WebApi.Test.DecoderTest
                     var pair = new Tuple<string, string, string>(inn, login, link);
                     testData.Add(pair);
                 }
-
             }
+
             return testData;
         }
     }

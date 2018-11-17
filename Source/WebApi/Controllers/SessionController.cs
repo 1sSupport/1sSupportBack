@@ -9,14 +9,12 @@
 
 namespace WebApi.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
-
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
     using WebApi.EF.Models;
     using WebApi.Models;
 
@@ -58,20 +56,22 @@ namespace WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> EndSession([FromBody] int id)
         {
-            var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
+            var user = await GetUserFromHttpContext().ConfigureAwait(false);
 
             var session =
-                await (from s in this.context.Sessions where s.Id == id && s.User.Login.Equals(user.Login) select s)
+                await (from s in context.Sessions where s.Id == id && s.User.Login.Equals(user.Login) select s)
                     .FirstOrDefaultAsync().ConfigureAwait(false);
 
             if (session == null || session.CloseTime != null)
-                return this.BadRequest(new { message = "Сессия была не создана либо уже закрыта" });
+            {
+                return BadRequest(new { message = "Сессия была не создана либо уже закрыта" });
+            }
 
             session.EndSession();
 
-            await this.context.SaveChangesAsync().ConfigureAwait(false);
+            await context.SaveChangesAsync().ConfigureAwait(false);
 
-            return this.Ok(id);
+            return Ok(id);
         }
 
         /// <summary>
@@ -87,9 +87,9 @@ namespace WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> SetMark([FromBody] MarkArticle markedArticle)
         {
-            var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
+            var user = await GetUserFromHttpContext().ConfigureAwait(false);
 
-            var openArticle = await (from s in this.context.Sessions
+            var openArticle = await (from s in context.Sessions
                                      where s.Id == markedArticle.SessionId && s.User.Id == user.Id
                                      from sq in s.SearchingQuery
                                      from oa in sq.OpenedArticle
@@ -97,12 +97,14 @@ namespace WebApi.Controllers
                                      select oa).FirstOrDefaultAsync().ConfigureAwait(false);
 
             if (openArticle == null)
-                return this.NotFound(new { message = "Не было найденно открытой статьи и таким ID" });
+            {
+                return NotFound(new { message = "Не было найденно открытой статьи и таким ID" });
+            }
 
             openArticle.Mark = markedArticle.Mark;
 
-            await this.context.SaveChangesAsync().ConfigureAwait(false);
-            return this.Ok();
+            await context.SaveChangesAsync().ConfigureAwait(false);
+            return Ok();
         }
 
         /// <summary>
@@ -117,15 +119,15 @@ namespace WebApi.Controllers
         {
             var date = DateTime.UtcNow;
 
-            var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
+            var user = await GetUserFromHttpContext().ConfigureAwait(false);
 
             var session = new Session(date, user);
 
-            this.context.Sessions.Add(session);
+            context.Sessions.Add(session);
 
-            await this.context.SaveChangesAsync().ConfigureAwait(false);
+            await context.SaveChangesAsync().ConfigureAwait(false);
 
-            return this.Ok(new { SessionId = session.Id, User = user.Login });
+            return Ok(new { SessionId = session.Id, User = user.Login });
         }
 
         /// <summary>
@@ -136,12 +138,9 @@ namespace WebApi.Controllers
         /// </returns>
         private Task<User> GetUserFromHttpContext()
         {
-            var userInfo = new UserInfo
-                               {
-                                   Inn = this.User.FindFirst("Inn").Value, Login = this.User.FindFirst("Login").Value
-                               };
+            var userInfo = new UserInfo { Inn = User.FindFirst("Inn").Value, Login = User.FindFirst("Login").Value };
 
-            return (from u in this.context.Users where u.INN == userInfo.Inn || u.Login == userInfo.Login select u)
+            return (from u in context.Users where u.INN == userInfo.Inn || u.Login == userInfo.Login select u)
                 .FirstOrDefaultAsync();
         }
     }

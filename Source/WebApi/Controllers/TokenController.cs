@@ -15,14 +15,9 @@ namespace WebApi.Controllers
     using System;
     using System.Collections.Generic;
     using System.IdentityModel.Tokens.Jwt;
-    using System.IO;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
-
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
-
     using WebApi.EF.Models;
     using WebApi.Models;
 
@@ -72,7 +67,6 @@ namespace WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> CreateToken(UserInfo info)
         {
-            
             if (!ModelState.IsValid)
             {
                 return NoContent();
@@ -87,7 +81,7 @@ namespace WebApi.Controllers
                 return response;
             }
 
-            var token = await this.JwtTokenBuilderAsync(identity.Claims).ConfigureAwait(false);
+            var token = await JwtTokenBuilderAsync(identity.Claims).ConfigureAwait(false);
             response = Ok(new { access_token = token });
             return response;
         }
@@ -103,7 +97,7 @@ namespace WebApi.Controllers
         /// </returns>
         private async Task<ClaimsIdentity> GetUserIdentity(UserInfo info)
         {
-            var user = await (from u in this.context.Users
+            var user = await (from u in context.Users
                               where string.Equals(u.INN, info.Inn, StringComparison.OrdinalIgnoreCase) && string.Equals(
                                         u.Login,
                                         info.Login,
@@ -140,12 +134,12 @@ namespace WebApi.Controllers
                 () =>
                     {
                         var now = DateTime.UtcNow;
-                        var key = this.tokenParameters.IssuerSigningKey;
+                        var key = tokenParameters.IssuerSigningKey;
                         var credantials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                         var token = new JwtSecurityToken(
                             claims: claims,
-                            issuer: this.tokenParameters.ValidIssuer,
-                            audience: this.tokenParameters.ValidAudience,
+                            issuer: tokenParameters.ValidIssuer,
+                            audience: tokenParameters.ValidAudience,
                             signingCredentials: credantials,
                             notBefore: now,
                             expires: now.AddMonths(3));

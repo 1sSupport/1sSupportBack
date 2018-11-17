@@ -1,32 +1,29 @@
 ﻿namespace WebApi.Test
 {
-    using System;
-    using System.Text;
-
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.IdentityModel.Tokens;
-
+    using System;
+    using System.Text;
     using WebApi.Controllers;
     using WebApi.EF.Models;
     using WebApi.Models;
-
     using Xunit;
 
     /// <summary>
     /// The token controller test.
     /// </summary>
-    public class TokenControllerTest: IDisposable
+    public class TokenControllerTest : IDisposable
     {
-        /// <summary>
-        /// The parameters.
-        /// </summary>
-        private readonly TokenValidationParameters parameters;
-
         /// <summary>
         /// The context.
         /// </summary>
         private readonly EFContext context;
+
+        /// <summary>
+        /// The parameters.
+        /// </summary>
+        private readonly TokenValidationParameters parameters;
 
         /// <summary>
         /// The user.
@@ -38,31 +35,19 @@
         /// </summary>
         public TokenControllerTest()
         {
-            this.parameters = new TokenValidationParameters()
-                                  {
-                                      IssuerSigningKey =  new SymmetricSecurityKey(Encoding.UTF8.GetBytes("StrongKeyForTesting")),
-                                      ValidateIssuer = true,
-                                      ValidateAudience = true,
-                                      ValidIssuer = $"Issuer",
-                                      ValidAudience = $"Audience",
-            };
+            parameters = new TokenValidationParameters()
+                             {
+                                 IssuerSigningKey =
+                                     new SymmetricSecurityKey(Encoding.UTF8.GetBytes("StrongKeyForTesting")),
+                                 ValidateIssuer = true,
+                                 ValidateAudience = true,
+                                 ValidIssuer = $"Issuer",
+                                 ValidAudience = $"Audience",
+                             };
             context = new EFContext(new DbContextOptionsBuilder<EFContext>().UseInMemoryDatabase("Test_BD").Options);
             user = new User("test", "test@test", "123456789000");
-            this.context.Users.Add(this.user);
-            this.context.SaveChanges();
-
-        }
-
-        /// <summary>
-        /// The can inicialization.
-        /// </summary>
-        [Fact]
-        public void CanInicialization()
-        {
-            TokenController target = new TokenController(this.parameters, this.context);
-
-            Assert.NotNull(target);
-
+            context.Users.Add(user);
+            context.SaveChanges();
         }
 
         /// <summary>
@@ -71,10 +56,9 @@
         [Fact]
         public async void CanGetToken()
         {
-            var userIfo = new UserInfo { Inn = this.user.INN, Login = this.user.Login };
+            var userIfo = new UserInfo { Inn = user.INN, Login = user.Login };
 
-            TokenController target = new TokenController(this.parameters, this.context);
-
+            TokenController target = new TokenController(parameters, context);
 
             var token = await target.CreateToken(userIfo);
 
@@ -82,6 +66,16 @@
             Assert.IsType<OkObjectResult>(token);
         }
 
+        /// <summary>
+        /// The can inicialization.
+        /// </summary>
+        [Fact]
+        public void CanInicialization()
+        {
+            TokenController target = new TokenController(parameters, context);
+
+            Assert.NotNull(target);
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -89,8 +83,8 @@
         /// </summary>
         public void Dispose()
         {
-            this.CanInicialization();
-            this.context.Dispose();
+            CanInicialization();
+            context.Dispose();
         }
     }
 }

@@ -9,12 +9,6 @@
 
 namespace WebApi
 {
-    using System;
-    using System.IO;
-    using System.Linq;
-    using System.Text.Encodings.Web;
-    using System.Text.Unicode;
-
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -24,10 +18,11 @@ namespace WebApi
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.WebEncoders;
-
     using NETCore.MailKit.Extensions;
     using NETCore.MailKit.Infrastructure.Internal;
-
+    using System;
+    using System.Text.Encodings.Web;
+    using System.Text.Unicode;
     using WebApi.EF.Models;
     using WebApi.Infrastructer;
 
@@ -49,26 +44,20 @@ namespace WebApi
         {
             if (environment.IsProduction())
             {
-                var builder = new ConfigurationBuilder()
-                .SetBasePath(environment.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", optional: true)
-                .AddJsonFile($"MyJson.json", optional: false)
-                .AddEnvironmentVariables();
+                var builder = new ConfigurationBuilder().SetBasePath(environment.ContentRootPath)
+                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                    .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", optional: true)
+                    .AddJsonFile($"MyJson.json", optional: false).AddEnvironmentVariables();
 
                 Configuration = builder.Build();
-
+                config = Configuration;
             }
-            
             else
             {
-
-
-                this.Configuration = config;
-
+                Configuration = config;
             }
 
-            this.Environment = environment;
+            Environment = environment;
         }
 
         /// <summary>
@@ -108,9 +97,15 @@ namespace WebApi
             app.UseAuthentication();
             app.UseMvc();
             app.UseRequestLocalization();
-            if (this.Environment.IsDevelopment())
-            { SeedData.EnsurePopulated(app); app.UseDeveloperExceptionPage();}
-            else app.UseHsts();
+            if (Environment.IsDevelopment())
+            {
+                SeedData.EnsurePopulated(app);
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHsts();
+            }
         }
 
         /// <summary>
@@ -127,7 +122,7 @@ namespace WebApi
         {
             Console.WriteLine(Configuration["Connection:String"]);
 
-            var tokenParams = TokenValidationParametersBuilder.GetTokenValidationParameters(this.Configuration);
+            var tokenParams = TokenValidationParametersBuilder.GetTokenValidationParameters(Configuration);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
                 config => { config.TokenValidationParameters = tokenParams; });
@@ -146,7 +141,7 @@ namespace WebApi
             services.Configure<WebEncoderOptions>(
                 options => options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All));
 
-            Console.WriteLine($"{this.Configuration["Email:Server"]}:{this.Configuration["Email:Port"]}");
+            Console.WriteLine($"{Configuration["Email:Server"]}:{Configuration["Email:Port"]}");
 
             services.AddMailKit(
                 optionBuilder =>
@@ -155,14 +150,14 @@ namespace WebApi
                             new MailKitOptions
                                 {
                                     // get options from sercets.json
-                                    Server = this.Configuration["Email:Server"],
-                                    Port = Convert.ToInt32(this.Configuration["Email:Port"]),
-                                    SenderName = this.Configuration["Email:SenderName"],
-                                    SenderEmail = this.Configuration["Email:SenderEmail"],
+                                    Server = Configuration["Email:Server"],
+                                    Port = Convert.ToInt32(Configuration["Email:Port"]),
+                                    SenderName = Configuration["Email:SenderName"],
+                                    SenderEmail = Configuration["Email:SenderEmail"],
 
                                     // can be optional with no authentication
-                                    Account = this.Configuration["Email:Account"],
-                                    Password = this.Configuration["Email:Password"],
+                                    Account = Configuration["Email:Account"],
+                                    Password = Configuration["Email:Password"],
 
                                     // enable ssl or tls
                                     Security = true

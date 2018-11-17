@@ -169,7 +169,7 @@ namespace WebApi.Test
             var provider = new Provider(providerName, dateProviderEnd);
             var user = new User(userLogin, userEmail, userInn) { Provider = provider };
             var session = new Session(DateTime.Now, user);
-            var query = new SearchingQuery(queryText,DateTime.Now, session);
+            var query = new SearchingQuery(queryText, DateTime.Now, session);
             var article = new Article(articleTitle, articleText);
             var date = DateTime.Now;
 

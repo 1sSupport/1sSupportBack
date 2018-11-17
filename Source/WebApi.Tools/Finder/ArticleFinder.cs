@@ -9,15 +9,12 @@
 
 namespace WebApi.Tools.Finder
 {
+    using Microsoft.EntityFrameworkCore.Internal;
+    using MoreLinq;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
-    using Microsoft.EntityFrameworkCore.Internal;
-
-    using MoreLinq;
-
     using WebApi.EF.Models;
     using WebApi.Tools.Parser;
 
@@ -55,18 +52,20 @@ namespace WebApi.Tools.Finder
         {
             var words = FilteredText.GetWords(query); // Список слов запроса
             var tags = words.Select(
-                    word => (from t in this.context.Tags
+                    word => (from t in context.Tags
                              where string.Equals(t.Value, word, StringComparison.OrdinalIgnoreCase)
                              select t).FirstOrDefault()).Where(tag => tag != null)
                 .ToList(); // Найденные теги для введенных слов
             var articleswithcoef = new List<WeightedArticle>(); // результирующая коллекция
 
-            if (!tags.Any()) return null;
+            if (!tags.Any())
+            {
+                return null;
+            }
 
             foreach (var tag in tags)
             {
-                var articles = (from a in this.context.ArticleTags where a.Tag.Value == tag.Value select a.Article)
-                    .ToList();
+                var articles = (from a in context.ArticleTags where a.Tag.Value == tag.Value select a.Article).ToList();
 
                 Parallel.ForEach(articles, article => { articleswithcoef.Add(GetWeightedArticle(article, tags)); });
             }

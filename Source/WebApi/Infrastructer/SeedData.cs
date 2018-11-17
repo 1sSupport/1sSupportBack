@@ -2,13 +2,11 @@
 {
     #region
 
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.Extensions.DependencyInjection;
     using System;
     using System.IO;
     using System.Linq;
-
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.Extensions.DependencyInjection;
-
     using WebApi.EF.Models;
     using WebApi.Tools.Deserializer;
     using WebApi.Tools.Tagirator;

@@ -81,6 +81,15 @@
             Assert.NotEmpty(articles);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// The dispose.
+        /// </summary>
+        public void Dispose()
+        {
+            context.Dispose();
+        }
+
         /// <summary>
         /// The can initialize tagirator.
         /// </summary>
@@ -94,15 +103,6 @@
             Assert.NotNull(context.Articles.FirstOrDefault());
             Assert.NotEmpty(context.Tags);
             Assert.NotEmpty(context.ArticleTags);
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// The dispose.
-        /// </summary>
-        public void Dispose()
-        {
-            context.Dispose();
         }
     }
 }

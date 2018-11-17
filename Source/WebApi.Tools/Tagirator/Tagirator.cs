@@ -49,17 +49,19 @@
         /// </exception>
         public void SetTagsInArticle()
         {
-            if (this.context == null)
+            if (context == null)
+            {
                 throw new NullReferenceException(
                     "Необходимо сначала добавить EFContext со статьями. Воспользуйтесь методом AddContextForTagging");
+            }
 
-            this.AddArticlesFromContext();
+            AddArticlesFromContext();
 
-            this.SetGlobalWords();
-            this.SetGlobalWordsRate();
-            this.SetLocalRate();
+            SetGlobalWords();
+            SetGlobalWordsRate();
+            SetLocalRate();
 
-            this.SetCurrentTag();
+            SetCurrentTag();
         }
 
         /// <summary>
@@ -101,13 +103,18 @@
         /// </exception>
         private void AddArticlesFromContext()
         {
-            if (IsArticlesNullOrEmpty(this.context.Articles))
+            if (IsArticlesNullOrEmpty(context.Articles))
+            {
                 throw new ArgumentException("Необходимо добавить стать в БД");
+            }
 
             /*add range*/
-            var currentArticle = this.context.Articles.Select(article => new TagirationArticle(article)).ToList();
+            var currentArticle = context.Articles.Select(article => new TagirationArticle(article)).ToList();
 
-            foreach (var tagirationArticle in currentArticle) this.tagirationArticles.Add(tagirationArticle);
+            foreach (var tagirationArticle in currentArticle)
+            {
+                tagirationArticles.Add(tagirationArticle);
+            }
         }
 
         /// <summary>
@@ -115,8 +122,8 @@
         /// </summary>
         private void ClearArticleTagTable()
         {
-            var articletags = from at in this.context.ArticleTags select at;
-            this.context.ArticleTags.RemoveRange(articletags);
+            var articletags = from at in context.ArticleTags select at;
+            context.ArticleTags.RemoveRange(articletags);
         }
 
         /// <summary>
@@ -130,10 +137,13 @@
         /// </returns>
         private double GetRatioFreq(string key)
         {
-            if (!this.globalWordsObject.ContainsKey(key)) return 0;
+            if (!globalWordsObject.ContainsKey(key))
+            {
+                return 0;
+            }
 
             // ReSharper disable once PossibleLossOfFraction
-            double v = this.globalWordsObject[key].Freq / this.tagirationArticles.Count;
+            double v = globalWordsObject[key].Freq / tagirationArticles.Count;
             return v;
         }
 
@@ -142,9 +152,9 @@
         /// </summary>
         private void SetCurrentTag()
         {
-            this.ClearArticleTagTable();
+            ClearArticleTagTable();
 
-            foreach (var tagirationArticle in this.tagirationArticles)
+            foreach (var tagirationArticle in tagirationArticles)
             {
                 tagirationArticle.Article.ArticleTag.Clear();
 
@@ -152,9 +162,12 @@
 
                 foreach (var pair in tagsAndRate)
                 {
-                    if (!this.localTagsDictionary.ContainsKey(pair.Key))
-                        this.localTagsDictionary.Add(pair.Key, new Tag(pair.Key));
-                    SetTagInArticle(tagirationArticle.Article, this.localTagsDictionary[pair.Key], pair.Value);
+                    if (!localTagsDictionary.ContainsKey(pair.Key))
+                    {
+                        localTagsDictionary.Add(pair.Key, new Tag(pair.Key));
+                    }
+
+                    SetTagInArticle(tagirationArticle.Article, localTagsDictionary[pair.Key], pair.Value);
                 }
             }
         }
@@ -164,19 +177,23 @@
         /// </summary>
         private void SetGlobalWords()
         {
-            foreach (var article in this.tagirationArticles)
-            foreach (var word in article.CleanWords)
-                if (this.globalWordsObject.ContainsKey(word))
+            foreach (var article in tagirationArticles)
+            {
+                foreach (var word in article.CleanWords)
                 {
-                    var value = article.GetWordFrequancy(word);
-                    this.globalWordsObject[word].Freq += value;
-                }
-                else
-                {
-                    var wordObject = new WordInfo { Freq = article.GetWordFrequancy(word) };
+                    if (globalWordsObject.ContainsKey(word))
+                    {
+                        var value = article.GetWordFrequancy(word);
+                        globalWordsObject[word].Freq += value;
+                    }
+                    else
+                    {
+                        var wordObject = new WordInfo { Freq = article.GetWordFrequancy(word) };
 
-                    this.globalWordsObject.Add(word, wordObject);
+                        globalWordsObject.Add(word, wordObject);
+                    }
                 }
+            }
         }
 
         /// <summary>
@@ -184,12 +201,15 @@
         /// </summary>
         private void SetGlobalWordsRate()
         {
-            if (!this.globalWordsObject.Any()) this.SetGlobalWords();
-
-            foreach (var key in this.globalWordsObject.Keys)
+            if (!globalWordsObject.Any())
             {
-                var wordObject = this.globalWordsObject[key];
-                wordObject.Rate = this.GetRatioFreq(key);
+                SetGlobalWords();
+            }
+
+            foreach (var key in globalWordsObject.Keys)
+            {
+                var wordObject = globalWordsObject[key];
+                wordObject.Rate = GetRatioFreq(key);
             }
         }
 
@@ -198,9 +218,13 @@
         /// </summary>
         private void SetLocalRate()
         {
-            foreach (var article in this.tagirationArticles)
-            foreach (var word in article.CleanWords)
-                article.SetWordRate(word, this.globalWordsObject[word].Rate);
+            foreach (var article in tagirationArticles)
+            {
+                foreach (var word in article.CleanWords)
+                {
+                    article.SetWordRate(word, globalWordsObject[word].Rate);
+                }
+            }
         }
     }
 }

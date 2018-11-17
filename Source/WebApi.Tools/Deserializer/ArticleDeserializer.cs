@@ -1,171 +1,66 @@
-﻿namespace WebApi.Tools.Deserializer
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ArticleDeserializer.cs" company="">
+//
+// </copyright>
+// <summary>
+//   Defines the ArticleDeserializer type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace WebApi.Tools.Deserializer
 {
     #region
 
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Threading.Tasks;
-
     using Newtonsoft.Json;
-
+    using System.Collections.Generic;
     using WebApi.EF.Models;
 
     #endregion
 
+    /// <inheritdoc />
     /// <summary>
     ///     The article deserializator.
     /// </summary>
-    public class ArticleDeserializer
+    public class ArticleDeserializer : Deserializer<Chapter>
     {
         /// <summary>
         ///     The context.
         /// </summary>
         private readonly EFContext context;
 
+        /// <inheritdoc />
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ArticleDeserializer" /> class.
+        /// Initializes a new instance of the <see cref="T:WebApi.Tools.Deserializer.ArticleDeserializer" /> class.
         /// </summary>
         /// <param name="pathToFolderWithPath">
-        ///     The path to folder with path.
+        /// The path to folder with path.
         /// </param>
         /// <param name="context">
-        ///     The context.
+        /// The context.
         /// </param>
         public ArticleDeserializer(string pathToFolderWithPath, EFContext context)
+            : base(pathToFolderWithPath)
         {
-            this.Directory = new DirectoryInfo(pathToFolderWithPath);
             this.context = context;
         }
 
+        /// <inheritdoc />
         /// <summary>
-        ///     Gets the thread count. Default 16 threads use. Min value is 1.
+        /// The save objects.
         /// </summary>
-        public int ThreadCount => Environment.ProcessorCount;
-
-        /// <summary>
-        ///     Gets the directory.
-        /// </summary>
-        private DirectoryInfo Directory { get; }
-
-        /// <summary>
-        ///     The deserialize.
-        /// </summary>
-        /// <returns>
-        ///     The <see cref="Task" />.
-        /// </returns>
-        /// <exception cref="DirectoryNotFoundException">
-        /// </exception>
-        public async Task DeserializeAsync()
-        {
-            if (!this.Directory.Exists) throw new DirectoryNotFoundException();
-
-            var files = this.Directory.GetFiles().ToList();
-
-            var mod = files.Count / this.ThreadCount;
-
-            ICollection<Chapter> chapters;
-
-            for (var i = 0; i < mod; i++)
-            {
-                var curentfiles = files.Take(this.ThreadCount).ToList();
-
-                files.RemoveRange(0, this.ThreadCount);
-                chapters = await DeserializeChapterByTasksAsync(curentfiles).ConfigureAwait(false);
-                this.AddChaptersItemInBd(ref chapters);
-            }
-
-            chapters = await DeserializeChapterByTasksAsync(files).ConfigureAwait(false);
-            this.AddChaptersItemInBd(ref chapters);
-
-            chapters.Clear();
-        }
-
-        /// <summary>
-        ///     The deserialize chapter by tasks.
-        /// </summary>
-        /// <param name="files">
-        ///     The files.
+        /// <param name="objects">
+        /// The objects.
         /// </param>
-        /// <returns>
-        ///     The <see cref="ICollection{Chapter}" />.
-        /// </returns>
-        private static ICollection<Chapter> DeserializeChapterByTasks(ICollection<FileInfo> files)
+        protected override void SaveObjects(ref ICollection<Chapter> objects)
         {
-            var tasks = new Task[files.Count];
-
-            var index = 0;
-
-            ICollection<Chapter> chapters = new List<Chapter>();
-
-            foreach (var file in files)
-            {
-                var fileref = file;
-                tasks[index] = Task.Factory.StartNew(
-                    () => { GetChapterFromFile(ref fileref, ref chapters); },
-                    TaskCreationOptions.LongRunning);
-                ++index;
-            }
-
-            Task.WaitAll(tasks);
-
-            return chapters;
-        }
-
-        /// <summary>
-        ///     The deserialize chapter by tasks.
-        /// </summary>
-        /// <param name="files">
-        ///     The files.
-        /// </param>
-        /// <returns>
-        ///     The <see cref="ICollection{Chapter}" />.
-        /// </returns>
-        private static Task<ICollection<Chapter>> DeserializeChapterByTasksAsync(ICollection<FileInfo> files)
-        {
-            return Task.Run(() => DeserializeChapterByTasks(files));
-        }
-        
-        /// <summary>
-        /// The get chapter from file.
-        /// </summary>
-        /// <param name="file">
-        /// The file.
-        /// </param>
-        /// <param name="chapters">
-        /// The chapters.
-        /// </param>
-        private static void GetChapterFromFile(ref FileInfo file, ref ICollection<Chapter> chapters)
-        {
-            var serializer = new JsonSerializer();
-            using (var stream = file.OpenRead())
-            {
-                using (var reader = new StreamReader(stream))
-                {
-                    using (var jsonTextReader = new JsonTextReader(reader))
-                    {
-                        var chapter = serializer.Deserialize<Chapter>(jsonTextReader);
-                        chapter.FileName = file.Name;
-                        chapters.Add(chapter);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        ///     The save chapters item in bd async.
-        /// </summary>
-        /// <param name="chapters">
-        ///     The chapters.
-        /// </param>
-        private void AddChaptersItemInBd(ref ICollection<Chapter> chapters)
-        {
-            foreach (var chapter in chapters)
+            foreach (var chapter in objects)
             {
                 foreach (var chapterContent in chapter.contents)
-                    this.context.Articles.Add(new Article(chapterContent.title, chapterContent.response));
-                this.context.SaveChanges();
+                {
+                    context.Articles.Add(new Article(chapterContent.title, chapterContent.response));
+                }
+
+                context.SaveChanges();
             }
         }
     }
