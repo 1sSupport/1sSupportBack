@@ -84,8 +84,7 @@
         /// <summary>
         /// The can initialize tagirator.
         /// </summary>
-        [Fact]
-        public void CanInitializeTagirator()
+        private void CanInitializeTagirator()
         {
             var tagirator = new Tagirator(context);
             tagirator.SetTagsInArticle();

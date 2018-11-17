@@ -336,3 +336,5 @@ dosbox*
 !dosbox.example.conf
 references/
 references/*
+.vscode/
+.vscode/*

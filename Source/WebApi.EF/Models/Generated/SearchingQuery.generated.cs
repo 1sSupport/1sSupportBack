@@ -39,11 +39,13 @@ namespace WebApi.EF.Models
       /// Public constructor with required data
       /// </summary>
       /// <param name="_text"></param>
+      /// <param name="_time"></param>
       /// <param name="_session"></param>
-      public SearchingQuery(string _text, WebApi.EF.Models.Session _session)
+      public SearchingQuery(string _text, DateTime _time, WebApi.EF.Models.Session _session)
       {
          if (string.IsNullOrEmpty(_text)) throw new ArgumentNullException(nameof(_text));
          Text = _text;
+         Time = _time;
          if (_session == null) throw new ArgumentNullException(nameof(_session));
          Session = _session;
 
@@ -55,10 +57,11 @@ namespace WebApi.EF.Models
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
       /// <param name="_text"></param>
+      /// <param name="_time"></param>
       /// <param name="_session"></param>
-      public static SearchingQuery Create(string _text, WebApi.EF.Models.Session _session)
+      public static SearchingQuery Create(string _text, DateTime _time, WebApi.EF.Models.Session _session)
       {
-         return new SearchingQuery(_text, _session);
+         return new SearchingQuery(_text, _time, _session);
       }
 
       // Persistent properties
@@ -80,7 +83,7 @@ namespace WebApi.EF.Models
       /// Required
       /// </summary>
       [Required]
-      public string Time { get; internal set; }
+      public DateTime Time { get; set; }
 
       // Persistent navigation properties
 
