@@ -15,9 +15,14 @@ namespace WebApi.Controllers
     using System;
     using System.Collections.Generic;
     using System.IdentityModel.Tokens.Jwt;
+    using System.IO;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
+
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
+
     using WebApi.EF.Models;
     using WebApi.Models;
 
@@ -67,6 +72,7 @@ namespace WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> CreateToken(UserInfo info)
         {
+            
             if (!ModelState.IsValid)
             {
                 return NoContent();

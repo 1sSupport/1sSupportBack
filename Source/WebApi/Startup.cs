@@ -10,6 +10,8 @@
 namespace WebApi
 {
     using System;
+    using System.IO;
+    using System.Linq;
     using System.Text.Encodings.Web;
     using System.Text.Unicode;
 
@@ -35,24 +37,44 @@ namespace WebApi
     public class Startup
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Startup" /> class.
+        /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
-        /// <param name="configuration">
-        ///     The configuration.
+        /// <param name="config">
+        /// The config.
         /// </param>
         /// <param name="environment">
-        ///     The environment.
+        /// The environment.
         /// </param>
-        public Startup(IConfiguration configuration, IHostingEnvironment environment)
+        public Startup(IConfiguration config, IHostingEnvironment environment)
         {
-            this.Configuration = configuration;
+            if (environment.IsProduction())
+            {
+                var builder = new ConfigurationBuilder()
+                .SetBasePath(environment.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", optional: true)
+                .AddJsonFile($"MyJson.json", optional: false)
+                .AddEnvironmentVariables();
+
+                Configuration = builder.Build();
+
+            }
+            
+            else
+            {
+
+
+                this.Configuration = config;
+
+            }
+
             this.Environment = environment;
         }
 
         /// <summary>
         ///     Gets the configuration.
         /// </summary>
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; private set; }
 
         /// <summary>
         ///     Gets the environment.
@@ -103,12 +125,18 @@ namespace WebApi
         /// </returns>
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            Console.WriteLine(Configuration["Connection:String"]);
+
             var tokenParams = TokenValidationParametersBuilder.GetTokenValidationParameters(this.Configuration);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
                 config => { config.TokenValidationParameters = tokenParams; });
 
-            services.AddDbContext<EFContext>(options => { options.UseInMemoryDatabase("MyDatabase"); });
+            services.AddDbContext<EFContext>(
+                options =>
+                    {
+                        options.UseSqlServer(Configuration["Connection:String"], b => b.MigrationsAssembly("WebApi"));
+                    });
 
             services.AddSingleton(tokenParams);
 

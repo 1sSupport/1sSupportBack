@@ -74,7 +74,7 @@ namespace WebApi.Controllers
             var openedArticle = new OpenedArticle(DateTime.UtcNow, article, queryDB);
 
             context.OpenedArticles.Add(openedArticle);
-            await this.context.SaveChangesAsync().ConfigureAwait(false);
+            this.context.SaveChangesAsync();
 
             return Ok(new { article.Id, article.Title, article.Text });
         }
@@ -109,9 +109,9 @@ namespace WebApi.Controllers
 
             var session = await (from s in this.context.Sessions where s.Id == sessionId select s).FirstOrDefaultAsync().ConfigureAwait(false);
 
-            context.SearchingQueries.Add(new SearchingQuery(query, session));
+            context.SearchingQueries.Add(new SearchingQuery(query,DateTime.Now, session));
 
-            await this.context.SaveChangesAsync().ConfigureAwait(false);
+            this.context.SaveChanges();
 
             return Ok((from a in articles select new { a.Id, a.Title, Text = a.Text.Substring(0, 75) }).ToList());
         }

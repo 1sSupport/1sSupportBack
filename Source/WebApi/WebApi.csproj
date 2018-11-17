@@ -2,7 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+	<AllowUntrustedCertificate>true</AllowUntrustedCertificate>
     <UserSecretsId>1d5a315d-a923-45ef-8a02-13e9c5f3a358</UserSecretsId>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +21,7 @@
     <PackageReference Include="morelinq" Version="3.0.0" />
     <PackageReference Include="NETCore.MailKit" Version="2.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="NLog" Version="4.5.10" />
+    <PackageReference Include="NLog" Version="4.5.11" />
   </ItemGroup>
 
   <ItemGroup>
