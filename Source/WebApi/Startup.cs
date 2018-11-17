@@ -108,9 +108,9 @@ namespace WebApi
             app.UseAuthentication();
             app.UseMvc();
             app.UseRequestLocalization();
-            if (this.Environment.IsDevelopment()) app.UseDeveloperExceptionPage();
+            if (this.Environment.IsDevelopment())
+            { SeedData.EnsurePopulated(app); app.UseDeveloperExceptionPage();}
             else app.UseHsts();
-            SeedData.EnsurePopulated(app);
         }
 
         /// <summary>

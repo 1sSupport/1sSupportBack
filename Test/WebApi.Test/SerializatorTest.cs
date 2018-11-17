@@ -29,12 +29,12 @@ namespace WebApi.Test
         [Fact]
         public async void CandDeserializeWithCustomTreadValue()
         {
-            var path = @"D:\Загрузки\dumpsNewFormat";
+            var path = @"D:\Загрузки\TestDumps";
 
             using (var context = new EFContext(
                 new DbContextOptionsBuilder<EFContext>().UseInMemoryDatabase("Test_BD").Options))
             {
-                var serializator = new ArticleDeserializer(path, context) { ThreadCount = 8 };
+                var serializator = new ArticleDeserializer(path, context);
 
                 var count = context.Articles.Count();
 
@@ -51,7 +51,7 @@ namespace WebApi.Test
         [Fact]
         public async void CanDeserialize()
         {
-            var path = @"D:\Загрузки\dumpsNewFormat";
+            var path = @"D:\Загрузки\TestDumps";
 
             using (var context = new EFContext(
                 new DbContextOptionsBuilder<EFContext>().UseInMemoryDatabase("Test_BD").Options))
