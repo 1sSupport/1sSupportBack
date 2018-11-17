@@ -26,10 +26,19 @@ namespace WebApi.Test.DecoderTest
         }
 
         [Fact]
+        public void InnLoginGetterCreationTest()
+        {
+            var decoder = new Decoder();
+            var innLoginGetter = new InnLoginGetter(decoder);
+            Assert.NotNull(innLoginGetter);
+        }
+
+        [Fact]
         public void GetInnLoginFromInvalidStringTest()
         {
             var decoder = new Decoder();
-            Assert.Throws<Exception>(() => decoder.GetInnLoginFromString("invalidString"));
+            var innLoginGetter = new InnLoginGetter(decoder);
+            Assert.Throws<Exception>(() => innLoginGetter.GetInnLogin("invalidString"));
         }
 
         [Fact]
@@ -37,9 +46,10 @@ namespace WebApi.Test.DecoderTest
         {
             var testData = GetTestData();
             var decoder = new Decoder();
+            var innLoginGetter = new InnLoginGetter(decoder);
             foreach (var tuple in testData)
             {
-                var result = decoder.GetInnLoginFromString(tuple.Item3);
+                var result = innLoginGetter.GetInnLogin(tuple.Item3);
                 Assert.Equal(tuple.Item1, result.Inn);
                 Assert.Equal(tuple.Item2, result.Login);
             }
