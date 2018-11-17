@@ -115,7 +115,7 @@
         /// </summary>
         private void ClearArticleTagTable()
         {
-            var articletags = (from at in this.context.ArticleTags select at).ToList();
+            var articletags = from at in this.context.ArticleTags select at;
             this.context.ArticleTags.RemoveRange(articletags);
         }
 
