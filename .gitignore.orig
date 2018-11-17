@@ -336,7 +336,10 @@ dosbox*
 !dosbox.example.conf
 references/
 references/*
+<<<<<<< HEAD
 .vscode/
 .vscode/*
+=======
 /Test/WebApi.Test/UserValidationCheck/TestData.txt
 /Test/WebApi.Test/DecoderTest/links.json
+>>>>>>> 8c3f97e5d142a95f57070b91a7ab1acc40492dd6
