@@ -75,9 +75,15 @@ namespace WebApi.Controllers
             }
 
             var openedArticle = new OpenedArticle(DateTime.UtcNow, article, queryDb);
-
-            context.OpenedArticles.Add(openedArticle);
-            context.SaveChangesAsync();
+            try
+            {
+                context.OpenedArticles.Add(openedArticle);
+                context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { message = "Что-то пошло не так" });
+            }
 
             return Ok(new { article.Id, article.Title, article.Text });
         }
@@ -108,10 +114,16 @@ namespace WebApi.Controllers
 
             var session = await (from s in context.Sessions where s.Id == sessionId select s).FirstOrDefaultAsync()
                               .ConfigureAwait(false);
+            try
+            {
+                context.SearchingQueries.Add(new SearchingQuery(query, DateTime.Now, session));
 
-            context.SearchingQueries.Add(new SearchingQuery(query, DateTime.Now, session));
-
-            context.SaveChangesAsync();
+                context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { message = "Что-то пошло не так" });
+            }
 
             if (!articles.Any())
             {

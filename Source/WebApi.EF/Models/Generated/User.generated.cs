@@ -41,7 +41,8 @@ namespace WebApi.EF.Models
       /// <param name="_login"></param>
       /// <param name="_email"></param>
       /// <param name="_inn"></param>
-      public User(string _login, string _email, string _inn)
+      /// <param name="_provider"></param>
+      public User(string _login, string _email, string _inn, WebApi.EF.Models.Provider _provider)
       {
          if (string.IsNullOrEmpty(_login)) throw new ArgumentNullException(nameof(_login));
          Login = _login;
@@ -49,6 +50,9 @@ namespace WebApi.EF.Models
          Email = _email;
          if (string.IsNullOrEmpty(_inn)) throw new ArgumentNullException(nameof(_inn));
          INN = _inn;
+         if (_provider == null) throw new ArgumentNullException(nameof(_provider));
+         Provider = _provider;
+
          Session = new HashSet<WebApi.EF.Models.Session>();
          Init();
       }
@@ -59,9 +63,10 @@ namespace WebApi.EF.Models
       /// <param name="_login"></param>
       /// <param name="_email"></param>
       /// <param name="_inn"></param>
-      public static User Create(string _login, string _email, string _inn)
+      /// <param name="_provider"></param>
+      public static User Create(string _login, string _email, string _inn, WebApi.EF.Models.Provider _provider)
       {
-         return new User(_login, _email, _inn);
+         return new User(_login, _email, _inn, _provider);
       }
 
       // Persistent properties
@@ -96,6 +101,9 @@ namespace WebApi.EF.Models
 
       public virtual ICollection<WebApi.EF.Models.Session> Session { get; set; }
 
+      /// <summary>
+      /// Required
+      /// </summary>
       public virtual WebApi.EF.Models.Provider Provider { get; set; }
 
    }

@@ -166,8 +166,8 @@ namespace WebApi.Test
         [Fact]
         public void CanInitialOpenedArticle()
         {
-            var provider = new Provider(providerName, dateProviderEnd);
-            var user = new User(userLogin, userEmail, userInn) { Provider = provider };
+            var provider = new Provider(providerName, dateProviderEnd,"d");
+            var user = new User(userLogin, userEmail, userInn, provider) { Provider = provider };
             var session = new Session(DateTime.Now, user);
             var query = new SearchingQuery(queryText, DateTime.Now, session);
             var article = new Article(articleTitle, articleText);
@@ -187,7 +187,7 @@ namespace WebApi.Test
         [Fact]
         public void CanInitialProvider()
         {
-            var provider = new Provider(providerName, dateProviderEnd);
+            var provider = new Provider(providerName, dateProviderEnd,"d");
 
             Assert.NotNull(provider);
             Assert.Equal(providerName, provider.Name);
@@ -200,8 +200,8 @@ namespace WebApi.Test
         [Fact]
         public void CanInitialQuery()
         {
-            var provider = new Provider(providerName, dateProviderEnd);
-            var user = new User(userLogin, userEmail, userInn) { Provider = provider };
+            var provider = new Provider(providerName, dateProviderEnd,"d");
+            var user = new User(userLogin, userEmail, userInn, provider) { Provider = provider };
             var session = new Session(DateTime.Now, user);
 
             var query = new SearchingQuery(queryText, DateTime.Now, session);
@@ -217,8 +217,8 @@ namespace WebApi.Test
         [Fact]
         public void CanInitialSession()
         {
-            var provider = new Provider(providerName, dateProviderEnd);
-            var user = new User(userLogin, userEmail, userInn) { Provider = provider };
+            var provider = new Provider(providerName, dateProviderEnd,"d");
+            var user = new User(userLogin, userEmail, userInn,provider) { Provider = provider };
 
             var session = new Session(DateTime.Now, user);
 
@@ -244,9 +244,9 @@ namespace WebApi.Test
         [Fact]
         public void CanInitialUser()
         {
-            var provider = new Provider(providerName, dateProviderEnd);
+            var provider = new Provider(providerName, dateProviderEnd,"d");
 
-            var user = new User(userLogin, userEmail, userInn) { Provider = provider };
+            var user = new User(userLogin, userEmail, userInn, provider) { Provider = provider };
 
             Assert.NotNull(user);
             Assert.Equal(userEmail, user.Email);

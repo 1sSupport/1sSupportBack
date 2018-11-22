@@ -38,9 +38,15 @@ namespace WebApi.EF.Models
       /// <summary>
       /// Public constructor with required data
       /// </summary>
+      /// <param name="_text"></param>
+      /// <param name="_contactinfo"></param>
       /// <param name="_session0"></param>
-      public SupportAsk(WebApi.EF.Models.Session _session0)
+      public SupportAsk(string _text, string _contactinfo, WebApi.EF.Models.Session _session0)
       {
+         if (string.IsNullOrEmpty(_text)) throw new ArgumentNullException(nameof(_text));
+         Text = _text;
+         if (string.IsNullOrEmpty(_contactinfo)) throw new ArgumentNullException(nameof(_contactinfo));
+         ContactInfo = _contactinfo;
          if (_session0 == null) throw new ArgumentNullException(nameof(_session0));
          _session0.SupportAsk.Add(this);
 
@@ -51,10 +57,12 @@ namespace WebApi.EF.Models
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
+      /// <param name="_text"></param>
+      /// <param name="_contactinfo"></param>
       /// <param name="_session0"></param>
-      public static SupportAsk Create(WebApi.EF.Models.Session _session0)
+      public static SupportAsk Create(string _text, string _contactinfo, WebApi.EF.Models.Session _session0)
       {
-         return new SupportAsk(_session0);
+         return new SupportAsk(_text, _contactinfo, _session0);
       }
 
       // Persistent properties
@@ -70,7 +78,13 @@ namespace WebApi.EF.Models
       /// Required
       /// </summary>
       [Required]
-      public string Title { get; protected set; }
+      public string Text { get; set; }
+
+      /// <summary>
+      /// Required
+      /// </summary>
+      [Required]
+      public string ContactInfo { get; set; }
 
       // Persistent navigation properties
 
