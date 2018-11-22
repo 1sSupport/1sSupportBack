@@ -7,6 +7,11 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Collections;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using NETCore.MailKit.Core;
+
 namespace WebApi.Controllers
 {
     using System;
@@ -34,15 +39,17 @@ namespace WebApi.Controllers
         /// </summary>
         private readonly EFContext context;
 
+        private readonly IEmailService emailService;
         /// <summary>
         ///     Initializes a new instance of the <see cref="SessionController" /> class.
         /// </summary>
         /// <param name="context">
         ///     The context.
         /// </param>
-        public SessionController(EFContext context)
+        public SessionController(EFContext context, IEmailService emailService)
         {
             this.context = context;
+            this.emailService = emailService;
         }
 
         /// <summary>
@@ -68,8 +75,14 @@ namespace WebApi.Controllers
                 return this.BadRequest(new { message = "Сессия была не создана либо уже закрыта" });
 
             session.EndSession();
-
-            await this.context.SaveChangesAsync().ConfigureAwait(false);
+            try
+            {
+                await this.context.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { message = "Что-то пошло не так" });
+            }
 
             return this.Ok(id);
         }
@@ -100,8 +113,15 @@ namespace WebApi.Controllers
                 return this.BadRequest(new { message = "Не было найденно открытой статьи и таким ID" });
 
             openArticle.Mark = markedArticle.Mark;
+            try
+            {
+                await this.context.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { message = "Что-то пошло не так" });
+            }
 
-            await this.context.SaveChangesAsync().ConfigureAwait(false);
             return this.Ok();
         }
 
@@ -122,10 +142,78 @@ namespace WebApi.Controllers
             var session = new Session(date, user);
 
             this.context.Sessions.Add(session);
-
-            await this.context.SaveChangesAsync().ConfigureAwait(false);
+            try
+            {
+                await this.context.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { message = "Что-то пошло не так" });
+            }
 
             return this.Ok(new { SessionId = session.Id, User = user.Login });
+        }
+        [HttpPost]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> CreateSupportMessage(SupportMessage message)
+        {
+
+            if (ModelState.IsValid)
+            {
+                SupportAsk supportAsk;
+                var session = await (from s in context.Sessions where s.Id == message.SessionId select s).FirstOrDefaultAsync().ConfigureAwait(true);
+                try
+                {
+                     supportAsk = new SupportAsk(session, message.Title, message.Text, message.ContactData);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+                
+                try
+                {
+                    context.SupportAsk.Add(supportAsk);
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(new {message = "Что-то пошло не так"});
+                }
+
+                var user = await GetUserFromHttpContext();           
+                var providerMail =
+                    await (from p in context.Providers
+                        from u in context.Users
+                        where ((u.Id == user.Id) && p.Id == u.Provider.Id)
+                        select p.SupportEmail).FirstOrDefaultAsync().ConfigureAwait(false); 
+                await SendSupportMessages(
+                    new List<string> {providerMail, "govjadkoilja@yandex.ru", "krumih@mail.ru"},
+                    message.Title, message.Text);
+                return Ok(supportAsk.Id);
+
+
+            }
+
+            return BadRequest();
+        }
+
+        private async Task SendSupportMessages(IEnumerable<string> emailsTo, string title,string text)
+        {
+            foreach (var email in emailsTo)
+            {
+                try
+                {
+                    await emailService.SendAsync(email, title, text);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                 
+                }
+               
+            }
         }
 
         /// <summary>
@@ -143,6 +231,15 @@ namespace WebApi.Controllers
 
             return (from u in this.context.Users where u.INN == userInfo.Inn || u.Login == userInfo.Login select u)
                 .FirstOrDefaultAsync();
+
+        }
+
+        public class SupportMessage
+        {
+            public int SessionId { get; set; }
+            public string Title { get; set; }
+            public string Text { get; set; }
+            public string ContactData { get; set; }
         }
     }
 }

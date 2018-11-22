@@ -130,6 +130,11 @@ namespace WebApi
             services.AddDbContext<EFContext>(
                 options =>
                     {
+                        if (Environment.IsDevelopment())
+                        {
+                            options.UseInMemoryDatabase("TestDb");
+                        }
+                        else
                         options.UseSqlServer(Configuration["Connection:String"], b => b.MigrationsAssembly("WebApi"));
                     });
 

@@ -168,6 +168,9 @@ namespace WebApi.EF.Models
          modelBuilder.Entity<WebApi.EF.Models.Provider>()
                      .Property(t => t.ContractEndTime)
                      .IsRequired();
+         modelBuilder.Entity<WebApi.EF.Models.Provider>()
+                     .Property(t => t.SupportEmail)
+                     .IsRequired();
 
          modelBuilder.Entity<WebApi.EF.Models.SearchingQuery>()
                      .ToTable("SearchingQuery")
@@ -212,7 +215,10 @@ namespace WebApi.EF.Models
                      .IsRequired()
                      .ValueGeneratedOnAdd();
          modelBuilder.Entity<WebApi.EF.Models.SupportAsk>()
-                     .Property(t => t.Title)
+                     .Property(t => t.Text)
+                     .IsRequired();
+         modelBuilder.Entity<WebApi.EF.Models.SupportAsk>()
+                     .Property(t => t.ContactInfo)
                      .IsRequired();
          modelBuilder.Entity<WebApi.EF.Models.SupportAsk>()
                      .HasMany(x => x.AskTitle)

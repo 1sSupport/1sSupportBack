@@ -36,9 +36,12 @@ namespace WebApi.EF.Models
       /// <summary>
       /// Public constructor with required data
       /// </summary>
+      /// <param name="_text"></param>
       /// <param name="_supportask0"></param>
-      public AskTitle(WebApi.EF.Models.SupportAsk _supportask0)
+      public AskTitle(string _text, WebApi.EF.Models.SupportAsk _supportask0)
       {
+         if (string.IsNullOrEmpty(_text)) throw new ArgumentNullException(nameof(_text));
+         Text = _text;
          if (_supportask0 == null) throw new ArgumentNullException(nameof(_supportask0));
          _supportask0.AskTitle.Add(this);
 
@@ -48,10 +51,11 @@ namespace WebApi.EF.Models
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
+      /// <param name="_text"></param>
       /// <param name="_supportask0"></param>
-      public static AskTitle Create(WebApi.EF.Models.SupportAsk _supportask0)
+      public static AskTitle Create(string _text, WebApi.EF.Models.SupportAsk _supportask0)
       {
-         return new AskTitle(_supportask0);
+         return new AskTitle(_text, _supportask0);
       }
 
       // Persistent properties
@@ -67,7 +71,7 @@ namespace WebApi.EF.Models
       /// Required
       /// </summary>
       [Required]
-      public string Text { get; protected set; }
+      public string Text { get; set; }
 
       // Persistent navigation properties
 

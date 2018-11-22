@@ -28,11 +28,13 @@
         {
             using (var context = app.ApplicationServices.GetRequiredService<EFContext>())
             {
+                
                 var start = DateTime.Now;
                 if (!context.Users.Any())
                 {
-                    context.Users.Add(new User("test", "test", "000000000000"));
-                    context.Users.Add(new User("admin", "admin", "999999999999"));
+                    var provider = new Provider("testProvieder",DateTime.Now.AddYears(10), "Bigcall9287006@gmail.com");
+                    context.Users.Add(new User("test", "test", "000000000000",provider));
+                    context.Users.Add(new User("admin", "admin", "999999999999",provider));
                     context.SaveChanges();
                     var end = DateTime.Now;
                     File.AppendAllText(@"d:\test.txt", $"{end} -> user {end - start}{Environment.NewLine}");
@@ -83,6 +85,8 @@
                     // "Да да Заглавие1",
                     // "ывааываукпеукпукфцуц фыавпапкцпцупкцыукуепе фывваолрорлфыварполфывапроауцфакпролнапросывмя олрфвыпарололфвпарлгподукфаагнпшелкфвупапролвам"));
                     var path = @"D:\Загрузки\dumpsNewFormat";
+                    if(!File.Exists(path))
+                        return;
                     var serializator = new ArticleDeserializer(path, context);
 
                     await serializator.DeserializeAsync().ConfigureAwait(true);

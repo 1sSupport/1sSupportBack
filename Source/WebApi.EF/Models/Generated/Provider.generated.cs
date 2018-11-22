@@ -40,11 +40,14 @@ namespace WebApi.EF.Models
       /// </summary>
       /// <param name="_name"></param>
       /// <param name="_contractendtime"></param>
-      public Provider(string _name, DateTime _contractendtime)
+      /// <param name="_supportemail"></param>
+      public Provider(string _name, DateTime _contractendtime, string _supportemail)
       {
          if (string.IsNullOrEmpty(_name)) throw new ArgumentNullException(nameof(_name));
          Name = _name;
          ContractEndTime = _contractendtime;
+         if (string.IsNullOrEmpty(_supportemail)) throw new ArgumentNullException(nameof(_supportemail));
+         SupportEmail = _supportemail;
          User = new HashSet<WebApi.EF.Models.User>();
          Init();
       }
@@ -54,9 +57,10 @@ namespace WebApi.EF.Models
       /// </summary>
       /// <param name="_name"></param>
       /// <param name="_contractendtime"></param>
-      public static Provider Create(string _name, DateTime _contractendtime)
+      /// <param name="_supportemail"></param>
+      public static Provider Create(string _name, DateTime _contractendtime, string _supportemail)
       {
-         return new Provider(_name, _contractendtime);
+         return new Provider(_name, _contractendtime, _supportemail);
       }
 
       // Persistent properties
@@ -86,6 +90,10 @@ namespace WebApi.EF.Models
       [Required]
       public DateTime ContractEndTime { get; set; }
 
+      /// <summary>
+      /// Required
+      /// </summary>
+      [Required]
       public string SupportEmail { get; set; }
 
       // Persistent navigation properties
