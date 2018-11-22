@@ -71,7 +71,7 @@ namespace WebApi.Controllers
 
             if (article == null || queryDb == null)
             {
-                return NotFound(new { message = $"Не найденно {id} || {query}" });
+                return BadRequest(new { message = $"Не найденно {id} || {query}" });
             }
 
             var openedArticle = new OpenedArticle(DateTime.UtcNow, article, queryDb);
@@ -105,10 +105,6 @@ namespace WebApi.Controllers
                                        return finder.GetArticlesByQuery(query);
                                    }).ConfigureAwait(false);
 
-            if (articles == null || !articles.Any())
-            {
-                return NotFound(new { message = "Cтатей по такому запросу не было обнаруженно" });
-            }
 
             var session = await (from s in context.Sessions where s.Id == sessionId select s).FirstOrDefaultAsync()
                               .ConfigureAwait(false);
@@ -116,6 +112,11 @@ namespace WebApi.Controllers
             context.SearchingQueries.Add(new SearchingQuery(query, DateTime.Now, session));
 
             context.SaveChangesAsync();
+
+            if (!articles.Any())
+            {
+                return this.Ok(null);
+            }
 
             return Ok((from a in articles select new { a.Id, a.Title, Text = a.Text.Substring(0, 75) }).ToList());
         }
