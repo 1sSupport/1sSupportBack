@@ -30,6 +30,7 @@ namespace WebApi.EF.Models
       /// </summary>
       protected Session()
       {
+         SupportAsk = new System.Collections.Generic.HashSet<WebApi.EF.Models.SupportAsk>();
          SearchingQuery = new System.Collections.Generic.HashSet<WebApi.EF.Models.SearchingQuery>();
 
          Init();
@@ -46,6 +47,7 @@ namespace WebApi.EF.Models
          if (_user == null) throw new ArgumentNullException(nameof(_user));
          User = _user;
 
+         SupportAsk = new HashSet<WebApi.EF.Models.SupportAsk>();
          SearchingQuery = new HashSet<WebApi.EF.Models.SearchingQuery>();
          Init();
       }
@@ -78,6 +80,8 @@ namespace WebApi.EF.Models
       public DateTime? CloseTime { get; protected set; }
 
       // Persistent navigation properties
+
+      public virtual ICollection<WebApi.EF.Models.SupportAsk> SupportAsk { get; set; }
 
       public virtual ICollection<WebApi.EF.Models.SearchingQuery> SearchingQuery { get; set; }
 

@@ -9,13 +9,15 @@
 
 namespace WebApi.Controllers
 {
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Threading.Tasks;
+
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+
     using WebApi.EF.Models;
     using WebApi.Tools.Finder;
 
@@ -64,15 +66,15 @@ namespace WebApi.Controllers
         {
             var article = await (from a in context.Articles where a.Id == id select a).FirstOrDefaultAsync()
                               .ConfigureAwait(false);
-            var queryDB = await (from q in context.SearchingQueries where q.Text == query select q)
+            var queryDb = await (from q in context.SearchingQueries where q.Text == query select q)
                               .FirstOrDefaultAsync().ConfigureAwait(false);
 
-            if (article == null || queryDB == null)
+            if (article == null || queryDb == null)
             {
                 return NotFound(new { message = $"Не найденно {id} || {query}" });
             }
 
-            var openedArticle = new OpenedArticle(DateTime.UtcNow, article, queryDB);
+            var openedArticle = new OpenedArticle(DateTime.UtcNow, article, queryDb);
 
             context.OpenedArticles.Add(openedArticle);
             context.SaveChangesAsync();
@@ -113,7 +115,7 @@ namespace WebApi.Controllers
 
             context.SearchingQueries.Add(new SearchingQuery(query, DateTime.Now, session));
 
-            context.SaveChanges();
+            context.SaveChangesAsync();
 
             return Ok((from a in articles select new { a.Id, a.Title, Text = a.Text.Substring(0, 75) }).ToList());
         }

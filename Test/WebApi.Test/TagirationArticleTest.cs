@@ -22,11 +22,6 @@ namespace WebApi.Test
     /// </summary>
     public class TagirationArticleTest : IDisposable
     {
-        /// <summary>
-        /// The k.
-        /// </summary>
-        private readonly string k;
-
         private readonly string nullText;
 
         /// <summary>
@@ -47,7 +42,6 @@ namespace WebApi.Test
             title = "dad";
             text = "Жопа я я";
             nullText = string.Empty;
-            k = "я";
         }
 
         /// <summary>

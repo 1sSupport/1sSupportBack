@@ -21,42 +21,37 @@ using System.Runtime.CompilerServices;
 
 namespace WebApi.EF.Models
 {
-   public partial class Provider
+   public partial class AskTitle
    {
       partial void Init();
 
       /// <summary>
       /// Default constructor. Protected due to required properties, but present because EF needs it.
       /// </summary>
-      protected Provider()
+      protected AskTitle()
       {
-         User = new System.Collections.Generic.HashSet<WebApi.EF.Models.User>();
-
          Init();
       }
 
       /// <summary>
       /// Public constructor with required data
       /// </summary>
-      /// <param name="_name"></param>
-      /// <param name="_contractendtime"></param>
-      public Provider(string _name, DateTime _contractendtime)
+      /// <param name="_supportask0"></param>
+      public AskTitle(WebApi.EF.Models.SupportAsk _supportask0)
       {
-         if (string.IsNullOrEmpty(_name)) throw new ArgumentNullException(nameof(_name));
-         Name = _name;
-         ContractEndTime = _contractendtime;
-         User = new HashSet<WebApi.EF.Models.User>();
+         if (_supportask0 == null) throw new ArgumentNullException(nameof(_supportask0));
+         _supportask0.AskTitle.Add(this);
+
          Init();
       }
 
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
-      /// <param name="_name"></param>
-      /// <param name="_contractendtime"></param>
-      public static Provider Create(string _name, DateTime _contractendtime)
+      /// <param name="_supportask0"></param>
+      public static AskTitle Create(WebApi.EF.Models.SupportAsk _supportask0)
       {
-         return new Provider(_name, _contractendtime);
+         return new AskTitle(_supportask0);
       }
 
       // Persistent properties
@@ -69,28 +64,12 @@ namespace WebApi.EF.Models
       public int Id { get; set; }
 
       /// <summary>
-      /// Required, Min length = 1
-      /// </summary>
-      [Required]
-      public string Name { get; set; }
-
-      /// <summary>
-      /// Min length = 1, Max length = 300
-      /// </summary>
-      [MaxLength(300)]
-      public string LogoUrl { get; set; }
-
-      /// <summary>
       /// Required
       /// </summary>
       [Required]
-      public DateTime ContractEndTime { get; set; }
-
-      public string SupportEmail { get; set; }
+      public string Text { get; protected set; }
 
       // Persistent navigation properties
-
-      public virtual ICollection<WebApi.EF.Models.User> User { get; set; }
 
    }
 }

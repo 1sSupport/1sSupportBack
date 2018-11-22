@@ -11,8 +11,6 @@
     {
         private readonly EFContext context;
 
-        private readonly string token;
-
         public ArticleControllerTest()
         {
             context = new EFContext(new DbContextOptionsBuilder<EFContext>().UseInMemoryDatabase("Test_BD").Options);

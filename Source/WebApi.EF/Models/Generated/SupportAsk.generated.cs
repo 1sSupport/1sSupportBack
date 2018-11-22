@@ -21,16 +21,16 @@ using System.Runtime.CompilerServices;
 
 namespace WebApi.EF.Models
 {
-   public partial class Provider
+   public partial class SupportAsk
    {
       partial void Init();
 
       /// <summary>
       /// Default constructor. Protected due to required properties, but present because EF needs it.
       /// </summary>
-      protected Provider()
+      protected SupportAsk()
       {
-         User = new System.Collections.Generic.HashSet<WebApi.EF.Models.User>();
+         AskTitle = new System.Collections.Generic.HashSet<WebApi.EF.Models.AskTitle>();
 
          Init();
       }
@@ -38,25 +38,23 @@ namespace WebApi.EF.Models
       /// <summary>
       /// Public constructor with required data
       /// </summary>
-      /// <param name="_name"></param>
-      /// <param name="_contractendtime"></param>
-      public Provider(string _name, DateTime _contractendtime)
+      /// <param name="_session0"></param>
+      public SupportAsk(WebApi.EF.Models.Session _session0)
       {
-         if (string.IsNullOrEmpty(_name)) throw new ArgumentNullException(nameof(_name));
-         Name = _name;
-         ContractEndTime = _contractendtime;
-         User = new HashSet<WebApi.EF.Models.User>();
+         if (_session0 == null) throw new ArgumentNullException(nameof(_session0));
+         _session0.SupportAsk.Add(this);
+
+         AskTitle = new HashSet<WebApi.EF.Models.AskTitle>();
          Init();
       }
 
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
-      /// <param name="_name"></param>
-      /// <param name="_contractendtime"></param>
-      public static Provider Create(string _name, DateTime _contractendtime)
+      /// <param name="_session0"></param>
+      public static SupportAsk Create(WebApi.EF.Models.Session _session0)
       {
-         return new Provider(_name, _contractendtime);
+         return new SupportAsk(_session0);
       }
 
       // Persistent properties
@@ -69,28 +67,14 @@ namespace WebApi.EF.Models
       public int Id { get; set; }
 
       /// <summary>
-      /// Required, Min length = 1
-      /// </summary>
-      [Required]
-      public string Name { get; set; }
-
-      /// <summary>
-      /// Min length = 1, Max length = 300
-      /// </summary>
-      [MaxLength(300)]
-      public string LogoUrl { get; set; }
-
-      /// <summary>
       /// Required
       /// </summary>
       [Required]
-      public DateTime ContractEndTime { get; set; }
-
-      public string SupportEmail { get; set; }
+      public string Title { get; protected set; }
 
       // Persistent navigation properties
 
-      public virtual ICollection<WebApi.EF.Models.User> User { get; set; }
+      public virtual ICollection<WebApi.EF.Models.AskTitle> AskTitle { get; set; }
 
    }
 }

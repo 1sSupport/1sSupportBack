@@ -25,11 +25,13 @@ namespace WebApi.EF.Models
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Article> Articles { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.ArticleDependencies> ArticleDependencies { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.ArticleTag> ArticleTags { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.AskTitle> AskTitle { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Configuration1C> Configurations1C { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.OpenedArticle> OpenedArticles { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Provider> Providers { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.SearchingQuery> SearchingQueries { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Session> Sessions { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.SupportAsk> SupportAsk { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Tag> Tags { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.User> Users { get; set; }
       #endregion DbSets
@@ -108,6 +110,17 @@ namespace WebApi.EF.Models
                      .HasOne(x => x.Tag)
                      .WithMany(x => x.ArticleTag);
 
+         modelBuilder.Entity<WebApi.EF.Models.AskTitle>()
+                     .ToTable("AskTitle")
+                     .HasKey(t => t.Id);
+         modelBuilder.Entity<WebApi.EF.Models.AskTitle>()
+                     .Property(t => t.Id)
+                     .IsRequired()
+                     .ValueGeneratedOnAdd();
+         modelBuilder.Entity<WebApi.EF.Models.AskTitle>()
+                     .Property(t => t.Text)
+                     .IsRequired();
+
          modelBuilder.Entity<WebApi.EF.Models.Configuration1C>()
                      .ToTable("Configuration1C")
                      .HasKey(t => t.Id);
@@ -184,8 +197,27 @@ namespace WebApi.EF.Models
                      .Property(t => t.OpenTime)
                      .IsRequired();
          modelBuilder.Entity<WebApi.EF.Models.Session>()
+                     .HasMany(x => x.SupportAsk)
+                     .WithOne()
+                     .IsRequired();
+         modelBuilder.Entity<WebApi.EF.Models.Session>()
                      .HasOne(x => x.User)
                      .WithMany(x => x.Session);
+
+         modelBuilder.Entity<WebApi.EF.Models.SupportAsk>()
+                     .ToTable("SupportAsk")
+                     .HasKey(t => t.Id);
+         modelBuilder.Entity<WebApi.EF.Models.SupportAsk>()
+                     .Property(t => t.Id)
+                     .IsRequired()
+                     .ValueGeneratedOnAdd();
+         modelBuilder.Entity<WebApi.EF.Models.SupportAsk>()
+                     .Property(t => t.Title)
+                     .IsRequired();
+         modelBuilder.Entity<WebApi.EF.Models.SupportAsk>()
+                     .HasMany(x => x.AskTitle)
+                     .WithOne()
+                     .IsRequired();
 
          modelBuilder.Entity<WebApi.EF.Models.Tag>()
                      .ToTable("Tag")
