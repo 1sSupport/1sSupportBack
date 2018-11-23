@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="FilteredText.cs" company="">
-//
+//   
 // </copyright>
 // <summary>
-//   Defines the FilteredText type.
+//   The filtered text.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ namespace WebApi.Tools.Parser
     using System.Text.RegularExpressions;
 
     /// <summary>
-    /// The filtered text.
+    ///     The filtered text.
     /// </summary>
     public static class FilteredText
     {
@@ -61,10 +61,7 @@ namespace WebApi.Tools.Parser
         private static string Clean(string text)
         {
             // remove all digits and punctuation marks
-            if (text == null)
-            {
-                return string.Empty;
-            }
+            if (text == null) return string.Empty;
 
             var fixtext = Regex.Replace(text.ToLower(), @"[\\pP\\d]", " ");
             fixtext = Regex.Replace(fixtext, @"[.,\/#!$%\^&\*;:{}=\-_`~()]", " ");

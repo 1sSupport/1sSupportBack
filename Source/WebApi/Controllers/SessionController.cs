@@ -1,26 +1,25 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="SessionController.cs" company="">
-//
+//   
 // </copyright>
 // <summary>
-//   The session controller.
+//   Defines the SessionController type.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.Collections;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using NETCore.MailKit.Core;
 
 namespace WebApi.Controllers
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+
+    using NETCore.MailKit.Core;
 
     using WebApi.EF.Models;
     using WebApi.Models;
@@ -39,12 +38,19 @@ namespace WebApi.Controllers
         /// </summary>
         private readonly EFContext context;
 
-        private readonly IEmailService emailService;
         /// <summary>
-        ///     Initializes a new instance of the <see cref="SessionController" /> class.
+        ///     The email service.
+        /// </summary>
+        private readonly IEmailService emailService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SessionController"/> class.
         /// </summary>
         /// <param name="context">
-        ///     The context.
+        /// The context.
+        /// </param>
+        /// <param name="emailService">
+        /// The email service.
         /// </param>
         public SessionController(EFContext context, IEmailService emailService)
         {
@@ -53,17 +59,70 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        ///     The end session.
+        /// The create support message.
         /// </summary>
-        /// <param name="id">
-        ///     The id.
+        /// <param name="message">
+        /// The message.
         /// </param>
         /// <returns>
-        ///     The <see cref="Task" />.
+        /// The <see cref="Task"/>.
         /// </returns>
         [HttpPost]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> EndSession([FromBody] int id)
+        public async Task<IActionResult> CreateSupportMessage([Required] SupportMessage message)
+        {
+            if (!this.ModelState.IsValid) return this.BadRequest();
+
+            SupportAsk supportAsk;
+            var session = await (from s in this.context.Sessions where s.Id == message.SessionId select s)
+                              .FirstOrDefaultAsync().ConfigureAwait(true);
+            try
+            {
+                supportAsk = new SupportAsk(session, message.Title, message.Text, message.ContactData);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            try
+            {
+                this.context.SupportAsk.Add(supportAsk);
+                await this.context.SaveChangesAsync().ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return this.BadRequest(new { message = "Что-то пошло не так" });
+            }
+
+            var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
+            var providerMail =
+                await (from p in this.context.Providers
+                       from u in this.context.Users
+                       where u.Id == user.Id && p.Id == u.Provider.Id
+                       select p.SupportEmail).FirstOrDefaultAsync().ConfigureAwait(false);
+            await this.SendSupportMessages(
+                new List<string> { providerMail, "govjadkoilja@yandex.ru", "krumih@mail.ru" },
+                message.Title,
+                message.Text).ConfigureAwait(false);
+            return this.Ok(supportAsk.Id);
+        }
+
+        /// <summary>
+        /// The end session.
+        /// </summary>
+        /// <param name="id">
+        /// The id.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        [HttpPost]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> EndSession(
+            [FromBody] [Required] [Range(0, int.MaxValue)]
+            int id)
         {
             var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
 
@@ -81,24 +140,24 @@ namespace WebApi.Controllers
             }
             catch (Exception)
             {
-                return BadRequest(new { message = "Что-то пошло не так" });
+                return this.BadRequest(new { message = "Что-то пошло не так" });
             }
 
             return this.Ok(id);
         }
 
         /// <summary>
-        ///     The set mark.
+        /// The set mark.
         /// </summary>
         /// <param name="markedArticle">
-        ///     The marked article.
+        /// The marked article.
         /// </param>
         /// <returns>
-        ///     The <see cref="Task" />.
+        /// The <see cref="Task"/>.
         /// </returns>
         [HttpPost]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> SetMark([FromBody] MarkArticle markedArticle)
+        public async Task<IActionResult> SetMark([FromBody] [Required] MarkArticle markedArticle)
         {
             var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
 
@@ -119,7 +178,7 @@ namespace WebApi.Controllers
             }
             catch (Exception)
             {
-                return BadRequest(new { message = "Что-то пошло не так" });
+                return this.BadRequest(new { message = "Что-то пошло не так" });
             }
 
             return this.Ok();
@@ -148,72 +207,10 @@ namespace WebApi.Controllers
             }
             catch (Exception)
             {
-                return BadRequest(new { message = "Что-то пошло не так" });
+                return this.BadRequest(new { message = "Что-то пошло не так" });
             }
 
             return this.Ok(new { SessionId = session.Id, User = user.Login });
-        }
-        [HttpPost]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> CreateSupportMessage(SupportMessage message)
-        {
-
-            if (ModelState.IsValid)
-            {
-                SupportAsk supportAsk;
-                var session = await (from s in context.Sessions where s.Id == message.SessionId select s).FirstOrDefaultAsync().ConfigureAwait(true);
-                try
-                {
-                     supportAsk = new SupportAsk(session, message.Title, message.Text, message.ContactData);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
-                
-                try
-                {
-                    context.SupportAsk.Add(supportAsk);
-                    await context.SaveChangesAsync();
-                }
-                catch (Exception e)
-                {
-                    return BadRequest(new {message = "Что-то пошло не так"});
-                }
-
-                var user = await GetUserFromHttpContext();           
-                var providerMail =
-                    await (from p in context.Providers
-                        from u in context.Users
-                        where ((u.Id == user.Id) && p.Id == u.Provider.Id)
-                        select p.SupportEmail).FirstOrDefaultAsync().ConfigureAwait(false); 
-                await SendSupportMessages(
-                    new List<string> {providerMail, "govjadkoilja@yandex.ru", "krumih@mail.ru"},
-                    message.Title, message.Text);
-                return Ok(supportAsk.Id);
-
-
-            }
-
-            return BadRequest();
-        }
-
-        private async Task SendSupportMessages(IEnumerable<string> emailsTo, string title,string text)
-        {
-            foreach (var email in emailsTo)
-            {
-                try
-                {
-                    await emailService.SendAsync(email, title, text);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                 
-                }
-               
-            }
         }
 
         /// <summary>
@@ -231,15 +228,34 @@ namespace WebApi.Controllers
 
             return (from u in this.context.Users where u.INN == userInfo.Inn || u.Login == userInfo.Login select u)
                 .FirstOrDefaultAsync();
-
         }
 
-        public class SupportMessage
+        /// <summary>
+        /// The send support messages.
+        /// </summary>
+        /// <param name="emailsTo">
+        /// The emails to.
+        /// </param>
+        /// <param name="title">
+        /// The title.
+        /// </param>
+        /// <param name="text">
+        /// The text.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        private async Task SendSupportMessages(IEnumerable<string> emailsTo, string title, string text)
         {
-            public int SessionId { get; set; }
-            public string Title { get; set; }
-            public string Text { get; set; }
-            public string ContactData { get; set; }
+            foreach (var email in emailsTo)
+                try
+                {
+                    await this.emailService.SendAsync(email, title, text).ConfigureAwait(false);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
         }
     }
 }

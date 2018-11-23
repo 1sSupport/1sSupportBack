@@ -1,12 +1,23 @@
-﻿namespace WebApi.Infrastructer
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="SeedData.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The seed data.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace WebApi.Infrastructer
 {
     #region
 
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.Extensions.DependencyInjection;
     using System;
     using System.IO;
     using System.Linq;
+
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.Extensions.DependencyInjection;
+
     using WebApi.EF.Models;
     using WebApi.Tools.Deserializer;
     using WebApi.Tools.Tagirator;
@@ -19,22 +30,21 @@
     public static class SeedData
     {
         /// <summary>
-        ///     The ensure populated.
+        /// The ensure populated.
         /// </summary>
         /// <param name="app">
-        ///     The app.
+        /// The app.
         /// </param>
         public static async void EnsurePopulated(IApplicationBuilder app)
         {
             using (var context = app.ApplicationServices.GetRequiredService<EFContext>())
             {
-                
                 var start = DateTime.Now;
                 if (!context.Users.Any())
                 {
-                    var provider = new Provider("testProvieder",DateTime.Now.AddYears(10), "Bigcall9287006@gmail.com");
-                    context.Users.Add(new User("test", "test", "000000000000",provider));
-                    context.Users.Add(new User("admin", "admin", "999999999999",provider));
+                    var provider = new Provider("testProvieder", DateTime.Now.AddYears(10), "Bigcall9287006@gmail.com");
+                    context.Users.Add(new User("test", "test", "000000000000", provider));
+                    context.Users.Add(new User("admin", "admin", "999999999999", provider));
                     context.SaveChanges();
                     var end = DateTime.Now;
                     File.AppendAllText(@"d:\test.txt", $"{end} -> user {end - start}{Environment.NewLine}");
@@ -85,8 +95,8 @@
                     // "Да да Заглавие1",
                     // "ывааываукпеукпукфцуц фыавпапкцпцупкцыукуепе фывваолрорлфыварполфывапроауцфакпролнапросывмя олрфвыпарололфвпарлгподукфаагнпшелкфвупапролвам"));
                     var path = @"D:\Загрузки\dumpsNewFormat";
-                    if(!File.Exists(path))
-                        return;
+                    if (!File.Exists(path)) return;
+
                     var serializator = new ArticleDeserializer(path, context);
 
                     await serializator.DeserializeAsync().ConfigureAwait(true);

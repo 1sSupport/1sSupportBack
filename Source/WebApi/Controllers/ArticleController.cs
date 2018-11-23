@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ArticleController.cs" company="">
-//
+//   
 // </copyright>
 // <summary>
-//   The article controller.
+//   Defines the ArticleController type.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ namespace WebApi.Controllers
 
     /// <inheritdoc />
     /// <summary>
-    /// The article controller.
+    ///     The article controller.
     /// </summary>
     [Route("api/[controller]/[action]")]
     [ApiController]
@@ -31,7 +31,7 @@ namespace WebApi.Controllers
     public class ArticleController : ControllerBase
     {
         /// <summary>
-        /// The _context.
+        ///     The _context.
         /// </summary>
         private readonly EFContext context;
 
@@ -61,31 +61,30 @@ namespace WebApi.Controllers
         [HttpGet]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetArticle(
-            [FromQuery] [Range(1, int.MaxValue)] int id,
-            [FromQuery] string query)
+            [FromQuery] [Required] [Range(1, int.MaxValue)]
+            int id,
+            [FromQuery] [Required] string query)
         {
-            var article = await (from a in context.Articles where a.Id == id select a).FirstOrDefaultAsync()
+            var article = await (from a in this.context.Articles where a.Id == id select a).FirstOrDefaultAsync()
                               .ConfigureAwait(false);
-            var queryDb = await (from q in context.SearchingQueries where q.Text == query select q)
+            var queryDb = await (from q in this.context.SearchingQueries where q.Text == query select q)
                               .FirstOrDefaultAsync().ConfigureAwait(false);
 
             if (article == null || queryDb == null)
-            {
-                return BadRequest(new { message = $"Не найденно {id} || {query}" });
-            }
+                return this.BadRequest(new { message = $"Не найденно {id} || {query}" });
 
             var openedArticle = new OpenedArticle(DateTime.UtcNow, article, queryDb);
             try
             {
-                context.OpenedArticles.Add(openedArticle);
-                context.SaveChangesAsync();
+                this.context.OpenedArticles.Add(openedArticle);
+                await this.context.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception)
             {
-                return BadRequest(new { message = "Что-то пошло не так" });
+                return this.BadRequest(new { message = "Что-то пошло не так" });
             }
 
-            return Ok(new { article.Id, article.Title, article.Text });
+            return this.Ok(new { article.Id, article.Title, article.Text });
         }
 
         /// <summary>
@@ -102,35 +101,34 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpGet]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetArticlesByQuery([FromQuery] string query, [FromQuery] int sessionId)
+        public async Task<IActionResult> GetArticlesByQuery(
+            [FromQuery] [Required] string query,
+            [FromQuery] [Required] [Range(0, int.MaxValue)]
+            int sessionId)
         {
             var articles = await Task.Run(
                                () =>
                                    {
-                                       var finder = new ArticleFinder(context);
+                                       var finder = new ArticleFinder(this.context);
                                        return finder.GetArticlesByQuery(query);
                                    }).ConfigureAwait(false);
 
-
-            var session = await (from s in context.Sessions where s.Id == sessionId select s).FirstOrDefaultAsync()
+            var session = await (from s in this.context.Sessions where s.Id == sessionId select s).FirstOrDefaultAsync()
                               .ConfigureAwait(false);
             try
             {
-                context.SearchingQueries.Add(new SearchingQuery(query, DateTime.Now, session));
+                this.context.SearchingQueries.Add(new SearchingQuery(query, DateTime.Now, session));
 
-                context.SaveChangesAsync();
+                await this.context.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception)
             {
-                return BadRequest(new { message = "Что-то пошло не так" });
+                return this.BadRequest(new { message = "Что-то пошло не так" });
             }
 
-            if (!articles.Any())
-            {
-                return this.Ok(null);
-            }
+            if (!articles.Any()) return this.Ok(null);
 
-            return Ok((from a in articles select new { a.Id, a.Title, Text = a.Text.Substring(0, 75) }).ToList());
+            return this.Ok((from a in articles select new { a.Id, a.Title, Text = a.Text.Substring(0, 75) }).ToList());
         }
     }
 }

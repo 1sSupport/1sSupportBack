@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ValidationChecker.cs" company="">
-//
+//   
 // </copyright>
 // <summary>
-//   Defines the ValidationChecker type.
+//   The validation checker.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -11,30 +11,31 @@ namespace WebApi.Tools.ValidationChecker
 {
     #region
 
-    using RestSharp;
-    using RestSharp.Deserializers;
     using System;
     using System.Text;
+
+    using RestSharp;
+    using RestSharp.Deserializers;
 
     #endregion
 
     /// <summary>
-    /// The validation checker.
+    ///     The validation checker.
     /// </summary>
     public class ValidationChecker
     {
         /// <summary>
-        /// The valid code.
+        ///     The valid code.
         /// </summary>
         private const string ValidCode = "1";
 
         /// <summary>
-        /// The server.
+        ///     The server.
         /// </summary>
         private readonly string server;
 
         /// <summary>
-        /// The token.
+        ///     The token.
         /// </summary>
         private readonly string token;
 
@@ -54,7 +55,7 @@ namespace WebApi.Tools.ValidationChecker
         {
             this.server = server;
             var tokenToEncode = $"{login}:{password}";
-            token = Convert.ToBase64String(Encoding.UTF8.GetBytes(tokenToEncode));
+            this.token = Convert.ToBase64String(Encoding.UTF8.GetBytes(tokenToEncode));
         }
 
         /// <summary>
@@ -71,10 +72,10 @@ namespace WebApi.Tools.ValidationChecker
         public bool GetUserValidation(string login)
         {
             var isValid = false;
-            var client = new RestClient(server);
+            var client = new RestClient(this.server);
             var request = new RestRequest(Method.POST);
             request.AddHeader("content-type", "text/xml");
-            request.AddHeader("authorization", $"Basic {token}");
+            request.AddHeader("authorization", $"Basic {this.token}");
             var requestBody =
                 $"<Envelope xmlns=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n<Body>\r\n<checkItsByLogin xmlns=\"http://api.repository.onec.ru/v2\">\r\n<loginList xmlns=\"\">\r\n<loginList>{login}</loginList>\r\n</loginList>\r\n</checkItsByLogin>\r\n</Body>\r\n</Envelope>";
             request.AddParameter("text/xml", requestBody, ParameterType.RequestBody);

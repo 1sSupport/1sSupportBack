@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="UserInfo.cs" company="">
-//
+//   
 // </copyright>
 // <summary>
 //   The user info.
@@ -12,12 +12,12 @@ namespace WebApi.Models
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
-    /// The user info.
+    ///     The user info.
     /// </summary>
     public class UserInfo
     {
         /// <summary>
-        /// Gets or sets the inn.
+        ///     Gets or sets the inn.
         /// </summary>
         [Required]
         [MinLength(12)]
@@ -25,7 +25,7 @@ namespace WebApi.Models
         public string Inn { get; set; }
 
         /// <summary>
-        /// Gets or sets the login.
+        ///     Gets or sets the login.
         /// </summary>
         [Required]
         [MaxLength(30)]

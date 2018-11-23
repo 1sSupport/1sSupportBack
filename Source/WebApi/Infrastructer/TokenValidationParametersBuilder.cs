@@ -1,17 +1,18 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="TokenValidationParametersBuilder.cs" company="">
-//
+//   
 // </copyright>
 // <summary>
-//   Defines the TokenValidationParametersBuilder type.
+//   The token validation parameters builder.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace WebApi.Infrastructer
 {
+    using System.Text;
+
     using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Tokens;
-    using System.Text;
 
     /// <summary>
     ///     The token validation parameters builder.
@@ -19,13 +20,13 @@ namespace WebApi.Infrastructer
     public static class TokenValidationParametersBuilder
     {
         /// <summary>
-        ///     The get token validation parameters.
+        /// The get token validation parameters.
         /// </summary>
         /// <param name="configuration">
-        ///     The configuration.
+        /// The configuration.
         /// </param>
         /// <returns>
-        ///     The <see cref="TokenValidationParameters" />.
+        /// The <see cref="TokenValidationParameters"/>.
         /// </returns>
         public static TokenValidationParameters GetTokenValidationParameters(IConfiguration configuration)
         {

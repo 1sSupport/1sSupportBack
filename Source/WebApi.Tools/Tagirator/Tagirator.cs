@@ -1,4 +1,13 @@
-﻿namespace WebApi.Tools.Tagirator
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Tagirator.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The tagirator.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace WebApi.Tools.Tagirator
 {
     using System;
     using System.Collections.Generic;
@@ -22,7 +31,7 @@
         private readonly IDictionary<string, WordInfo> globalWordsObject = new Dictionary<string, WordInfo>();
 
         /// <summary>
-        /// The local tags dictionary.
+        ///     The local tags dictionary.
         /// </summary>
         private readonly IDictionary<string, Tag> localTagsDictionary = new Dictionary<string, Tag>();
 
@@ -32,10 +41,10 @@
         private readonly ICollection<TagirationArticle> tagirationArticles = new List<TagirationArticle>();
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Tagirator" /> class.
+        /// Initializes a new instance of the <see cref="Tagirator"/> class.
         /// </summary>
         /// <param name="context">
-        ///     The context.
+        /// The context.
         /// </param>
         public Tagirator(EFContext context)
         {
@@ -49,29 +58,27 @@
         /// </exception>
         public void SetTagsInArticle()
         {
-            if (context == null)
-            {
+            if (this.context == null)
                 throw new NullReferenceException(
                     "Необходимо сначала добавить EFContext со статьями. Воспользуйтесь методом AddContextForTagging");
-            }
 
-            AddArticlesFromContext();
+            this.AddArticlesFromContext();
 
-            SetGlobalWords();
-            SetGlobalWordsRate();
-            SetLocalRate();
+            this.SetGlobalWords();
+            this.SetGlobalWordsRate();
+            this.SetLocalRate();
 
-            SetCurrentTag();
+            this.SetCurrentTag();
         }
 
         /// <summary>
-        ///     The is articles null or empty.
+        /// The is articles null or empty.
         /// </summary>
         /// <param name="articles">
-        ///     The articles.
+        /// The articles.
         /// </param>
         /// <returns>
-        ///     The <see cref="bool" />.
+        /// The <see cref="bool"/>.
         /// </returns>
         private static bool IsArticlesNullOrEmpty(IEnumerable<Article> articles)
         {
@@ -79,16 +86,16 @@
         }
 
         /// <summary>
-        ///     The set tag in article.
+        /// The set tag in article.
         /// </summary>
         /// <param name="article">
-        ///     The article.
+        /// The article.
         /// </param>
         /// <param name="tag">
-        ///     The tag.
+        /// The tag.
         /// </param>
         /// <param name="weight">
-        ///     The weight.
+        /// The weight.
         /// </param>
         private static void SetTagInArticle(Article article, Tag tag, double weight)
         {
@@ -103,18 +110,13 @@
         /// </exception>
         private void AddArticlesFromContext()
         {
-            if (IsArticlesNullOrEmpty(context.Articles))
-            {
+            if (IsArticlesNullOrEmpty(this.context.Articles))
                 throw new ArgumentException("Необходимо добавить стать в БД");
-            }
 
             /*add range*/
-            var currentArticle = context.Articles.Select(article => new TagirationArticle(article)).ToList();
+            var currentArticle = this.context.Articles.Select(article => new TagirationArticle(article)).ToList();
 
-            foreach (var tagirationArticle in currentArticle)
-            {
-                tagirationArticles.Add(tagirationArticle);
-            }
+            foreach (var tagirationArticle in currentArticle) this.tagirationArticles.Add(tagirationArticle);
         }
 
         /// <summary>
@@ -122,28 +124,25 @@
         /// </summary>
         private void ClearArticleTagTable()
         {
-            var articletags = from at in context.ArticleTags select at;
-            context.ArticleTags.RemoveRange(articletags);
+            var articletags = from at in this.context.ArticleTags select at;
+            this.context.ArticleTags.RemoveRange(articletags);
         }
 
         /// <summary>
-        ///     The get ratio freq.
+        /// The get ratio freq.
         /// </summary>
         /// <param name="key">
-        ///     The key.
+        /// The key.
         /// </param>
         /// <returns>
-        ///     The <see cref="double" />.
+        /// The <see cref="double"/>.
         /// </returns>
         private double GetRatioFreq(string key)
         {
-            if (!globalWordsObject.ContainsKey(key))
-            {
-                return 0;
-            }
+            if (!this.globalWordsObject.ContainsKey(key)) return 0;
 
             // ReSharper disable once PossibleLossOfFraction
-            double v = globalWordsObject[key].Freq / tagirationArticles.Count;
+            double v = this.globalWordsObject[key].Freq / this.tagirationArticles.Count;
             return v;
         }
 
@@ -152,9 +151,9 @@
         /// </summary>
         private void SetCurrentTag()
         {
-            ClearArticleTagTable();
+            this.ClearArticleTagTable();
 
-            foreach (var tagirationArticle in tagirationArticles)
+            foreach (var tagirationArticle in this.tagirationArticles)
             {
                 tagirationArticle.Article.ArticleTag.Clear();
 
@@ -162,12 +161,10 @@
 
                 foreach (var pair in tagsAndRate)
                 {
-                    if (!localTagsDictionary.ContainsKey(pair.Key))
-                    {
-                        localTagsDictionary.Add(pair.Key, new Tag(pair.Key));
-                    }
+                    if (!this.localTagsDictionary.ContainsKey(pair.Key))
+                        this.localTagsDictionary.Add(pair.Key, new Tag(pair.Key));
 
-                    SetTagInArticle(tagirationArticle.Article, localTagsDictionary[pair.Key], pair.Value);
+                    SetTagInArticle(tagirationArticle.Article, this.localTagsDictionary[pair.Key], pair.Value);
                 }
             }
         }
@@ -177,23 +174,19 @@
         /// </summary>
         private void SetGlobalWords()
         {
-            foreach (var article in tagirationArticles)
-            {
-                foreach (var word in article.CleanWords)
+            foreach (var article in this.tagirationArticles)
+            foreach (var word in article.CleanWords)
+                if (this.globalWordsObject.ContainsKey(word))
                 {
-                    if (globalWordsObject.ContainsKey(word))
-                    {
-                        var value = article.GetWordFrequancy(word);
-                        globalWordsObject[word].Freq += value;
-                    }
-                    else
-                    {
-                        var wordObject = new WordInfo { Freq = article.GetWordFrequancy(word) };
-
-                        globalWordsObject.Add(word, wordObject);
-                    }
+                    var value = article.GetWordFrequancy(word);
+                    this.globalWordsObject[word].Freq += value;
                 }
-            }
+                else
+                {
+                    var wordObject = new WordInfo { Freq = article.GetWordFrequancy(word) };
+
+                    this.globalWordsObject.Add(word, wordObject);
+                }
         }
 
         /// <summary>
@@ -201,15 +194,12 @@
         /// </summary>
         private void SetGlobalWordsRate()
         {
-            if (!globalWordsObject.Any())
-            {
-                SetGlobalWords();
-            }
+            if (!this.globalWordsObject.Any()) this.SetGlobalWords();
 
-            foreach (var key in globalWordsObject.Keys)
+            foreach (var key in this.globalWordsObject.Keys)
             {
-                var wordObject = globalWordsObject[key];
-                wordObject.Rate = GetRatioFreq(key);
+                var wordObject = this.globalWordsObject[key];
+                wordObject.Rate = this.GetRatioFreq(key);
             }
         }
 
@@ -218,13 +208,9 @@
         /// </summary>
         private void SetLocalRate()
         {
-            foreach (var article in tagirationArticles)
-            {
-                foreach (var word in article.CleanWords)
-                {
-                    article.SetWordRate(word, globalWordsObject[word].Rate);
-                }
-            }
+            foreach (var article in this.tagirationArticles)
+            foreach (var word in article.CleanWords)
+                article.SetWordRate(word, this.globalWordsObject[word].Rate);
         }
     }
 }

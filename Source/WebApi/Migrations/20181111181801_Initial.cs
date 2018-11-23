@@ -1,40 +1,65 @@
-﻿namespace WebApi.Migrations
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="20181111181801_Initial.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The initial.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace WebApi.Migrations
 {
-    using Microsoft.EntityFrameworkCore.Metadata;
-    using Microsoft.EntityFrameworkCore.Migrations;
     using System;
 
+    using Microsoft.EntityFrameworkCore.Metadata;
+    using Microsoft.EntityFrameworkCore.Migrations;
+
+    /// <summary>
+    /// The initial.
+    /// </summary>
     public partial class Initial : Migration
     {
+        /// <summary>
+        /// The down.
+        /// </summary>
+        /// <param name="migrationBuilder">
+        /// The migration builder.
+        /// </param>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(name: "ArticleTag", schema: "dbo");
+            migrationBuilder.DropTable("ArticleTag", "dbo");
 
-            migrationBuilder.DropTable(name: "OpenedArticle", schema: "dbo");
+            migrationBuilder.DropTable("OpenedArticle", "dbo");
 
-            migrationBuilder.DropTable(name: "Tag", schema: "dbo");
+            migrationBuilder.DropTable("Tag", "dbo");
 
-            migrationBuilder.DropTable(name: "Article", schema: "dbo");
+            migrationBuilder.DropTable("Article", "dbo");
 
-            migrationBuilder.DropTable(name: "SearchingQuery", schema: "dbo");
+            migrationBuilder.DropTable("SearchingQuery", "dbo");
 
-            migrationBuilder.DropTable(name: "ArticleDependencies", schema: "dbo");
+            migrationBuilder.DropTable("ArticleDependencies", "dbo");
 
-            migrationBuilder.DropTable(name: "Session", schema: "dbo");
+            migrationBuilder.DropTable("Session", "dbo");
 
-            migrationBuilder.DropTable(name: "Configuration1C", schema: "dbo");
+            migrationBuilder.DropTable("Configuration1C", "dbo");
 
-            migrationBuilder.DropTable(name: "User", schema: "dbo");
+            migrationBuilder.DropTable("User", "dbo");
 
-            migrationBuilder.DropTable(name: "Provider", schema: "dbo");
+            migrationBuilder.DropTable("Provider", "dbo");
         }
 
+        /// <summary>
+        /// The up.
+        /// </summary>
+        /// <param name="migrationBuilder">
+        /// The migration builder.
+        /// </param>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(name: "dbo");
+            migrationBuilder.EnsureSchema("dbo");
 
             migrationBuilder.CreateTable(
-                name: "Configuration1C",
+                "Configuration1C",
                 schema: "dbo",
                 columns: table => new
                                       {
@@ -46,7 +71,7 @@
                 constraints: table => { table.PrimaryKey("PK_Configuration1C", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "Provider",
+                "Provider",
                 schema: "dbo",
                 columns: table => new
                                       {
@@ -60,7 +85,7 @@
                 constraints: table => { table.PrimaryKey("PK_Provider", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "Tag",
+                "Tag",
                 schema: "dbo",
                 columns: table => new
                                       {
@@ -72,7 +97,7 @@
                 constraints: table => { table.PrimaryKey("PK_Tag", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "ArticleDependencies",
+                "ArticleDependencies",
                 schema: "dbo",
                 columns: table => new
                                       {
@@ -85,8 +110,8 @@
                     {
                         table.PrimaryKey("PK_ArticleDependencies", x => x.Id);
                         table.ForeignKey(
-                            name: "FK_ArticleDependencies_Configuration1C_Configuration1CId",
-                            column: x => x.Configuration1CId,
+                            "FK_ArticleDependencies_Configuration1C_Configuration1CId",
+                            x => x.Configuration1CId,
                             principalSchema: "dbo",
                             principalTable: "Configuration1C",
                             principalColumn: "Id",
@@ -94,7 +119,7 @@
                     });
 
             migrationBuilder.CreateTable(
-                name: "User",
+                "User",
                 schema: "dbo",
                 columns: table => new
                                       {
@@ -110,8 +135,8 @@
                     {
                         table.PrimaryKey("PK_User", x => x.Id);
                         table.ForeignKey(
-                            name: "FK_User_Provider_ProviderId",
-                            column: x => x.ProviderId,
+                            "FK_User_Provider_ProviderId",
+                            x => x.ProviderId,
                             principalSchema: "dbo",
                             principalTable: "Provider",
                             principalColumn: "Id",
@@ -119,7 +144,7 @@
                     });
 
             migrationBuilder.CreateTable(
-                name: "Article",
+                "Article",
                 schema: "dbo",
                 columns: table => new
                                       {
@@ -137,8 +162,8 @@
                     {
                         table.PrimaryKey("PK_Article", x => x.Id);
                         table.ForeignKey(
-                            name: "FK_Article_ArticleDependencies_ArticleDependenciesId",
-                            column: x => x.ArticleDependenciesId,
+                            "FK_Article_ArticleDependencies_ArticleDependenciesId",
+                            x => x.ArticleDependenciesId,
                             principalSchema: "dbo",
                             principalTable: "ArticleDependencies",
                             principalColumn: "Id",
@@ -146,7 +171,7 @@
                     });
 
             migrationBuilder.CreateTable(
-                name: "Session",
+                "Session",
                 schema: "dbo",
                 columns: table => new
                                       {
@@ -161,8 +186,8 @@
                     {
                         table.PrimaryKey("PK_Session", x => x.Id);
                         table.ForeignKey(
-                            name: "FK_Session_User_UserId",
-                            column: x => x.UserId,
+                            "FK_Session_User_UserId",
+                            x => x.UserId,
                             principalSchema: "dbo",
                             principalTable: "User",
                             principalColumn: "Id",
@@ -170,7 +195,7 @@
                     });
 
             migrationBuilder.CreateTable(
-                name: "ArticleTag",
+                "ArticleTag",
                 schema: "dbo",
                 columns: table => new
                                       {
@@ -185,15 +210,15 @@
                     {
                         table.PrimaryKey("PK_ArticleTag", x => x.ID);
                         table.ForeignKey(
-                            name: "FK_ArticleTag_Article_ArticleId",
-                            column: x => x.ArticleId,
+                            "FK_ArticleTag_Article_ArticleId",
+                            x => x.ArticleId,
                             principalSchema: "dbo",
                             principalTable: "Article",
                             principalColumn: "Id",
                             onDelete: ReferentialAction.Restrict);
                         table.ForeignKey(
-                            name: "FK_ArticleTag_Tag_TagId",
-                            column: x => x.TagId,
+                            "FK_ArticleTag_Tag_TagId",
+                            x => x.TagId,
                             principalSchema: "dbo",
                             principalTable: "Tag",
                             principalColumn: "Id",
@@ -201,7 +226,7 @@
                     });
 
             migrationBuilder.CreateTable(
-                name: "SearchingQuery",
+                "SearchingQuery",
                 schema: "dbo",
                 columns: table => new
                                       {
@@ -216,8 +241,8 @@
                     {
                         table.PrimaryKey("PK_SearchingQuery", x => x.Id);
                         table.ForeignKey(
-                            name: "FK_SearchingQuery_Session_SessionId",
-                            column: x => x.SessionId,
+                            "FK_SearchingQuery_Session_SessionId",
+                            x => x.SessionId,
                             principalSchema: "dbo",
                             principalTable: "Session",
                             principalColumn: "Id",
@@ -225,7 +250,7 @@
                     });
 
             migrationBuilder.CreateTable(
-                name: "OpenedArticle",
+                "OpenedArticle",
                 schema: "dbo",
                 columns: table => new
                                       {
@@ -244,15 +269,15 @@
                     {
                         table.PrimaryKey("PK_OpenedArticle", x => x.Id);
                         table.ForeignKey(
-                            name: "FK_OpenedArticle_Article_ArticleId",
-                            column: x => x.ArticleId,
+                            "FK_OpenedArticle_Article_ArticleId",
+                            x => x.ArticleId,
                             principalSchema: "dbo",
                             principalTable: "Article",
                             principalColumn: "Id",
                             onDelete: ReferentialAction.Restrict);
                         table.ForeignKey(
-                            name: "FK_OpenedArticle_SearchingQuery_SearchingQueryId",
-                            column: x => x.SearchingQueryId,
+                            "FK_OpenedArticle_SearchingQuery_SearchingQueryId",
+                            x => x.SearchingQueryId,
                             principalSchema: "dbo",
                             principalTable: "SearchingQuery",
                             principalColumn: "Id",
@@ -260,54 +285,46 @@
                     });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Article_ArticleDependenciesId",
+                "IX_Article_ArticleDependenciesId",
                 schema: "dbo",
                 table: "Article",
                 column: "ArticleDependenciesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ArticleDependencies_Configuration1CId",
+                "IX_ArticleDependencies_Configuration1CId",
                 schema: "dbo",
                 table: "ArticleDependencies",
                 column: "Configuration1CId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ArticleTag_ArticleId",
+                "IX_ArticleTag_ArticleId",
                 schema: "dbo",
                 table: "ArticleTag",
                 column: "ArticleId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_ArticleTag_TagId",
-                schema: "dbo",
-                table: "ArticleTag",
-                column: "TagId");
+            migrationBuilder.CreateIndex("IX_ArticleTag_TagId", schema: "dbo", table: "ArticleTag", column: "TagId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OpenedArticle_ArticleId",
+                "IX_OpenedArticle_ArticleId",
                 schema: "dbo",
                 table: "OpenedArticle",
                 column: "ArticleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OpenedArticle_SearchingQueryId",
+                "IX_OpenedArticle_SearchingQueryId",
                 schema: "dbo",
                 table: "OpenedArticle",
                 column: "SearchingQueryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SearchingQuery_SessionId",
+                "IX_SearchingQuery_SessionId",
                 schema: "dbo",
                 table: "SearchingQuery",
                 column: "SessionId");
 
-            migrationBuilder.CreateIndex(name: "IX_Session_UserId", schema: "dbo", table: "Session", column: "UserId");
+            migrationBuilder.CreateIndex("IX_Session_UserId", schema: "dbo", table: "Session", column: "UserId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_User_ProviderId",
-                schema: "dbo",
-                table: "User",
-                column: "ProviderId");
+            migrationBuilder.CreateIndex("IX_User_ProviderId", schema: "dbo", table: "User", column: "ProviderId");
         }
     }
 }

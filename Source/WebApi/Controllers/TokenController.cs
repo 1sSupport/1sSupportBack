@@ -1,6 +1,6 @@
-﻿//// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TokenController.cs" company="1CHelp">
-//
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="TokenController.cs" company="">
+//   
 // </copyright>
 // <summary>
 //   Defines the TokenController type.
@@ -9,33 +9,35 @@
 
 namespace WebApi.Controllers
 {
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.IdentityModel.Tokens;
     using System;
     using System.Collections.Generic;
     using System.IdentityModel.Tokens.Jwt;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
+
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.IdentityModel.Tokens;
+
     using WebApi.EF.Models;
     using WebApi.Models;
 
     /// <inheritdoc />
     /// <summary>
-    /// The token controller.
+    ///     The token controller.
     /// </summary>
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class TokenController : ControllerBase
     {
         /// <summary>
-        /// The Context.
+        ///     The Context.
         /// </summary>
         private readonly EFContext context;
 
         /// <summary>
-        /// The configuration.
+        ///     The configuration.
         /// </summary>
         private readonly TokenValidationParameters tokenParameters;
 
@@ -67,22 +69,16 @@ namespace WebApi.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> CreateToken(UserInfo info)
         {
-            if (!ModelState.IsValid)
-            {
-                return NoContent();
-            }
+            if (!this.ModelState.IsValid) return this.NoContent();
 
-            IActionResult response = Unauthorized();
+            IActionResult response = this.Unauthorized();
 
-            var identity = await GetUserIdentity(info).ConfigureAwait(false);
+            var identity = await this.GetUserIdentity(info).ConfigureAwait(false);
 
-            if (identity == null)
-            {
-                return response;
-            }
+            if (identity == null) return response;
 
-            var token = await JwtTokenBuilderAsync(identity.Claims).ConfigureAwait(false);
-            response = Ok(new { access_token = token });
+            var token = await this.JwtTokenBuilderAsync(identity.Claims).ConfigureAwait(false);
+            response = this.Ok(new { access_token = token });
             return response;
         }
 
@@ -97,17 +93,14 @@ namespace WebApi.Controllers
         /// </returns>
         private async Task<ClaimsIdentity> GetUserIdentity(UserInfo info)
         {
-            var user = await (from u in context.Users
+            var user = await (from u in this.context.Users
                               where string.Equals(u.INN, info.Inn, StringComparison.OrdinalIgnoreCase) && string.Equals(
                                         u.Login,
                                         info.Login,
                                         StringComparison.OrdinalIgnoreCase)
                               select u).FirstOrDefaultAsync().ConfigureAwait(false);
 
-            if (user == null)
-            {
-                return null;
-            }
+            if (user == null) return null;
 
             var claims = new List<Claim> { new Claim("Login", user.Login), new Claim("Inn", user.INN) };
 
@@ -119,7 +112,8 @@ namespace WebApi.Controllers
             return claimsIdentity;
         }
 
-        /// /// <summary>
+        /// ///
+        /// <summary>
         /// The jwt token builder.
         /// </summary>
         /// <param name="claims">
@@ -134,12 +128,12 @@ namespace WebApi.Controllers
                 () =>
                     {
                         var now = DateTime.UtcNow;
-                        var key = tokenParameters.IssuerSigningKey;
+                        var key = this.tokenParameters.IssuerSigningKey;
                         var credantials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                         var token = new JwtSecurityToken(
                             claims: claims,
-                            issuer: tokenParameters.ValidIssuer,
-                            audience: tokenParameters.ValidAudience,
+                            issuer: this.tokenParameters.ValidIssuer,
+                            audience: this.tokenParameters.ValidAudience,
                             signingCredentials: credantials,
                             notBefore: now,
                             expires: now.AddMonths(3));

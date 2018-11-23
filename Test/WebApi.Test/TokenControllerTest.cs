@@ -45,7 +45,7 @@
                                  ValidAudience = $"Audience",
                              };
             context = new EFContext(new DbContextOptionsBuilder<EFContext>().UseInMemoryDatabase("Test_BD").Options);
-            user = new User("test", "test@test", "123456789000",new Provider("mepw",DateTime.UtcNow, "Bigc"));
+            user = new User("test", "test@test", "123456789000", new Provider("mepw", DateTime.UtcNow, "Bigc"));
             context.Users.Add(user);
             context.SaveChanges();
         }
