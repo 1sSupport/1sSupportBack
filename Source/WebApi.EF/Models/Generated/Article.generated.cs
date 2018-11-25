@@ -40,13 +40,13 @@ namespace WebApi.EF.Models
       /// Public constructor with required data
       /// </summary>
       /// <param name="_title"></param>
-      /// <param name="_text"></param>
-      public Article(string _title, string _text)
+      /// <param name="_filename"></param>
+      public Article(string _title, string _filename)
       {
          if (string.IsNullOrEmpty(_title)) throw new ArgumentNullException(nameof(_title));
          Title = _title;
-         if (string.IsNullOrEmpty(_text)) throw new ArgumentNullException(nameof(_text));
-         Text = _text;
+         if (string.IsNullOrEmpty(_filename)) throw new ArgumentNullException(nameof(_filename));
+         FileName = _filename;
          ArticleTag = new HashSet<WebApi.EF.Models.ArticleTag>();
          OpenedArticle = new HashSet<WebApi.EF.Models.OpenedArticle>();
          Init();
@@ -56,10 +56,10 @@ namespace WebApi.EF.Models
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
       /// <param name="_title"></param>
-      /// <param name="_text"></param>
-      public static Article Create(string _title, string _text)
+      /// <param name="_filename"></param>
+      public static Article Create(string _title, string _filename)
       {
-         return new Article(_title, _text);
+         return new Article(_title, _filename);
       }
 
       // Persistent properties
@@ -81,13 +81,15 @@ namespace WebApi.EF.Models
       /// Required, Min length = 1
       /// </summary>
       [Required]
-      public string Text { get; set; }
+      public string FileName { get; set; }
 
       public DateTime? EditDate { get; set; }
 
       public double? Weight { get; set; }
 
       public bool? IsDeleted { get; set; }
+
+      public string Preview { get; set; }
 
       // Persistent navigation properties
 

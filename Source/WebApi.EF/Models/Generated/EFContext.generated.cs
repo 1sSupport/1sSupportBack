@@ -76,7 +76,7 @@ namespace WebApi.EF.Models
                      .Property(t => t.Title)
                      .IsRequired();
          modelBuilder.Entity<WebApi.EF.Models.Article>()
-                     .Property(t => t.Text)
+                     .Property(t => t.FileName)
                      .IsRequired();
          modelBuilder.Entity<WebApi.EF.Models.Article>()
                      .HasOne(x => x.ArticleDependencies)
