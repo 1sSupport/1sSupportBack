@@ -68,7 +68,17 @@ namespace WebApi.Tools.Finder
                 var articles = (from a in this.context.ArticleTags where a.Tag.Value == tag.Value select a.Article)
                     .ToList();
 
-                Parallel.ForEach(articles, article => { articleswithcoef.Add(GetWeightedArticle(article, tags)); });
+                Parallel.ForEach(
+                    articles,
+                    article =>
+                        {
+                            var coef = GetWeightedArticle(article, tags);
+
+                            lock (articleswithcoef)
+                            {
+                                articleswithcoef.Add(coef);
+                            }
+                        });
             }
 
             var currentArticle = (from a in articleswithcoef.OrderByDescending(p => p.T).DistinctBy(a => a.Article.Id)
