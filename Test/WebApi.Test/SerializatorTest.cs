@@ -21,28 +21,6 @@ namespace WebApi.Test
     public class SerializatorTest
     {
         /// <summary>
-        ///     The cand deserialize with custom tread value.
-        /// </summary>
-        [Fact]
-        public async void CandDeserializeWithCustomTreadValue()
-        {
-            var path = @"D:\Загрузки\TestDumps";
-
-            using (var context = new EFContext(
-                new DbContextOptionsBuilder<EFContext>().UseInMemoryDatabase("Test_BD").Options))
-            {
-                var serializator = new ArticleDeserializer(path, context);
-
-                var count = context.Articles.Count();
-
-                await serializator.DeserializeAsync().ConfigureAwait(false);
-
-                Assert.NotNull(serializator);
-                Assert.NotEmpty(context.Articles);
-            }
-        }
-
-        /// <summary>
         ///     The can deserialize.
         /// </summary>
         [Fact]
@@ -51,16 +29,19 @@ namespace WebApi.Test
             var path = @"D:\Загрузки\TestDumps";
 
             using (var context = new EFContext(
-                new DbContextOptionsBuilder<EFContext>().UseInMemoryDatabase("Test_BD").Options))
+                new DbContextOptionsBuilder<EFContext>().UseInMemoryDatabase("Serialion_test2").Options))
             {
                 var serializator = new ArticleDeserializer(path, context);
 
                 var count = context.Articles.Count();
 
-                await serializator.DeserializeAsync().ConfigureAwait(false);
+                serializator.Deserialize();
+
+                context.SaveChanges();
 
                 Assert.NotNull(serializator);
                 Assert.NotEmpty(context.Articles);
+                context.Dispose();
             }
         }
     }

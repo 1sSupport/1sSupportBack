@@ -103,7 +103,7 @@ namespace WebApi.Test
 
             Assert.NotNull(article);
             Assert.Equal(articleTitle, article.Title);
-            Assert.Equal(articleText, article.Text);
+            Assert.Equal(articleText, article.FileName);
         }
 
         /// <summary>
