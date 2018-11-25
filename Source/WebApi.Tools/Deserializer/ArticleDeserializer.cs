@@ -11,7 +11,9 @@ namespace WebApi.Tools.Deserializer
 {
     #region
 
+    using System;
     using System.Collections.Generic;
+    using System.IO;
 
     using WebApi.EF.Models;
     using WebApi.Tools.Deserializer.Models;
@@ -22,7 +24,7 @@ namespace WebApi.Tools.Deserializer
     /// <summary>
     ///     The article deserializator.
     /// </summary>
-    public class ArticleDeserializer : Deserializer<Chapter>
+    public class ArticleDeserializer : Deserializer<NewArticle>
     {
         /// <summary>
         ///     The context.
@@ -33,14 +35,14 @@ namespace WebApi.Tools.Deserializer
         /// <summary>
         ///     Initializes a new instance of the <see cref="T:WebApi.Tools.Deserializer.ArticleDeserializer" /> class.
         /// </summary>
-        /// <param name="pathToFolderWithPath">
+        /// <param name="pathToFolder">
         ///     The path to folder with path.
         /// </param>
         /// <param name="context">
         ///     The context.
         /// </param>
-        public ArticleDeserializer(string pathToFolderWithPath, EFContext context)
-            : base(pathToFolderWithPath)
+        public ArticleDeserializer(string pathToFolder, EFContext context)
+            : base(pathToFolder)
         {
             this.context = context;
         }
@@ -52,14 +54,12 @@ namespace WebApi.Tools.Deserializer
         /// <param name="objects">
         ///     The objects.
         /// </param>
-        protected override void SaveObjects(ref ICollection<Chapter> objects)
+        protected override void SaveObjects()
         {
-            foreach (var chapter in objects)
+            foreach (var myObject in objects)
             {
-                foreach (var chapterContent in chapter.Contents)
-                    this.context.Articles.Add(new Article(chapterContent.Title, chapterContent.Response));
-
-                this.context.SaveChanges();
+                var path = $"{myObject.Id}.json";
+                    this.context.Articles.Add(new Article(myObject.Title, path));
             }
         }
     }

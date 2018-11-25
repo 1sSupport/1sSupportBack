@@ -39,4 +39,5 @@ namespace WebApi.Tools.Deserializer.Models
         /// </summary>
         public string Title { get; set; }
     }
+    
 }

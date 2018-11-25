@@ -30,14 +30,19 @@ namespace WebApi.Tools.Deserializer
         where T : class
     {
         /// <summary>
+        /// The objects.
+        /// </summary>
+        protected ICollection<T> objects = new List<T>();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Deserializer{T}"/> class.
         /// </summary>
-        /// <param name="pathToFolderWithPath">
+        /// <param name="pathToFolder">
         /// The path to folder with path.
         /// </param>
-        protected Deserializer(string pathToFolderWithPath)
+        protected Deserializer(string pathToFolder)
         {
-            this.Directory = new DirectoryInfo(pathToFolderWithPath);
+            this.Directory = new DirectoryInfo(pathToFolder);
         }
 
         /// <summary>
@@ -51,81 +56,34 @@ namespace WebApi.Tools.Deserializer
         protected virtual DirectoryInfo Directory { get; }
 
         /// <summary>
-        ///     The deserialize async.
+        /// The deserialize async.
         /// </summary>
-        /// <returns>
-        ///     The <see cref="Task" />.
-        /// </returns>
         /// <exception cref="DirectoryNotFoundException">
         /// </exception>
-        public async Task DeserializeAsync()
+        public void Deserialize()
         {
             if (!this.Directory.Exists) throw new DirectoryNotFoundException();
 
-            var files = this.Directory.GetFiles().ToList();
+            var files = this.Directory.GetFiles(string.Empty).ToList();
 
-            var mod = files.Count / this.ThreadCount;
+            if (!files.Any()) throw new NullReferenceException();
 
-            ICollection<T> chapters;
+            var tasks = new Task[this.ThreadCount];
 
-            for (var i = 0; i < mod; i++)
+            var elementsPerTask = files.Count / this.ThreadCount + 1;
+
+            for (var k = 0; k < this.ThreadCount; k++)
             {
-                var curentfiles = files.Take(this.ThreadCount).ToList();
+                var start = k * elementsPerTask;
+                var indexlastElementPerTask = (k + 1) * elementsPerTask;
 
-                files.RemoveRange(0, this.ThreadCount);
-                chapters = await this.DeserializeChapterByTasksAsync(curentfiles).ConfigureAwait(false);
-                this.SaveObjects(ref chapters);
+                var finish = indexlastElementPerTask < files.Count ? indexlastElementPerTask : files.Count;
+
+                tasks[k] = this.DeserializeFromFilesAsync(start, finish, files);
             }
-
-            chapters = await this.DeserializeChapterByTasksAsync(files).ConfigureAwait(false);
-            this.SaveObjects(ref chapters);
-
-            chapters.Clear();
-        }
-
-        /// <summary>
-        /// The deserialize chapter by tasks.
-        /// </summary>
-        /// <param name="files">
-        /// The files.
-        /// </param>
-        /// <returns>
-        /// The <see cref="ICollection{Chapter}"/>.
-        /// </returns>
-        protected virtual ICollection<T> DeserializeChapterByTasks(ICollection<FileInfo> files)
-        {
-            var tasks = new Task[files.Count];
-
-            var index = 0;
-
-            ICollection<T> chapters = new List<T>();
-
-            foreach (var file in files)
-            {
-                var fileref = file;
-                tasks[index] = Task.Factory.StartNew(
-                    () => { this.GetChapterFromFile(ref fileref, ref chapters); },
-                    TaskCreationOptions.LongRunning);
-                ++index;
-            }
-
             Task.WaitAll(tasks);
 
-            return chapters;
-        }
-
-        /// <summary>
-        /// The deserialize chapter by tasks.
-        /// </summary>
-        /// <param name="files">
-        /// The files.
-        /// </param>
-        /// <returns>
-        /// The <see cref="ICollection{Chapter}"/>.
-        /// </returns>
-        protected virtual Task<ICollection<T>> DeserializeChapterByTasksAsync(ICollection<FileInfo> files)
-        {
-            return Task.Run(() => this.DeserializeChapterByTasks(files));
+            this.SaveObjects();
         }
 
         /// <summary>
@@ -134,10 +92,7 @@ namespace WebApi.Tools.Deserializer
         /// <param name="file">
         /// The file.
         /// </param>
-        /// <param name="chapters">
-        /// The chapters.
-        /// </param>
-        protected virtual void GetChapterFromFile(ref FileInfo file, ref ICollection<T> chapters)
+        protected virtual void GetObjectFromFile(FileInfo file)
         {
             var serializer = new JsonSerializer();
             using (var stream = file.OpenRead())
@@ -146,19 +101,44 @@ namespace WebApi.Tools.Deserializer
                 {
                     using (var jsonTextReader = new JsonTextReader(reader))
                     {
-                        var chapter = serializer.Deserialize<T>(jsonTextReader);
-                        chapters.Add(chapter);
+                        var item = serializer.Deserialize<T>(jsonTextReader);
+                        lock (this.objects)
+                        {
+                            this.objects.Add(item);
+                        }
                     }
                 }
             }
         }
 
         /// <summary>
-        /// The save object.
+        /// The save objects.
         /// </summary>
-        /// <param name="objects">
-        /// The objects.
+        protected abstract void SaveObjects();
+
+        /// <summary>
+        /// The deserialize from files.
+        /// </summary>
+        /// <param name="start">
+        /// The start.
         /// </param>
-        protected abstract void SaveObjects(ref ICollection<T> objects);
+        /// <param name="last">
+        /// The last.
+        /// </param>
+        /// <param name="files">
+        /// The files.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        private Task DeserializeFromFilesAsync(int start, int last, IReadOnlyList<FileInfo> files)
+        {
+            return Task.Factory.StartNew(
+                () =>
+                    {
+                        for (var i = start; i < last; i++) this.GetObjectFromFile(files[i]);
+                    },
+                TaskCreationOptions.LongRunning);
+        }
     }
 }
