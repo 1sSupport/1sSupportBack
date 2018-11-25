@@ -132,7 +132,7 @@ namespace WebApi.Tools.Tagirator
         /// </returns>
         private IEnumerable<string> GetCleanAllWords()
         {
-            var words = FilteredText.GetWords(this.Article.Text);
+            var words = FilteredText.GetWords(this.Article.GetText());
             return words;
         }
 

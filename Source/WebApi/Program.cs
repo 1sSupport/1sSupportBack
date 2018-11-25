@@ -50,6 +50,12 @@ namespace WebApi
         /// </param>
         public static void Main(string[] args)
         {
+            var path = Environment.GetCommandLineArgs()[0];
+
+            var dir = Path.GetDirectoryName(path);
+
+            Directory.SetCurrentDirectory(dir);
+
             var build = CreateWebHostBuilder(args).Build();
 
             if (args.Length > 0 && args[0] == "swagger" && args[1] != string.Empty)

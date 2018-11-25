@@ -94,12 +94,12 @@ namespace WebApi.Infrastructer
                     // new Article(
                     // "Да да Заглавие1",
                     // "ывааываукпеукпукфцуц фыавпапкцпцупкцыукуепе фывваолрорлфыварполфывапроауцфакпролнапросывмя олрфвыпарололфвпарлгподукфаагнпшелкфвупапролвам"));
-                    var path = @"D:\Загрузки\dumpsNewFormat";
-                    if (!File.Exists(path)) return;
+                    var path = Path.Combine(Environment.CurrentDirectory, "articles");
+                    if (!Directory.Exists(path)) return;
 
                     var serializator = new ArticleDeserializer(path, context);
 
-                    await serializator.DeserializeAsync().ConfigureAwait(true);
+                    serializator.Deserialize();
                     context.SaveChanges();
 
                     var end = DateTime.Now;

@@ -1,0 +1,1 @@
+dotnet publish -o c:\Dotnetapp\Panel10 -c release

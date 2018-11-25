@@ -84,7 +84,7 @@ namespace WebApi.Controllers
                 return this.BadRequest(new { message = "Что-то пошло не так" });
             }
 
-            return this.Ok(new { article.Id, article.Title, article.Text });
+            return this.Ok(new { article.Id, article.Title, Text = article.GetText() });
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace WebApi.Controllers
 
             if (!articles.Any()) return this.Ok(null);
 
-            return this.Ok((from a in articles select new { a.Id, a.Title, Text = a.Text.Substring(0, 75) }).ToList());
+            return this.Ok((from a in articles select new { a.Id, a.Title, Text = a.Preview }).ToList());
         }
     }
 }
