@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="EFModelTest.cs" company="">
-//
+//   
 // </copyright>
 // <summary>
 //   The ef model test.
@@ -9,111 +9,113 @@
 
 namespace WebApi.Test
 {
-    using Microsoft.EntityFrameworkCore;
     using System;
+
+    using Microsoft.EntityFrameworkCore;
+
     using WebApi.EF.Models;
+
     using Xunit;
 
     /// <summary>
-    /// The ef model test.
+    ///     The ef model test.
     /// </summary>
     public class EfModelTest : IDisposable
     {
         /// <summary>
-        /// The article text.
+        ///     The article text.
         /// </summary>
         private readonly string articleText;
 
         /// <summary>
-        /// The article title.
+        ///     The article title.
         /// </summary>
         private readonly string articleTitle;
 
         /// <summary>
-        /// The config name.
+        ///     The config name.
         /// </summary>
         private readonly string configName;
 
         /// <summary>
-        /// The context options.
+        ///     The context options.
         /// </summary>
         private readonly DbContextOptions<EFContext> contextOptions;
 
         /// <summary>
-        /// The date provider end.
+        ///     The date provider end.
         /// </summary>
         private readonly DateTime dateProviderEnd;
 
         /// <summary>
-        /// The provider name.
+        ///     The provider name.
         /// </summary>
         private readonly string providerName;
 
         /// <summary>
-        /// The query text.
+        ///     The query text.
         /// </summary>
         private readonly string queryText;
 
         /// <summary>
-        /// The tag text.
+        ///     The tag text.
         /// </summary>
         private readonly string tagText;
 
         /// <summary>
-        /// The user email.
+        ///     The user email.
         /// </summary>
         private readonly string userEmail;
 
         /// <summary>
-        /// The user inn.
+        ///     The user inn.
         /// </summary>
         private readonly string userInn;
 
         /// <summary>
-        /// The user login.
+        ///     The user login.
         /// </summary>
         private readonly string userLogin;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EfModelTest"/> class.
+        ///     Initializes a new instance of the <see cref="EfModelTest" /> class.
         /// </summary>
         public EfModelTest()
         {
-            contextOptions = new DbContextOptionsBuilder<EFContext>().UseInMemoryDatabase(databaseName: "Test_BD")
-                .Options;
-            userLogin = "123321";
-            userEmail = "superStrong@mail.com";
-            userInn = "123456789";
-            articleText = "Blah blah balh blah la la la la";
-            articleTitle = "1233";
-            tagText = "Blah";
-            configName = "Ypp";
-            providerName = "OOO MMM";
-            dateProviderEnd = DateTime.Now.AddDays(10);
-            queryText = "Мне сложно, помогите";
+            this.contextOptions = new DbContextOptionsBuilder<EFContext>().UseInMemoryDatabase("Test_BD").Options;
+            this.userLogin = "123321";
+            this.userEmail = "superStrong@mail.com";
+            this.userInn = "123456789";
+            this.articleText = "Blah blah balh blah la la la la";
+            this.articleTitle = "1233";
+            this.tagText = "Blah";
+            this.configName = "Ypp";
+            this.providerName = "OOO MMM";
+            this.dateProviderEnd = DateTime.Now.AddDays(10);
+            this.queryText = "Мне сложно, помогите";
         }
 
         /// <summary>
-        /// The can initial article.
+        ///     The can initial article.
         /// </summary>
         [Fact]
         public void CanInitialArticle()
         {
-            var article = new Article(articleTitle, articleText);
+            var article = new Article(this.articleTitle, this.articleText);
 
             Assert.NotNull(article);
-            Assert.Equal(articleTitle, article.Title);
-            Assert.Equal(articleText, article.FileName);
+            Assert.Equal(this.articleTitle, article.Title);
+            Assert.Equal(this.articleText, article.FileName);
         }
 
         /// <summary>
-        /// The can initial article tag.
+        ///     The can initial article tag.
         /// </summary>
         [Fact]
         public void CanInitialArticleTag()
         {
-            var tag = new Tag(tagText);
-            var article = new Article(articleTitle, articleText);
+            var tag = new Tag(this.tagText);
+            var article = new Article(this.articleTitle, this.articleText);
 
             var articleTag = new ArticleTag(5, article, tag);
 
@@ -124,35 +126,35 @@ namespace WebApi.Test
         }
 
         /// <summary>
-        /// The can initial configuration 1 c.
+        ///     The can initial configuration 1 c.
         /// </summary>
         [Fact]
         public void CanInitialConfiguration1C()
         {
-            var config = new Configuration1C(configName);
+            var config = new Configuration1C(this.configName);
 
             Assert.NotNull(config);
-            Assert.Equal(configName, config.Name);
+            Assert.Equal(this.configName, config.Name);
         }
 
         /// <summary>
-        /// The can initial context.
+        ///     The can initial context.
         /// </summary>
         [Fact]
         public void CanInitialContext()
         {
-            var context = new EFContext(contextOptions);
+            var context = new EFContext(this.contextOptions);
 
             Assert.NotNull(context);
         }
 
         /// <summary>
-        /// The can_ initial_ dependes article.
+        ///     The can_ initial_ dependes article.
         /// </summary>
         [Fact]
         public void CanInitialDependesArticle()
         {
-            var config = new Configuration1C(configName);
+            var config = new Configuration1C(this.configName);
 
             var depenedes = new ArticleDependencies(config);
 
@@ -161,16 +163,16 @@ namespace WebApi.Test
         }
 
         /// <summary>
-        /// The can initial opened article.
+        ///     The can initial opened article.
         /// </summary>
         [Fact]
         public void CanInitialOpenedArticle()
         {
-            var provider = new Provider(providerName, dateProviderEnd, "d");
-            var user = new User(userLogin, userEmail, userInn, provider) { Provider = provider };
+            var provider = new Provider(this.providerName, this.dateProviderEnd, "d");
+            var user = new User(this.userLogin, this.userEmail, this.userInn, provider) { Provider = provider };
             var session = new Session(DateTime.Now, user);
-            var query = new SearchingQuery(queryText, DateTime.Now, session);
-            var article = new Article(articleTitle, articleText);
+            var query = new SearchingQuery(this.queryText, DateTime.Now, session);
+            var article = new Article(this.articleTitle, this.articleText);
             var date = DateTime.Now;
 
             var openedArticle = new OpenedArticle(date, article, query);
@@ -182,43 +184,43 @@ namespace WebApi.Test
         }
 
         /// <summary>
-        /// The can initial provider.
+        ///     The can initial provider.
         /// </summary>
         [Fact]
         public void CanInitialProvider()
         {
-            var provider = new Provider(providerName, dateProviderEnd, "d");
+            var provider = new Provider(this.providerName, this.dateProviderEnd, "d");
 
             Assert.NotNull(provider);
-            Assert.Equal(providerName, provider.Name);
-            Assert.Equal(dateProviderEnd, provider.ContractEndTime);
+            Assert.Equal(this.providerName, provider.Name);
+            Assert.Equal(this.dateProviderEnd, provider.ContractEndTime);
         }
 
         /// <summary>
-        /// The can initial query.
+        ///     The can initial query.
         /// </summary>
         [Fact]
         public void CanInitialQuery()
         {
-            var provider = new Provider(providerName, dateProviderEnd, "d");
-            var user = new User(userLogin, userEmail, userInn, provider) { Provider = provider };
+            var provider = new Provider(this.providerName, this.dateProviderEnd, "d");
+            var user = new User(this.userLogin, this.userEmail, this.userInn, provider) { Provider = provider };
             var session = new Session(DateTime.Now, user);
 
-            var query = new SearchingQuery(queryText, DateTime.Now, session);
+            var query = new SearchingQuery(this.queryText, DateTime.Now, session);
 
             Assert.NotNull(query);
-            Assert.Equal(query.Text, queryText);
+            Assert.Equal(query.Text, this.queryText);
             Assert.Equal(query.Session, session);
         }
 
         /// <summary>
-        /// The can initial session.
+        ///     The can initial session.
         /// </summary>
         [Fact]
         public void CanInitialSession()
         {
-            var provider = new Provider(providerName, dateProviderEnd, "d");
-            var user = new User(userLogin, userEmail, userInn, provider) { Provider = provider };
+            var provider = new Provider(this.providerName, this.dateProviderEnd, "d");
+            var user = new User(this.userLogin, this.userEmail, this.userInn, provider) { Provider = provider };
 
             var session = new Session(DateTime.Now, user);
 
@@ -227,37 +229,37 @@ namespace WebApi.Test
         }
 
         /// <summary>
-        /// The can initial tag.
+        ///     The can initial tag.
         /// </summary>
         [Fact]
         public void CanInitialTag()
         {
-            var tag = new Tag(tagText);
+            var tag = new Tag(this.tagText);
 
             Assert.NotNull(tag);
-            Assert.Equal(tagText, tag.Value);
+            Assert.Equal(this.tagText, tag.Value);
         }
 
         /// <summary>
-        /// The can initial user.
+        ///     The can initial user.
         /// </summary>
         [Fact]
         public void CanInitialUser()
         {
-            var provider = new Provider(providerName, dateProviderEnd, "d");
+            var provider = new Provider(this.providerName, this.dateProviderEnd, "d");
 
-            var user = new User(userLogin, userEmail, userInn, provider) { Provider = provider };
+            var user = new User(this.userLogin, this.userEmail, this.userInn, provider) { Provider = provider };
 
             Assert.NotNull(user);
-            Assert.Equal(userEmail, user.Email);
-            Assert.Equal(userInn, user.INN);
-            Assert.Equal(userLogin, user.Login);
+            Assert.Equal(this.userEmail, user.Email);
+            Assert.Equal(this.userInn, user.INN);
+            Assert.Equal(this.userLogin, user.Login);
             Assert.Equal(user.Provider, provider);
         }
 
         /// <inheritdoc />
         /// <summary>
-        /// The dispose.
+        ///     The dispose.
         /// </summary>
         public void Dispose()
         {

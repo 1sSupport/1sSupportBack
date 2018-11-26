@@ -98,12 +98,12 @@ namespace WebApi.Controllers
 
             var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
             var providerMail =
-                await (from p in this.context.Providers
-                       from u in this.context.Users
+                await (from p in context.Providers
+                       from u in context.Users
                        where u.Id == user.Id && p.Id == u.Provider.Id
                        select p.SupportEmail).FirstOrDefaultAsync().ConfigureAwait(false);
             await this.SendSupportMessages(
-                new List<string> { providerMail, "govjadkoilja@yandex.ru", "krumih@mail.ru" },
+                new List<string> { providerMail},
                 message.Title,
                 message.Text).ConfigureAwait(false);
             return this.Ok(supportAsk.Id);
@@ -120,14 +120,12 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpPost]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> EndSession(
-            [FromBody] [Required] [Range(0, int.MaxValue)]int id)
+        public async Task<IActionResult> EndSession([FromBody] [Required] [Range(0, int.MaxValue)] int id)
         {
             var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
 
-            var session =
-                await (from s in this.context.Sessions where s.Id == id && s.User.Id == user.Id select s)
-                    .FirstOrDefaultAsync().ConfigureAwait(false);
+            var session = await (from s in this.context.Sessions where s.Id == id && s.User.Id == user.Id select s)
+                              .FirstOrDefaultAsync().ConfigureAwait(false);
 
             if (session == null || session.CloseTime != null)
                 return this.BadRequest(new { message = "Сессия была не создана либо уже закрыта" });
@@ -197,13 +195,11 @@ namespace WebApi.Controllers
 
             var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
 
-            var session = await (from s in this.context.Sessions where s.CloseTime == null && s.User.Id == user.Id select s)
-                              .FirstOrDefaultAsync().ConfigureAwait(false);
+            var session =
+                await (from s in this.context.Sessions where s.CloseTime == null && s.User.Id == user.Id select s)
+                    .FirstOrDefaultAsync().ConfigureAwait(false);
 
-            if (session != null)
-            {
-                return this.Ok(new { SessionId = session.Id, User = user.Login });
-            }
+            if (session != null) return this.Ok(new { SessionId = session.Id, User = user.Login });
 
             session = new Session(date, user);
 

@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="SerializatorTest.cs" company="">
-//
+//   
 // </copyright>
 // <summary>
 //   The serializator test.
@@ -9,10 +9,13 @@
 
 namespace WebApi.Test
 {
-    using Microsoft.EntityFrameworkCore;
     using System.Linq;
+
+    using Microsoft.EntityFrameworkCore;
+
     using WebApi.EF.Models;
     using WebApi.Tools.Deserializer;
+
     using Xunit;
 
     /// <summary>

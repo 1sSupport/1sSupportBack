@@ -1,18 +1,27 @@
-﻿namespace WebApi.EF.Models
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Session.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The session.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace WebApi.EF.Models
 {
     using System;
 
     /// <summary>
-    /// The session.
+    ///     The session.
     /// </summary>
     public partial class Session
     {
         /// <summary>
-        /// The end seddion.
+        ///     The end seddion.
         /// </summary>
         public void EndSession()
         {
-            CloseTime = DateTime.UtcNow;
+            this.CloseTime = DateTime.UtcNow;
         }
     }
 }

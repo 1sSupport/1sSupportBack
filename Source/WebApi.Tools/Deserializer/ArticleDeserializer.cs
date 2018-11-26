@@ -25,7 +25,7 @@ namespace WebApi.Tools.Deserializer
     public class ArticleDeserializer : Deserializer<NewArticle>
     {
         /// <summary>
-        /// The context.
+        ///     The context.
         /// </summary>
         private readonly EFContext context;
 
@@ -46,7 +46,7 @@ namespace WebApi.Tools.Deserializer
 
         /// <inheritdoc />
         /// <summary>
-        /// The save objects.
+        ///     The save objects.
         /// </summary>
         protected override void SaveObjects()
         {

@@ -15,7 +15,7 @@ namespace WebApi.Migrations
     using Microsoft.EntityFrameworkCore.Migrations;
 
     /// <summary>
-    /// The initial.
+    ///     The initial.
     /// </summary>
     public partial class Initial : Migration
     {

@@ -15,7 +15,7 @@ namespace WebApi.Tools.Deserializer.Models
     public class NewArticle
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="NewArticle"/> class.
+        ///     Initializes a new instance of the <see cref="NewArticle" /> class.
         /// </summary>
         public NewArticle()
         {

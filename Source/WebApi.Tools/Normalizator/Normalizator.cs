@@ -180,7 +180,7 @@ namespace WebApi.Tools.Normalizator
                                          Response = content.Response
                                      };
                 var fileName = $"{newContetn.Id}.json";
-                
+
                 var path = Path.Combine(this.saveDir.FullName, fileName);
                 var file = new FileInfo(path);
                 if (file.Exists) continue;

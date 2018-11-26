@@ -30,7 +30,7 @@ namespace WebApi.Tools.Deserializer
         where T : class
     {
         /// <summary>
-        /// The objects.
+        ///     The objects.
         /// </summary>
         protected ICollection<T> objects = new List<T>();
 
@@ -56,7 +56,7 @@ namespace WebApi.Tools.Deserializer
         protected virtual DirectoryInfo Directory { get; }
 
         /// <summary>
-        /// The deserialize async.
+        ///     The deserialize async.
         /// </summary>
         /// <exception cref="DirectoryNotFoundException">
         /// </exception>
@@ -81,6 +81,7 @@ namespace WebApi.Tools.Deserializer
 
                 tasks[k] = this.DeserializeFromFilesAsync(start, finish, files);
             }
+
             Task.WaitAll(tasks);
 
             this.SaveObjects();
@@ -112,7 +113,7 @@ namespace WebApi.Tools.Deserializer
         }
 
         /// <summary>
-        /// The save objects.
+        ///     The save objects.
         /// </summary>
         protected abstract void SaveObjects();
 

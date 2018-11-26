@@ -1,16 +1,34 @@
-﻿namespace WebApi.Test.DecoderTest
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="DecoderTest.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   The decoder test.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace WebApi.Test.DecoderTest
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Text;
     using System.Text.RegularExpressions;
 
     using WebApi.Tools.Decoder;
 
     using Xunit;
 
+    using Decoder = WebApi.Tools.Decoder.Decoder;
+
+    /// <summary>
+    /// The decoder test.
+    /// </summary>
     public class DecoderTest
     {
+        /// <summary>
+        /// The decoder creation test.
+        /// </summary>
         [Fact]
         public void DecoderCreationTest()
         {
@@ -18,6 +36,9 @@
             Assert.NotNull(decoder);
         }
 
+        /// <summary>
+        /// The get inn login from invalid string test.
+        /// </summary>
         [Fact]
         public void GetInnLoginFromInvalidStringTest()
         {
@@ -25,10 +46,13 @@
             Assert.Throws<Exception>(() => decoder.GetInnLoginFromString("invalidString"));
         }
 
+        /// <summary>
+        /// The get inn login from string test.
+        /// </summary>
         [Fact]
         public void GetInnLoginFromStringTest()
         {
-            var testData = GetTestData();
+            var testData = this.GetTestData();
             var decoder = new Decoder();
             foreach (var tuple in testData)
             {
@@ -38,6 +62,9 @@
             }
         }
 
+        /// <summary>
+        /// The inn login creation test.
+        /// </summary>
         [Fact]
         public void InnLoginCreationTest()
         {
@@ -47,11 +74,17 @@
             Assert.Equal("login", innLogin.Login);
         }
 
+        /// <summary>
+        /// The get test data.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="List"/>.
+        /// </returns>
         private List<Tuple<string, string, string>> GetTestData()
         {
             var testData = new List<Tuple<string, string, string>>();
             var path = @"C:\Users\Анна\source\repos\1sSupportBack\Test\WebApi.Test\DecoderTest\links.json";
-            using (StreamReader sr = new StreamReader(path, System.Text.Encoding.Default))
+            using (var sr = new StreamReader(path, Encoding.Default))
             {
                 var text = sr.ReadToEnd();
                 var matches = Regex.Matches(

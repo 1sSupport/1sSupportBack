@@ -14,7 +14,7 @@ namespace WebApi.Migrations
     using Microsoft.EntityFrameworkCore.Migrations;
 
     /// <summary>
-    /// The fix query.
+    ///     The fix query.
     /// </summary>
     public partial class FixQuery : Migration
     {

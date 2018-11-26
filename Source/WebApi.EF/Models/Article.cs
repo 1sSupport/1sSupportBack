@@ -11,6 +11,7 @@ namespace WebApi.EF.Models
 {
     using System;
     using System.IO;
+
     using Newtonsoft.Json.Linq;
 
     /// <summary>
@@ -27,7 +28,7 @@ namespace WebApi.EF.Models
         public virtual string GetText()
         {
             // var serializer = new JsonSerializer();
-            var file = new FileInfo(Path.Combine(Environment.CurrentDirectory, "articles", FileName));
+            var file = new FileInfo(Path.Combine(Environment.CurrentDirectory, "articles", this.FileName));
             string text;
             using (var stream = file.OpenRead())
             {

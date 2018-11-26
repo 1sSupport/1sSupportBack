@@ -134,11 +134,11 @@ namespace WebApi
             services.AddDbContext<EFContext>(
                 options =>
                     {
-                        //if (this.Environment.IsDevelopment()) options.UseInMemoryDatabase("TestDb");
-                        //else
-                            options.UseSqlServer(
-                                this.Configuration["Connection:String"],
-                                b => b.MigrationsAssembly("WebApi"));
+                        // if (this.Environment.IsDevelopment()) options.UseInMemoryDatabase("TestDb");
+                        // else
+                        options.UseSqlServer(
+                            this.Configuration["Connection:String"],
+                            b => b.MigrationsAssembly("WebApi"));
                     });
 
             services.AddSingleton(tokenParams);

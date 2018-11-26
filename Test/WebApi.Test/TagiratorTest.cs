@@ -1,10 +1,20 @@
-﻿namespace WebApi.Test
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="TagiratorTest.cs" company="">
+//   
+// </copyright>
+// <summary>
+//   Defines the TagiratorTest type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace WebApi.Test
 {
-    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+
+    using Microsoft.EntityFrameworkCore;
 
     using Newtonsoft.Json;
 
@@ -12,33 +22,85 @@
     using WebApi.Tools.Deserializer.Models;
     using WebApi.Tools.Finder;
     using WebApi.Tools.Tagirator;
+
     using Xunit;
 
     /// <inheritdoc />
     /// <summary>
-    /// The tagirator test.
+    ///     The tagirator test.
     /// </summary>
     public class TagiratorTest : IDisposable
     {
         /// <summary>
-        /// The context.
+        ///     The context.
         /// </summary>
         private readonly EFContext context;
 
+        /// <summary>
+        /// The subdir.
+        /// </summary>
         private DirectoryInfo Subdir;
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="TagiratorTest" /> class.
+        /// </summary>
+        public TagiratorTest()
+        {
+            this.context = new EFContext(
+                new DbContextOptionsBuilder<EFContext>().UseInMemoryDatabase("Tagirator_test_BD").Options);
+            this.Initial();
+        }
+
+        /// <summary>
+        ///     The can get article in query.
+        /// </summary>
+        [Fact]
+        public void CanGetArticleInQuery()
+        {
+            this.CanInitializeTagirator();
+            var query = new ArticleFinder(this.context);
+            var articles = query.GetArticlesByQuery("Врата да да я");
+            Assert.NotEmpty(articles);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     The dispose.
+        /// </summary>
+        public void Dispose()
+        {
+            this.context.Dispose();
+            this.Subdir.Delete(true);
+        }
+
+        /// <summary>
+        ///     The can initialize tagirator.
+        /// </summary>
+        private void CanInitializeTagirator()
+        {
+            var tagirator = new Tagirator(this.context);
+            tagirator.SetTagsInArticle();
+            this.context.SaveChanges();
+
+            Assert.NotEmpty(this.context.Articles);
+            Assert.NotNull(this.context.Articles.FirstOrDefault());
+            Assert.NotEmpty(this.context.Tags);
+            Assert.NotEmpty(this.context.ArticleTags);
+        }
+
+        /// <summary>
+        /// The initial.
+        /// </summary>
         private void Initial()
         {
-
             var dir = new DirectoryInfo(Environment.CurrentDirectory);
-            Subdir = dir.CreateSubdirectory("TestTagirator");
-            
+            this.Subdir = dir.CreateSubdirectory("TestTagirator");
 
             var list = new List<NewArticle>();
             list.Add(
-              new NewArticle(
-                  "Да да Заглавие",
-                  "Огроманя статья исполльзуящая огромное колличество буков и слов я хз что сюда еще написать для размера"));
+                new NewArticle(
+                    "Да да Заглавие",
+                    "Огроманя статья исполльзуящая огромное колличество буков и слов я хз что сюда еще написать для размера"));
             list.Add(
                 new NewArticle(
                     "Да да Заглавие",
@@ -76,7 +138,7 @@
                 new NewArticle(
                     "Да да Заглавие1",
                     "ывааываукпеукпукфцуц фыавпапкцпцупкцыукуепе фывваолрорлфыварполфывапроауцфакпролнапросывмя олрфвыпарололфвпарлгподукфаагнпшелкфвупапролвам"));
-            int count = 0;
+            var count = 0;
             foreach (var newArticle in list)
             {
                 var id = count + 1;
@@ -103,52 +165,6 @@
             }
 
             this.context.SaveChanges();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TagiratorTest"/> class.
-        /// </summary>
-        public TagiratorTest()
-        {
-            context = new EFContext(new DbContextOptionsBuilder<EFContext>().UseInMemoryDatabase("Tagirator_test_BD").Options);
-            this.Initial();
-        }
-
-        /// <summary>
-        /// The can get article in query.
-        /// </summary>
-        [Fact]
-        public void CanGetArticleInQuery()
-        {
-            CanInitializeTagirator();
-            var query = new ArticleFinder(context);
-            var articles = query.GetArticlesByQuery("Врата да да я");
-            Assert.NotEmpty(articles);
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// The dispose.
-        /// </summary>
-        public void Dispose()
-        {
-            context.Dispose();
-            this.Subdir.Delete(true);
-        }
-
-        /// <summary>
-        /// The can initialize tagirator.
-        /// </summary>
-        private void CanInitializeTagirator()
-        {
-            var tagirator = new Tagirator(context);
-            tagirator.SetTagsInArticle();
-            context.SaveChanges();
-
-            Assert.NotEmpty(context.Articles);
-            Assert.NotNull(context.Articles.FirstOrDefault());
-            Assert.NotEmpty(context.Tags);
-            Assert.NotEmpty(context.ArticleTags);
         }
     }
 }

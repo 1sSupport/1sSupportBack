@@ -42,7 +42,7 @@ namespace WebApi.Infrastructer
                 var start = DateTime.Now;
                 if (!context.Users.Any())
                 {
-                    var provider = new Provider("testProvieder", DateTime.Now.AddYears(10), "Bigcall9287006@gmail.com");
+                    var provider = new Provider("testProvieder", DateTime.Now.AddYears(10), "govjadkoilja@yandex.ru");
                     context.Users.Add(new User("test", "test", "000000000000", provider));
                     context.Users.Add(new User("admin", "admin", "999999999999", provider));
                     context.SaveChanges();
@@ -106,6 +106,7 @@ namespace WebApi.Infrastructer
                     Console.WriteLine($"{end}Article {end - start}");
                     File.AppendAllText(@"d:\test.txt", $"{end} -> Article {end - start}{Environment.NewLine}");
                 }
+
                 if (!context.Tags.Any())
                 {
                     var tagirator = new Tagirator(context);
