@@ -121,13 +121,12 @@ namespace WebApi.Controllers
         [HttpPost]
         [ProducesResponseType(404)]
         public async Task<IActionResult> EndSession(
-            [FromBody] [Required] [Range(0, int.MaxValue)]
-            int id)
+            [FromBody] [Required] [Range(0, int.MaxValue)]int id)
         {
             var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
 
             var session =
-                await (from s in this.context.Sessions where s.Id == id && s.User.Login.Equals(user.Login) select s)
+                await (from s in this.context.Sessions where s.Id == id && s.User.Id == user.Id select s)
                     .FirstOrDefaultAsync().ConfigureAwait(false);
 
             if (session == null || session.CloseTime != null)
@@ -198,7 +197,15 @@ namespace WebApi.Controllers
 
             var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
 
-            var session = new Session(date, user);
+            var session = await (from s in this.context.Sessions where s.CloseTime == null && s.User.Id == user.Id select s)
+                              .FirstOrDefaultAsync().ConfigureAwait(false);
+
+            if (session != null)
+            {
+                return this.Ok(new { SessionId = session.Id, User = user.Login });
+            }
+
+            session = new Session(date, user);
 
             this.context.Sessions.Add(session);
             try

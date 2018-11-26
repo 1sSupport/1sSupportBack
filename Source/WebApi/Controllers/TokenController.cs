@@ -136,7 +136,7 @@ namespace WebApi.Controllers
                             audience: this.tokenParameters.ValidAudience,
                             signingCredentials: credantials,
                             notBefore: now,
-                            expires: now.AddMonths(3));
+                            expires: now.AddMinutes(5));
                         return new JwtSecurityTokenHandler().WriteToken(token);
                     });
         }

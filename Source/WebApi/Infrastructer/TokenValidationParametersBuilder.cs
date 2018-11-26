@@ -9,6 +9,7 @@
 
 namespace WebApi.Infrastructer
 {
+    using System;
     using System.Text;
 
     using Microsoft.Extensions.Configuration;
@@ -34,8 +35,8 @@ namespace WebApi.Infrastructer
                        {
                            ValidateIssuer = true,
                            ValidateAudience = true,
-
-                           // ValidateLifetime = true,
+                           ClockSkew = TimeSpan.FromMinutes(0),
+                           ValidateLifetime = true,
                            ValidIssuer = $"{configuration["JWT:issuer"]}",
                            ValidAudience = $"{configuration["JWT:audience"]}",
                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:key"]))
