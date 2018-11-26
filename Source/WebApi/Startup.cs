@@ -103,13 +103,13 @@ namespace WebApi
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "1cSupport V1"); });
-
-                SeedData.EnsurePopulated(app);
             }
             else
             {
                 app.UseHsts();
             }
+
+            SeedData.EnsurePopulated(app);
         }
 
         /// <summary>

@@ -27,7 +27,7 @@ namespace WebApi.EF.Models
         public virtual string GetText()
         {
             // var serializer = new JsonSerializer();
-            var file = new FileInfo(Path.Combine(Environment.CurrentDirectory, "articels", FileName));
+            var file = new FileInfo(Path.Combine(Environment.CurrentDirectory, "articles", FileName));
             string text;
             using (var stream = file.OpenRead())
             {

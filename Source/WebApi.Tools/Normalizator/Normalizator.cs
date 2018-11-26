@@ -64,12 +64,12 @@ namespace WebApi.Tools.Normalizator
         public string SaveFolder { get; }
 
         /// <summary>
-        /// The normalize.
+        ///     The normalize.
         /// </summary>
         /// <exception cref="DirectoryNotFoundException">
         /// </exception>
         /// <returns>
-        /// The <see cref="Task"/>.
+        ///     The <see cref="Task" />.
         /// </returns>
         public Task NormalizeAsync()
         {
@@ -149,7 +149,7 @@ namespace WebApi.Tools.Normalizator
                         {
                             var chapter = GetChapterFromFile(files[i]);
 
-                            this.SaveArticleFromSaveDirectory(chapter, this.saveDir);
+                            this.SaveArticleFromSaveDirectory(chapter);
                         }
                     },
                 TaskCreationOptions.LongRunning);
@@ -161,10 +161,7 @@ namespace WebApi.Tools.Normalizator
         /// <param name="chapter">
         /// The chapter.
         /// </param>
-        /// <param name="saveDir">
-        /// The save dir.
-        /// </param>
-        private void SaveArticleFromSaveDirectory(Chapter chapter, FileSystemInfo saveDir)
+        private void SaveArticleFromSaveDirectory(Chapter chapter)
         {
             foreach (var content in chapter.Contents)
             {
@@ -183,7 +180,8 @@ namespace WebApi.Tools.Normalizator
                                          Response = content.Response
                                      };
                 var fileName = $"{newContetn.Id}.json";
-                var path = Path.Combine(saveDir.FullName,fileName);
+                
+                var path = Path.Combine(this.saveDir.FullName, fileName);
                 var file = new FileInfo(path);
                 if (file.Exists) continue;
 

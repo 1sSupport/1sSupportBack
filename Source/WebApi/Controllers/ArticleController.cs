@@ -84,7 +84,14 @@ namespace WebApi.Controllers
                 return this.BadRequest(new { message = "Что-то пошло не так" });
             }
 
-            return this.Ok(new { article.Id, article.Title, Text = article.GetText() });
+            try
+            {
+                return this.Ok(new { article.Id, article.Title, Text = article.GetText() });
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new { id, message = "Данной статьи не было найдено" });
+            }
         }
 
         /// <summary>
