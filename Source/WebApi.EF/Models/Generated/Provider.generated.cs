@@ -63,7 +63,9 @@ namespace WebApi.EF.Models
          return new Provider(_name, _contractendtime, _supportemail);
       }
 
-      // Persistent properties
+      /*************************************************************************
+       * Persistent properties
+       *************************************************************************/
 
       /// <summary>
       /// Identity, Required, Indexed
@@ -82,6 +84,7 @@ namespace WebApi.EF.Models
       /// Min length = 1, Max length = 300
       /// </summary>
       [MaxLength(300)]
+      [StringLength(300)]
       public string LogoUrl { get; set; }
 
       /// <summary>
@@ -96,7 +99,9 @@ namespace WebApi.EF.Models
       [Required]
       public string SupportEmail { get; set; }
 
-      // Persistent navigation properties
+      /*************************************************************************
+       * Persistent navigation properties
+       *************************************************************************/
 
       public virtual ICollection<WebApi.EF.Models.User> User { get; set; }
 

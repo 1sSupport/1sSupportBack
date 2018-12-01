@@ -62,7 +62,9 @@ namespace WebApi.EF.Models
          return new Article(_title, _filename);
       }
 
-      // Persistent properties
+      /*************************************************************************
+       * Persistent properties
+       *************************************************************************/
 
       /// <summary>
       /// Identity, Required, Indexed
@@ -91,7 +93,9 @@ namespace WebApi.EF.Models
 
       public string Preview { get; set; }
 
-      // Persistent navigation properties
+      /*************************************************************************
+       * Persistent navigation properties
+       *************************************************************************/
 
       public virtual ICollection<WebApi.EF.Models.ArticleTag> ArticleTag { get; set; }
 

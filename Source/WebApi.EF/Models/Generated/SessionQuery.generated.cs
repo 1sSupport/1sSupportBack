@@ -21,16 +21,16 @@ using System.Runtime.CompilerServices;
 
 namespace WebApi.EF.Models
 {
-   public partial class ArticleDependencies
+   public partial class SessionQuery
    {
       partial void Init();
 
       /// <summary>
       /// Default constructor. Protected due to required properties, but present because EF needs it.
       /// </summary>
-      protected ArticleDependencies()
+      protected SessionQuery()
       {
-         Article = new System.Collections.Generic.HashSet<WebApi.EF.Models.Article>();
+         OpenedArticle = new System.Collections.Generic.HashSet<WebApi.EF.Models.OpenedArticle>();
 
          Init();
       }
@@ -38,23 +38,31 @@ namespace WebApi.EF.Models
       /// <summary>
       /// Public constructor with required data
       /// </summary>
-      /// <param name="_configuration1c"></param>
-      public ArticleDependencies(WebApi.EF.Models.Configuration1C _configuration1c)
+      /// <param name="_time"></param>
+      /// <param name="_session"></param>
+      /// <param name="_searchingquery0"></param>
+      public SessionQuery(DateTime _time, WebApi.EF.Models.Session _session, WebApi.EF.Models.SearchingQuery _searchingquery0)
       {
-         if (_configuration1c == null) throw new ArgumentNullException(nameof(_configuration1c));
-         Configuration1C = _configuration1c;
+         Time = _time;
+         if (_session == null) throw new ArgumentNullException(nameof(_session));
+         Session = _session;
 
-         Article = new HashSet<WebApi.EF.Models.Article>();
+         if (_searchingquery0 == null) throw new ArgumentNullException(nameof(_searchingquery0));
+         _searchingquery0.SessionQuery.Add(this);
+
+         OpenedArticle = new HashSet<WebApi.EF.Models.OpenedArticle>();
          Init();
       }
 
       /// <summary>
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
-      /// <param name="_configuration1c"></param>
-      public static ArticleDependencies Create(WebApi.EF.Models.Configuration1C _configuration1c)
+      /// <param name="_time"></param>
+      /// <param name="_session"></param>
+      /// <param name="_searchingquery0"></param>
+      public static SessionQuery Create(DateTime _time, WebApi.EF.Models.Session _session, WebApi.EF.Models.SearchingQuery _searchingquery0)
       {
-         return new ArticleDependencies(_configuration1c);
+         return new SessionQuery(_time, _session, _searchingquery0);
       }
 
       /*************************************************************************
@@ -68,16 +76,22 @@ namespace WebApi.EF.Models
       [Required]
       public int Id { get; set; }
 
+      /// <summary>
+      /// Required
+      /// </summary>
+      [Required]
+      public DateTime Time { get; set; }
+
       /*************************************************************************
        * Persistent navigation properties
        *************************************************************************/
 
-      public virtual ICollection<WebApi.EF.Models.Article> Article { get; set; }
+      public virtual ICollection<WebApi.EF.Models.OpenedArticle> OpenedArticle { get; set; }
 
       /// <summary>
       /// Required
       /// </summary>
-      public virtual WebApi.EF.Models.Configuration1C Configuration1C { get; set; }
+      public virtual WebApi.EF.Models.Session Session { get; set; }
 
    }
 }

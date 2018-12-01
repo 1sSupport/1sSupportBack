@@ -9,6 +9,9 @@
 
 namespace WebApi.Test
 {
+    using System;
+    using System.IO;
+
     using WebApi.Tools.Normalizator;
 
     using Xunit;
@@ -16,7 +19,7 @@ namespace WebApi.Test
     /// <summary>
     /// The normalizator test.
     /// </summary>
-    public class NormalizatorTest
+    public class NormalizatorTest: IDisposable
     {
         /// <summary>
         /// The dumps folder.
@@ -33,7 +36,7 @@ namespace WebApi.Test
         /// </summary>
         public NormalizatorTest()
         {
-            this.dumpsFolder = @"D:\Загрузки\dumpsNewFormat";
+            this.dumpsFolder = @"D:\Загрузки\testDump";
             this.saveFodler = @"D:\Normalizator";
         }
 
@@ -49,6 +52,19 @@ namespace WebApi.Test
 
             Assert.Equal(this.saveFodler, normalizer.SaveFolder);
             Assert.Equal(this.dumpsFolder, normalizer.DumpsFolder);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// The dispose.
+        /// </summary>
+        public void Dispose()
+        {
+            var saveDir = new DirectoryInfo(this.saveFodler);
+            if (saveDir.Exists)
+            {
+                saveDir.Delete(true);
+            }
         }
     }
 }

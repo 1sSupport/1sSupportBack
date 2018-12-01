@@ -62,7 +62,9 @@ namespace WebApi.EF.Models
          return new ArticleTag(_weight, _article, _tag);
       }
 
-      // Persistent properties
+      /*************************************************************************
+       * Persistent properties
+       *************************************************************************/
 
       /// <summary>
       /// Identity, Required, Indexed
@@ -77,7 +79,9 @@ namespace WebApi.EF.Models
       [Required]
       public double Weight { get; set; }
 
-      // Persistent navigation properties
+      /*************************************************************************
+       * Persistent navigation properties
+       *************************************************************************/
 
       /// <summary>
       /// Required

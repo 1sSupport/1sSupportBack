@@ -10,6 +10,7 @@
 namespace WebApi.Test
 {
     using System;
+    using System.Linq;
 
     using Microsoft.EntityFrameworkCore;
 
@@ -171,15 +172,16 @@ namespace WebApi.Test
             var provider = new Provider(this.providerName, this.dateProviderEnd, "d");
             var user = new User(this.userLogin, this.userEmail, this.userInn, provider) { Provider = provider };
             var session = new Session(DateTime.Now, user);
-            var query = new SearchingQuery(this.queryText, DateTime.Now, session);
+            var query = new SearchingQuery(this.queryText);
+            var sessionQuary = new SessionQuery(DateTime.Now, session, query);
             var article = new Article(this.articleTitle, this.articleText);
             var date = DateTime.Now;
 
-            var openedArticle = new OpenedArticle(date, article, query);
+            var openedArticle = new OpenedArticle(date, article, sessionQuary);
 
             Assert.NotNull(openedArticle);
             Assert.Equal(openedArticle.Article, article);
-            Assert.Equal(openedArticle.SearchingQuery, query);
+            Assert.Equal(openedArticle.SearchingQuery, sessionQuary);
             Assert.Equal(openedArticle.Time, date);
         }
 
@@ -206,11 +208,10 @@ namespace WebApi.Test
             var user = new User(this.userLogin, this.userEmail, this.userInn, provider) { Provider = provider };
             var session = new Session(DateTime.Now, user);
 
-            var query = new SearchingQuery(this.queryText, DateTime.Now, session);
 
-            Assert.NotNull(query);
-            Assert.Equal(query.Text, this.queryText);
-            Assert.Equal(query.Session, session);
+            var sessionQuary = new SessionQuery(DateTime.Now, session, new SearchingQuery("dd"));
+
+            Assert.NotNull(sessionQuary);
         }
 
         /// <summary>

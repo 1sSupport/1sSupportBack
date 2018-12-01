@@ -18,7 +18,7 @@ namespace WebApi.Tools.Tagirator
     /// <summary>
     ///     The tagirator.
     /// </summary>
-    public class Tagirator
+    public class Tagirator: IDisposable
     {
         /// <summary>
         ///     The context.
@@ -117,6 +117,17 @@ namespace WebApi.Tools.Tagirator
             var currentArticle = this.context.Articles.Select(article => new TagirationArticle(article)).ToList();
 
             foreach (var tagirationArticle in currentArticle) this.tagirationArticles.Add(tagirationArticle);
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// The dispose.
+        /// </summary>
+        public void Dispose()
+        {
+            this.globalWordsObject.Clear();
+            this.localTagsDictionary.Clear();
+            this.tagirationArticles.Clear();
         }
 
         /// <summary>

@@ -29,7 +29,7 @@ namespace WebApi.Test
         [Fact]
         public async void CanDeserialize()
         {
-            var path = @"D:\Загрузки\TestDumps";
+            var path = @"D:\Загрузки\testDump";
 
             using (var context = new EFContext(
                 new DbContextOptionsBuilder<EFContext>().UseInMemoryDatabase("Serialion_test2").Options))

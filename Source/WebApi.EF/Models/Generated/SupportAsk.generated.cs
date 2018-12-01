@@ -65,7 +65,9 @@ namespace WebApi.EF.Models
          return new SupportAsk(_text, _contactinfo, _session0);
       }
 
-      // Persistent properties
+      /*************************************************************************
+       * Persistent properties
+       *************************************************************************/
 
       /// <summary>
       /// Identity, Required, Indexed
@@ -86,7 +88,9 @@ namespace WebApi.EF.Models
       [Required]
       public string ContactInfo { get; set; }
 
-      // Persistent navigation properties
+      /*************************************************************************
+       * Persistent navigation properties
+       *************************************************************************/
 
       public virtual ICollection<WebApi.EF.Models.AskTitle> AskTitle { get; set; }
 

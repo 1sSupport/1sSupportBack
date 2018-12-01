@@ -30,7 +30,8 @@ namespace WebApi.EF.Models
       /// </summary>
       protected SearchingQuery()
       {
-         OpenedArticle = new System.Collections.Generic.HashSet<WebApi.EF.Models.OpenedArticle>();
+         Amount = 1;
+         SessionQuery = new System.Collections.Generic.HashSet<WebApi.EF.Models.SessionQuery>();
 
          Init();
       }
@@ -39,17 +40,13 @@ namespace WebApi.EF.Models
       /// Public constructor with required data
       /// </summary>
       /// <param name="_text"></param>
-      /// <param name="_time"></param>
-      /// <param name="_session"></param>
-      public SearchingQuery(string _text, DateTime _time, WebApi.EF.Models.Session _session)
+      /// <param name="_amount"></param>
+      public SearchingQuery(string _text, int _amount = 1)
       {
          if (string.IsNullOrEmpty(_text)) throw new ArgumentNullException(nameof(_text));
          Text = _text;
-         Time = _time;
-         if (_session == null) throw new ArgumentNullException(nameof(_session));
-         Session = _session;
-
-         OpenedArticle = new HashSet<WebApi.EF.Models.OpenedArticle>();
+         Amount = _amount;
+         SessionQuery = new HashSet<WebApi.EF.Models.SessionQuery>();
          Init();
       }
 
@@ -57,14 +54,15 @@ namespace WebApi.EF.Models
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
       /// <param name="_text"></param>
-      /// <param name="_time"></param>
-      /// <param name="_session"></param>
-      public static SearchingQuery Create(string _text, DateTime _time, WebApi.EF.Models.Session _session)
+      /// <param name="_amount"></param>
+      public static SearchingQuery Create(string _text, int _amount = 1)
       {
-         return new SearchingQuery(_text, _time, _session);
+         return new SearchingQuery(_text, _amount);
       }
 
-      // Persistent properties
+      /*************************************************************************
+       * Persistent properties
+       *************************************************************************/
 
       /// <summary>
       /// Identity, Required, Indexed
@@ -80,19 +78,16 @@ namespace WebApi.EF.Models
       public string Text { get; set; }
 
       /// <summary>
-      /// Required
+      /// Required, Default value = 1
       /// </summary>
       [Required]
-      public DateTime Time { get; set; }
+      public int Amount { get; set; }
 
-      // Persistent navigation properties
+      /*************************************************************************
+       * Persistent navigation properties
+       *************************************************************************/
 
-      public virtual ICollection<WebApi.EF.Models.OpenedArticle> OpenedArticle { get; set; }
-
-      /// <summary>
-      /// Required
-      /// </summary>
-      public virtual WebApi.EF.Models.Session Session { get; set; }
+      public virtual ICollection<WebApi.EF.Models.SessionQuery> SessionQuery { get; set; }
 
    }
 }

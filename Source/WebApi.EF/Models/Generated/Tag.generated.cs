@@ -56,7 +56,9 @@ namespace WebApi.EF.Models
          return new Tag(_value);
       }
 
-      // Persistent properties
+      /*************************************************************************
+       * Persistent properties
+       *************************************************************************/
 
       /// <summary>
       /// Identity, Required, Indexed
@@ -70,9 +72,12 @@ namespace WebApi.EF.Models
       /// </summary>
       [Required]
       [MaxLength(120)]
+      [StringLength(120)]
       public string Value { get; set; }
 
-      // Persistent navigation properties
+      /*************************************************************************
+       * Persistent navigation properties
+       *************************************************************************/
 
       public virtual ICollection<WebApi.EF.Models.ArticleTag> ArticleTag { get; set; }
 

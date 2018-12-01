@@ -58,7 +58,9 @@ namespace WebApi.EF.Models
          return new AskTitle(_text, _supportask0);
       }
 
-      // Persistent properties
+      /*************************************************************************
+       * Persistent properties
+       *************************************************************************/
 
       /// <summary>
       /// Identity, Required, Indexed
@@ -73,7 +75,9 @@ namespace WebApi.EF.Models
       [Required]
       public string Text { get; set; }
 
-      // Persistent navigation properties
+      /*************************************************************************
+       * Persistent navigation properties
+       *************************************************************************/
 
    }
 }

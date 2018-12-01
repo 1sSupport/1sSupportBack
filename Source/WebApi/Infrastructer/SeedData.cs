@@ -109,15 +109,19 @@ namespace WebApi.Infrastructer
 
                 if (!context.Tags.Any())
                 {
-                    var tagirator = new Tagirator(context);
-                    tagirator.SetTagsInArticle();
-                    context.SaveChanges();
+                    using (var tagirator = new Tagirator(context))
+                    {
+                        tagirator.SetTagsInArticle();
+                        context.SaveChanges();
 
-                    var end = DateTime.Now;
-                    Console.WriteLine($"{end}Tagiration {end - start}");
-                    File.AppendAllText(@"d:\test.txt", $"{end} -> Tagiration {end - start}{Environment.NewLine}");
+                        var end = DateTime.Now;
+                        Console.WriteLine($"{end}Tagiration {end - start}");
+                        File.AppendAllText(@"d:\test.txt", $"{end} -> Tagiration {end - start}{Environment.NewLine}");
+                    }
                 }
             }
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
     }
 }

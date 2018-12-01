@@ -42,7 +42,7 @@ namespace WebApi.EF.Models
       /// <param name="_time"></param>
       /// <param name="_article"></param>
       /// <param name="_searchingquery"></param>
-      public OpenedArticle(DateTime _time, WebApi.EF.Models.Article _article, WebApi.EF.Models.SearchingQuery _searchingquery, int _openednumber = 0)
+      public OpenedArticle(DateTime _time, WebApi.EF.Models.Article _article, WebApi.EF.Models.SessionQuery _searchingquery, int _openednumber = 0)
       {
          OpenedNumber = _openednumber;
          Time = _time;
@@ -62,12 +62,14 @@ namespace WebApi.EF.Models
       /// <param name="_time"></param>
       /// <param name="_article"></param>
       /// <param name="_searchingquery"></param>
-      public static OpenedArticle Create(DateTime _time, WebApi.EF.Models.Article _article, WebApi.EF.Models.SearchingQuery _searchingquery, int _openednumber = 0)
+      public static OpenedArticle Create(DateTime _time, WebApi.EF.Models.Article _article, WebApi.EF.Models.SessionQuery _searchingquery, int _openednumber = 0)
       {
          return new OpenedArticle(_time, _article, _searchingquery, _openednumber);
       }
 
-      // Persistent properties
+      /*************************************************************************
+       * Persistent properties
+       *************************************************************************/
 
       /// <summary>
       /// Identity, Required, Indexed
@@ -94,7 +96,9 @@ namespace WebApi.EF.Models
 
       public int? Mark { get; set; }
 
-      // Persistent navigation properties
+      /*************************************************************************
+       * Persistent navigation properties
+       *************************************************************************/
 
       /// <summary>
       /// Required
@@ -104,7 +108,7 @@ namespace WebApi.EF.Models
       /// <summary>
       /// Required
       /// </summary>
-      public virtual WebApi.EF.Models.SearchingQuery SearchingQuery { get; set; }
+      public virtual WebApi.EF.Models.SessionQuery SearchingQuery { get; set; }
 
    }
 }

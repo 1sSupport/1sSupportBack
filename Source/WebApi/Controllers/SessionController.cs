@@ -22,6 +22,7 @@ namespace WebApi.Controllers
     using NETCore.MailKit.Core;
 
     using WebApi.EF.Models;
+    using WebApi.Infrastructer;
     using WebApi.Models;
 
     /// <inheritdoc />
@@ -68,7 +69,8 @@ namespace WebApi.Controllers
         /// The <see cref="Task"/>.
         /// </returns>
         [HttpPost]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(100)]
         public async Task<IActionResult> CreateSupportMessage([Required] SupportMessage message)
         {
             if (!this.ModelState.IsValid) return this.BadRequest();
@@ -96,7 +98,7 @@ namespace WebApi.Controllers
                 return this.BadRequest(new { message = "Что-то пошло не так" });
             }
 
-            var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
+            var user = await this.User.GetUserFromDbInContextAsync(this.context).ConfigureAwait(false);
             var providerMail =
                 await (from p in context.Providers
                        from u in context.Users
@@ -119,10 +121,11 @@ namespace WebApi.Controllers
         /// The <see cref="Task"/>.
         /// </returns>
         [HttpPost]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(100)]
         public async Task<IActionResult> EndSession([FromBody] [Required] [Range(0, int.MaxValue)] int id)
         {
-            var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
+            var user = await this.User.GetUserFromDbInContextAsync(this.context).ConfigureAwait(false);
 
             var session = await (from s in this.context.Sessions where s.Id == id && s.User.Id == user.Id select s)
                               .FirstOrDefaultAsync().ConfigureAwait(false);
@@ -153,10 +156,11 @@ namespace WebApi.Controllers
         /// The <see cref="Task"/>.
         /// </returns>
         [HttpPost]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(100)]
         public async Task<IActionResult> SetMark([FromBody] [Required] MarkArticle markedArticle)
         {
-            var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
+            var user = await this.User.GetUserFromDbInContextAsync(this.context).ConfigureAwait(false);
 
             var openArticle = await (from s in this.context.Sessions
                                      where s.Id == markedArticle.SessionId && s.User.Id == user.Id
@@ -188,15 +192,15 @@ namespace WebApi.Controllers
         ///     The <see cref="Task" />.
         /// </returns>
         [HttpPost]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(100)]
         public async Task<IActionResult> StartSession()
         {
             var date = DateTime.UtcNow;
 
-            var user = await this.GetUserFromHttpContext().ConfigureAwait(false);
+            var user = await this.User.GetUserFromDbInContextAsync(this.context).ConfigureAwait(false);
 
-            var session =
-                await (from s in this.context.Sessions where s.CloseTime == null && s.User.Id == user.Id select s)
+            var session = await (from s in this.context.Sessions where s.CloseTime == null && s.User.Id == user.Id select s)
                     .FirstOrDefaultAsync().ConfigureAwait(false);
 
             if (session != null) return this.Ok(new { SessionId = session.Id, User = user.Login });
@@ -214,23 +218,6 @@ namespace WebApi.Controllers
             }
 
             return this.Ok(new { SessionId = session.Id, User = user.Login });
-        }
-
-        /// <summary>
-        ///     The get user from http context.
-        /// </summary>
-        /// <returns>
-        ///     The <see cref="Task" />.
-        /// </returns>
-        private Task<User> GetUserFromHttpContext()
-        {
-            var userInfo = new UserInfo
-                               {
-                                   Inn = this.User.FindFirst("Inn").Value, Login = this.User.FindFirst("Login").Value
-                               };
-
-            return (from u in this.context.Users where u.INN == userInfo.Inn || u.Login == userInfo.Login select u)
-                .FirstOrDefaultAsync();
         }
 
         /// <summary>

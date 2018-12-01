@@ -29,8 +29,9 @@ namespace WebApi.EF.Models
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Configuration1C> Configurations1C { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.OpenedArticle> OpenedArticles { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Provider> Providers { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.SearchingQuery> SearchingQueries { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.SearchingQuery> SearchingQueryes { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Session> Sessions { get; set; }
+      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.SessionQuery> SessionQueries { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.SupportAsk> SupportAsk { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Tag> Tags { get; set; }
       public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.User> Users { get; set; }
@@ -183,11 +184,12 @@ namespace WebApi.EF.Models
                      .Property(t => t.Text)
                      .IsRequired();
          modelBuilder.Entity<WebApi.EF.Models.SearchingQuery>()
-                     .Property(t => t.Time)
+                     .Property(t => t.Amount)
                      .IsRequired();
          modelBuilder.Entity<WebApi.EF.Models.SearchingQuery>()
-                     .HasOne(x => x.Session)
-                     .WithMany(x => x.SearchingQuery);
+                     .HasMany(x => x.SessionQuery)
+                     .WithOne()
+                     .IsRequired();
 
          modelBuilder.Entity<WebApi.EF.Models.Session>()
                      .ToTable("Session")
@@ -206,6 +208,20 @@ namespace WebApi.EF.Models
          modelBuilder.Entity<WebApi.EF.Models.Session>()
                      .HasOne(x => x.User)
                      .WithMany(x => x.Session);
+
+         modelBuilder.Entity<WebApi.EF.Models.SessionQuery>()
+                     .ToTable("SessionQuery")
+                     .HasKey(t => t.Id);
+         modelBuilder.Entity<WebApi.EF.Models.SessionQuery>()
+                     .Property(t => t.Id)
+                     .IsRequired()
+                     .ValueGeneratedOnAdd();
+         modelBuilder.Entity<WebApi.EF.Models.SessionQuery>()
+                     .Property(t => t.Time)
+                     .IsRequired();
+         modelBuilder.Entity<WebApi.EF.Models.SessionQuery>()
+                     .HasOne(x => x.Session)
+                     .WithMany(x => x.SearchingQuery);
 
          modelBuilder.Entity<WebApi.EF.Models.SupportAsk>()
                      .ToTable("SupportAsk")

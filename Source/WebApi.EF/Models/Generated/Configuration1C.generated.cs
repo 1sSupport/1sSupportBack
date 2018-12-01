@@ -56,7 +56,9 @@ namespace WebApi.EF.Models
          return new Configuration1C(_name);
       }
 
-      // Persistent properties
+      /*************************************************************************
+       * Persistent properties
+       *************************************************************************/
 
       /// <summary>
       /// Identity, Required, Indexed
@@ -71,7 +73,9 @@ namespace WebApi.EF.Models
       [Required]
       public string Name { get; set; }
 
-      // Persistent navigation properties
+      /*************************************************************************
+       * Persistent navigation properties
+       *************************************************************************/
 
       public virtual ICollection<WebApi.EF.Models.ArticleDependencies> ArticleDependencies { get; set; }
 

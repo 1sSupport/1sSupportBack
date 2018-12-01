@@ -31,7 +31,7 @@ namespace WebApi.EF.Models
       protected Session()
       {
          SupportAsk = new System.Collections.Generic.HashSet<WebApi.EF.Models.SupportAsk>();
-         SearchingQuery = new System.Collections.Generic.HashSet<WebApi.EF.Models.SearchingQuery>();
+         SearchingQuery = new System.Collections.Generic.HashSet<WebApi.EF.Models.SessionQuery>();
 
          Init();
       }
@@ -48,7 +48,7 @@ namespace WebApi.EF.Models
          User = _user;
 
          SupportAsk = new HashSet<WebApi.EF.Models.SupportAsk>();
-         SearchingQuery = new HashSet<WebApi.EF.Models.SearchingQuery>();
+         SearchingQuery = new HashSet<WebApi.EF.Models.SessionQuery>();
          Init();
       }
 
@@ -62,7 +62,9 @@ namespace WebApi.EF.Models
          return new Session(_opentime, _user);
       }
 
-      // Persistent properties
+      /*************************************************************************
+       * Persistent properties
+       *************************************************************************/
 
       /// <summary>
       /// Identity, Required, Indexed
@@ -79,11 +81,13 @@ namespace WebApi.EF.Models
 
       public DateTime? CloseTime { get; protected set; }
 
-      // Persistent navigation properties
+      /*************************************************************************
+       * Persistent navigation properties
+       *************************************************************************/
 
       public virtual ICollection<WebApi.EF.Models.SupportAsk> SupportAsk { get; set; }
 
-      public virtual ICollection<WebApi.EF.Models.SearchingQuery> SearchingQuery { get; set; }
+      public virtual ICollection<WebApi.EF.Models.SessionQuery> SearchingQuery { get; set; }
 
       /// <summary>
       /// Required

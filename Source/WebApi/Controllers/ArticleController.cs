@@ -19,6 +19,7 @@ namespace WebApi.Controllers
     using Microsoft.EntityFrameworkCore;
 
     using WebApi.EF.Models;
+    using WebApi.Infrastructer;
     using WebApi.Tools.Finder;
 
     /// <inheritdoc />
@@ -59,21 +60,24 @@ namespace WebApi.Controllers
         /// The <see cref="Task"/>.
         /// </returns>
         [HttpGet]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> GetArticle(
-            [FromQuery] [Required] [Range(1, int.MaxValue)]
-            int id,
-            [FromQuery] [Required] string query)
+        [ProducesResponseType(400)]
+        [ProducesResponseType(100)]
+        public async Task<IActionResult> GetArticle( [FromQuery] [Required] [Range(1, int.MaxValue)] int id, [FromQuery] [Required] string query)
         {
-            var article = await (from a in this.context.Articles where a.Id == id select a).FirstOrDefaultAsync()
-                              .ConfigureAwait(false);
-            var queryDb = await (from q in this.context.SearchingQueries where q.Text == query select q)
+            var article = await (from a in this.context.Articles where a.Id == id select a).FirstOrDefaultAsync().ConfigureAwait(false);
+
+            var queryDb = await (from q in this.context.SearchingQueryes where q.Text == query select q)
                               .FirstOrDefaultAsync().ConfigureAwait(false);
 
             if (article == null || queryDb == null)
                 return this.BadRequest(new { message = $"Не найденно {id} || {query}" });
 
-            var openedArticle = new OpenedArticle(DateTime.UtcNow, article, queryDb);
+            var user = await this.User.GetUserFromDbInContextAsync(this.context).ConfigureAwait(false);
+
+            var userSessionQuary = await (from q in this.context.SessionQueries where q.Session.User.Id == user.Id select q).FirstOrDefaultAsync().ConfigureAwait(false);
+
+            var openedArticle = new OpenedArticle(DateTime.UtcNow, article, userSessionQuary);
+
             try
             {
                 this.context.OpenedArticles.Add(openedArticle);
@@ -88,7 +92,7 @@ namespace WebApi.Controllers
             {
                 return this.Ok(new { article.Id, article.Title, Text = article.GetText() });
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return this.BadRequest(new { id, message = "Данной статьи не было найдено" });
             }
@@ -107,11 +111,11 @@ namespace WebApi.Controllers
         /// The <see cref="Task"/>.
         /// </returns>
         [HttpGet]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(100)]
         public async Task<IActionResult> GetArticlesByQuery(
             [FromQuery] [Required] string query,
-            [FromQuery] [Required] [Range(0, int.MaxValue)]
-            int sessionId)
+            [FromQuery] [Required] [Range(0, int.MaxValue)]int sessionId)
         {
             var articles = await Task.Run(
                                () =>
@@ -120,11 +124,14 @@ namespace WebApi.Controllers
                                        return finder.GetArticlesByQuery(query);
                                    }).ConfigureAwait(false);
 
-            var session = await (from s in this.context.Sessions where s.Id == sessionId select s).FirstOrDefaultAsync()
-                              .ConfigureAwait(false);
+            var session = await (from s in this.context.Sessions where s.Id == sessionId select s).FirstOrDefaultAsync().ConfigureAwait(false);
             try
             {
-                this.context.SearchingQueries.Add(new SearchingQuery(query, DateTime.Now, session));
+                var searchingQuery = await (from q in this.context.SearchingQueryes where q.Text == query.ToLower() select q).FirstOrDefaultAsync().ConfigureAwait(false) ?? new SearchingQuery(query.ToLower());
+
+                var sessionQuary = new SessionQuery(DateTime.Now, session, searchingQuery);
+
+                this.context.SessionQueries.Add(sessionQuary);
 
                 await this.context.SaveChangesAsync().ConfigureAwait(false);
             }

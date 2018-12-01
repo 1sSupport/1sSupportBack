@@ -69,7 +69,9 @@ namespace WebApi.EF.Models
          return new User(_login, _email, _inn, _provider);
       }
 
-      // Persistent properties
+      /*************************************************************************
+       * Persistent properties
+       *************************************************************************/
 
       /// <summary>
       /// Identity, Required, Indexed
@@ -95,9 +97,12 @@ namespace WebApi.EF.Models
       /// </summary>
       [Required]
       [MaxLength(12)]
+      [StringLength(12)]
       public string INN { get; set; }
 
-      // Persistent navigation properties
+      /*************************************************************************
+       * Persistent navigation properties
+       *************************************************************************/
 
       public virtual ICollection<WebApi.EF.Models.Session> Session { get; set; }
 
