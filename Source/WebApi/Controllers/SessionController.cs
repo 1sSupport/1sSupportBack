@@ -127,13 +127,14 @@ namespace WebApi.Controllers
         {
             var user = await this.User.GetUserFromDbInContextAsync(this.context).ConfigureAwait(false);
 
-            var session = await (from s in this.context.Sessions where s.Id == id && s.User.Id == user.Id select s)
+            var session = await (from s in this.context.Sessions where s.Id == id && s.User.Id == user.Id && s.CloseTime == null select s)
                               .FirstOrDefaultAsync().ConfigureAwait(false);
 
-            if (session == null || session.CloseTime != null)
+            if (session == null)
                 return this.BadRequest(new { message = "Сессия была не создана либо уже закрыта" });
 
             session.EndSession();
+
             try
             {
                 await this.context.SaveChangesAsync().ConfigureAwait(false);

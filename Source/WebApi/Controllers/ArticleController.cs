@@ -74,7 +74,7 @@ namespace WebApi.Controllers
 
             var user = await this.User.GetUserFromDbInContextAsync(this.context).ConfigureAwait(false);
 
-            var userSessionQuary = await (from q in this.context.SessionQueries where q.Session.User.Id == user.Id select q).FirstOrDefaultAsync().ConfigureAwait(false);
+            var userSessionQuary = await (from q in this.context.SessionQueries where q.Session.User.Id == user.Id && q.Session.CloseTime == null select q).FirstOrDefaultAsync().ConfigureAwait(false);
 
             var openedArticle = new OpenedArticle(DateTime.UtcNow, article, userSessionQuary);
 
@@ -92,7 +92,7 @@ namespace WebApi.Controllers
             {
                 return this.Ok(new { article.Id, article.Title, Text = article.GetText() });
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return this.BadRequest(new { id, message = "Данной статьи не было найдено" });
             }
@@ -127,15 +127,23 @@ namespace WebApi.Controllers
             var session = await (from s in this.context.Sessions where s.Id == sessionId select s).FirstOrDefaultAsync().ConfigureAwait(false);
             try
             {
-                var searchingQuery = await (from q in this.context.SearchingQueryes where q.Text == query.ToLower() select q).FirstOrDefaultAsync().ConfigureAwait(false) ?? new SearchingQuery(query.ToLower());
+                var searchingQuery =
+                    await (from q in this.context.SearchingQueryes where q.Text == query.ToLower() select q)
+                        .FirstOrDefaultAsync().ConfigureAwait(false);
+                if (searchingQuery == null)
+                {
+                    searchingQuery = new SearchingQuery(query.ToLower());
+                    await this.context.SearchingQueryes.AddAsync(searchingQuery).ConfigureAwait(false);
+                }
+
 
                 var sessionQuary = new SessionQuery(DateTime.Now, session, searchingQuery);
 
-                this.context.SessionQueries.Add(sessionQuary);
+                await this.context.SessionQueries.AddAsync(sessionQuary);
 
                 await this.context.SaveChangesAsync().ConfigureAwait(false);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return this.BadRequest(new { message = "Что-то пошло не так" });
             }

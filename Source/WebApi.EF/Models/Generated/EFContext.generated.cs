@@ -186,10 +186,6 @@ namespace WebApi.EF.Models
          modelBuilder.Entity<WebApi.EF.Models.SearchingQuery>()
                      .Property(t => t.Amount)
                      .IsRequired();
-         modelBuilder.Entity<WebApi.EF.Models.SearchingQuery>()
-                     .HasMany(x => x.SessionQuery)
-                     .WithOne()
-                     .IsRequired();
 
          modelBuilder.Entity<WebApi.EF.Models.Session>()
                      .ToTable("Session")
@@ -222,6 +218,9 @@ namespace WebApi.EF.Models
          modelBuilder.Entity<WebApi.EF.Models.SessionQuery>()
                      .HasOne(x => x.Session)
                      .WithMany(x => x.SearchingQuery);
+         modelBuilder.Entity<WebApi.EF.Models.SessionQuery>()
+                     .HasOne(x => x.SearchingQuery)
+                     .WithMany(x => x.SessionQuery);
 
          modelBuilder.Entity<WebApi.EF.Models.SupportAsk>()
                      .ToTable("SupportAsk")

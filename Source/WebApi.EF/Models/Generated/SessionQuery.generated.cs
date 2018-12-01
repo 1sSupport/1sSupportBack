@@ -40,15 +40,15 @@ namespace WebApi.EF.Models
       /// </summary>
       /// <param name="_time"></param>
       /// <param name="_session"></param>
-      /// <param name="_searchingquery0"></param>
-      public SessionQuery(DateTime _time, WebApi.EF.Models.Session _session, WebApi.EF.Models.SearchingQuery _searchingquery0)
+      /// <param name="_searchingquery"></param>
+      public SessionQuery(DateTime _time, WebApi.EF.Models.Session _session, WebApi.EF.Models.SearchingQuery _searchingquery)
       {
          Time = _time;
          if (_session == null) throw new ArgumentNullException(nameof(_session));
          Session = _session;
 
-         if (_searchingquery0 == null) throw new ArgumentNullException(nameof(_searchingquery0));
-         _searchingquery0.SessionQuery.Add(this);
+         if (_searchingquery == null) throw new ArgumentNullException(nameof(_searchingquery));
+         SearchingQuery = _searchingquery;
 
          OpenedArticle = new HashSet<WebApi.EF.Models.OpenedArticle>();
          Init();
@@ -59,10 +59,10 @@ namespace WebApi.EF.Models
       /// </summary>
       /// <param name="_time"></param>
       /// <param name="_session"></param>
-      /// <param name="_searchingquery0"></param>
-      public static SessionQuery Create(DateTime _time, WebApi.EF.Models.Session _session, WebApi.EF.Models.SearchingQuery _searchingquery0)
+      /// <param name="_searchingquery"></param>
+      public static SessionQuery Create(DateTime _time, WebApi.EF.Models.Session _session, WebApi.EF.Models.SearchingQuery _searchingquery)
       {
-         return new SessionQuery(_time, _session, _searchingquery0);
+         return new SessionQuery(_time, _session, _searchingquery);
       }
 
       /*************************************************************************
@@ -92,6 +92,11 @@ namespace WebApi.EF.Models
       /// Required
       /// </summary>
       public virtual WebApi.EF.Models.Session Session { get; set; }
+
+      /// <summary>
+      /// Required
+      /// </summary>
+      public virtual WebApi.EF.Models.SearchingQuery SearchingQuery { get; set; }
 
    }
 }
