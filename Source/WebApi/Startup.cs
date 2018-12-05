@@ -94,15 +94,15 @@ namespace WebApi
         {
             app.UseCors();
             app.UseStaticFiles();
+            app.UseMvc();
             app.UseHttpsRedirection();
             app.UseAuthentication();
-            app.UseMvc();
             app.UseRequestLocalization();
             if (this.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "1cSupport V1"); });
+                app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "1cSupport V1"); c.RoutePrefix = "swagger"; });
             }
             else
             {
