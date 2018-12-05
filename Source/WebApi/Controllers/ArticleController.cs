@@ -124,7 +124,12 @@ namespace WebApi.Controllers
                                        return finder.GetArticlesByQuery(query);
                                    }).ConfigureAwait(false);
 
+
+            if (!articles.Any()) return this.Ok(null);
+
+
             var session = await (from s in this.context.Sessions where s.Id == sessionId select s).FirstOrDefaultAsync().ConfigureAwait(false);
+
             try
             {
                 var searchingQuery =
@@ -135,11 +140,18 @@ namespace WebApi.Controllers
                     searchingQuery = new SearchingQuery(query.ToLower());
                     await this.context.SearchingQueryes.AddAsync(searchingQuery).ConfigureAwait(false);
                 }
-
+                else
+                {
+                    lock (searchingQuery)
+                    {
+                        searchingQuery.Amount++;
+                        this.context.SearchingQueryes.Update(searchingQuery);
+                    }
+                }
 
                 var sessionQuary = new SessionQuery(DateTime.Now, session, searchingQuery);
 
-                await this.context.SessionQueries.AddAsync(sessionQuary);
+                await this.context.SessionQueries.AddAsync(sessionQuary).ConfigureAwait(false);
 
                 await this.context.SaveChangesAsync().ConfigureAwait(false);
             }
@@ -147,8 +159,6 @@ namespace WebApi.Controllers
             {
                 return this.BadRequest(new { message = "Что-то пошло не так" });
             }
-
-            if (!articles.Any()) return this.Ok(null);
 
             return this.Ok((from a in articles select new { a.Id, a.Title, Text = a.Preview }).ToList());
         }
