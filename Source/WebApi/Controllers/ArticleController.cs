@@ -9,6 +9,8 @@
 
 namespace WebApi.Controllers
 {
+    #region
+
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
@@ -17,10 +19,13 @@ namespace WebApi.Controllers
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
 
     using WebApi.EF.Models;
     using WebApi.Infrastructer;
     using WebApi.Tools.Finder;
+
+    #endregion
 
     /// <inheritdoc />
     /// <summary>
@@ -37,14 +42,23 @@ namespace WebApi.Controllers
         private readonly EFContext context;
 
         /// <summary>
+        ///     The logger.
+        /// </summary>
+        private readonly ILogger logger;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ArticleController"/> class.
         /// </summary>
         /// <param name="context">
         /// The context.
         /// </param>
-        public ArticleController(EFContext context)
+        /// <param name="logger">
+        /// The logger.
+        /// </param>
+        public ArticleController(EFContext context, ILogger logger)
         {
             this.context = context;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -62,9 +76,13 @@ namespace WebApi.Controllers
         [HttpGet]
         [ProducesResponseType(400)]
         [ProducesResponseType(100)]
-        public async Task<IActionResult> GetArticle( [FromQuery] [Required] [Range(1, int.MaxValue)] int id, [FromQuery] [Required] string query)
+        public async Task<IActionResult> GetArticle(
+            [FromQuery] [Required] [Range(1, int.MaxValue)]
+            int id,
+            [FromQuery] [Required] string query)
         {
-            var article = await (from a in this.context.Articles where a.Id == id select a).FirstOrDefaultAsync().ConfigureAwait(false);
+            var article = await (from a in this.context.Articles where a.Id == id select a).FirstOrDefaultAsync()
+                              .ConfigureAwait(false);
 
             var queryDb = await (from q in this.context.SearchingQueryes where q.Text == query select q)
                               .FirstOrDefaultAsync().ConfigureAwait(false);
@@ -74,7 +92,10 @@ namespace WebApi.Controllers
 
             var user = await this.User.GetUserFromDbInContextAsync(this.context).ConfigureAwait(false);
 
-            var userSessionQuary = await (from q in this.context.SessionQueries where q.Session.User.Id == user.Id && q.Session.CloseTime == null select q).FirstOrDefaultAsync().ConfigureAwait(false);
+            var userSessionQuary =
+                await (from q in this.context.SessionQueries
+                       where q.Session.User.Id == user.Id && q.Session.CloseTime == null
+                       select q).FirstOrDefaultAsync().ConfigureAwait(false);
 
             var openedArticle = new OpenedArticle(DateTime.UtcNow, article, userSessionQuary);
 
@@ -115,7 +136,8 @@ namespace WebApi.Controllers
         [ProducesResponseType(100)]
         public async Task<IActionResult> GetArticlesByQuery(
             [FromQuery] [Required] string query,
-            [FromQuery] [Required] [Range(0, int.MaxValue)]int sessionId)
+            [FromQuery] [Required] [Range(0, int.MaxValue)]
+            int sessionId)
         {
             var articles = await Task.Run(
                                () =>
@@ -124,11 +146,10 @@ namespace WebApi.Controllers
                                        return finder.GetArticlesByQuery(query);
                                    }).ConfigureAwait(false);
 
-
             if (!articles.Any()) return this.Ok(null);
 
-
-            var session = await (from s in this.context.Sessions where s.Id == sessionId select s).FirstOrDefaultAsync().ConfigureAwait(false);
+            var session = await (from s in this.context.Sessions where s.Id == sessionId select s).FirstOrDefaultAsync()
+                              .ConfigureAwait(false);
 
             try
             {
@@ -161,6 +182,33 @@ namespace WebApi.Controllers
             }
 
             return this.Ok((from a in articles select new { a.Id, a.Title, Text = a.Preview }).ToList());
+        }
+
+        /// <summary>
+        /// The get marks.
+        /// </summary>
+        /// <param name="n">
+        /// The n.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        [HttpGet]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(100)]
+        public async Task<IActionResult> GetMarks([FromQuery] int n = 5)
+        {
+            try
+            {
+                var marks = await(from m in this.context.SearchingQueryes where m.Amount >= n select m.Text)
+                                .ToListAsync().ConfigureAwait(false);
+                return this.Ok(marks);
+            }
+            catch (Exception e)
+            {
+                this.logger.Log(LogLevel.Critical, e, "Сломались MArks");
+                return this.BadRequest(new { message = "Что-то пошло не так" });
+            }
         }
     }
 }

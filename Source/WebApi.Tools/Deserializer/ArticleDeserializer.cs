@@ -12,6 +12,7 @@ namespace WebApi.Tools.Deserializer
     #region
 
     using System;
+    using System.Linq;
 
     using WebApi.EF.Models;
     using WebApi.Tools.Deserializer.Models;
@@ -53,7 +54,7 @@ namespace WebApi.Tools.Deserializer
             foreach (var myObject in this.objects)
             {
                 var path = $"{myObject.Id}.json";
-                this.context.Articles.Add(new Article(myObject.Title, path) { EditDate = DateTime.UtcNow });
+                this.context.Articles.Add(new Article(myObject.Title, path) { EditDate = DateTime.UtcNow, Preview = myObject.Response.Take(300).ToString() });
             }
         }
     }

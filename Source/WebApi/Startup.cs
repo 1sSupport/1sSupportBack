@@ -144,7 +144,7 @@ namespace WebApi
             services.AddSingleton(tokenParams);
 
             services.AddCors();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.Configure<WebEncoderOptions>(
                 options => options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All));
