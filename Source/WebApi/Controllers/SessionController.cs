@@ -9,21 +9,30 @@
 
 namespace WebApi.Controllers
 {
+    #region
+
+    using System;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
     using NETCore.MailKit.Core;
 
+    using NLog;
+
     using WebApi.EF.Models;
     using WebApi.Infrastructer;
     using WebApi.Models;
+    using WebApi.Tools.Finder;
+
+    #endregion
 
     /// <inheritdoc />
     /// <summary>
@@ -31,7 +40,7 @@ namespace WebApi.Controllers
     /// </summary>
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class SessionController : ControllerBase
     {
         /// <summary>
@@ -45,6 +54,11 @@ namespace WebApi.Controllers
         private readonly IEmailService emailService;
 
         /// <summary>
+        ///     The loger.
+        /// </summary>
+       // private readonly ILogger loger;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SessionController"/> class.
         /// </summary>
         /// <param name="context">
@@ -53,10 +67,14 @@ namespace WebApi.Controllers
         /// <param name="emailService">
         /// The email service.
         /// </param>
+        /// <param name="logger">
+        /// The logger.
+        /// </param>
         public SessionController(EFContext context, IEmailService emailService)
         {
             this.context = context;
             this.emailService = emailService;
+            //this.loger = logger;
         }
 
         /// <summary>
@@ -75,39 +93,30 @@ namespace WebApi.Controllers
         {
             if (!this.ModelState.IsValid) return this.BadRequest();
 
-            SupportAsk supportAsk;
             var session = await (from s in this.context.Sessions where s.Id == message.SessionId select s)
                               .FirstOrDefaultAsync().ConfigureAwait(true);
-            try
-            {
-                supportAsk = new SupportAsk(session, message.Title, message.Text, message.ContactData);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+
+            var supportAsk = new SupportAsk(session, message.Title, message.Text, message.ContactData);
 
             try
             {
                 this.context.SupportAsk.Add(supportAsk);
                 await this.context.SaveChangesAsync().ConfigureAwait(false);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                //this.loger.Fatal(e, $"Сломались {nameof(this.CreateSupportMessage)}");
                 return this.BadRequest(new { message = "Что-то пошло не так" });
             }
 
             var user = await this.User.GetUserFromDbInContextAsync(this.context).ConfigureAwait(false);
             var providerMail =
-                await (from p in context.Providers
-                       from u in context.Users
+                await (from p in this.context.Providers
+                       from u in this.context.Users
                        where u.Id == user.Id && p.Id == u.Provider.Id
                        select p.SupportEmail).FirstOrDefaultAsync().ConfigureAwait(false);
-            await this.SendSupportMessages(
-                new List<string> { providerMail},
-                message.Title,
-                message.Text).ConfigureAwait(false);
+            await this.SendSupportMessages(new List<string> { providerMail }, message.Title, message.Text)
+                .ConfigureAwait(false);
             return this.Ok(supportAsk.Id);
         }
 
@@ -123,12 +132,16 @@ namespace WebApi.Controllers
         [HttpPost]
         [ProducesResponseType(400)]
         [ProducesResponseType(100)]
-        public async Task<IActionResult> EndSession([FromBody] [Required] [Range(0, int.MaxValue)] int id)
+        public async Task<IActionResult> EndSession(
+            [FromBody] [Required] [Range(0, int.MaxValue)]
+            int id)
         {
             var user = await this.User.GetUserFromDbInContextAsync(this.context).ConfigureAwait(false);
 
-            var session = await (from s in this.context.Sessions where s.Id == id && s.User.Id == user.Id && s.CloseTime == null select s)
-                              .FirstOrDefaultAsync().ConfigureAwait(false);
+            var session =
+                await (from s in this.context.Sessions
+                       where s.Id == id && s.User.Id == user.Id && s.CloseTime == null
+                       select s).FirstOrDefaultAsync().ConfigureAwait(false);
 
             if (session == null)
                 return this.BadRequest(new { message = "Сессия была не создана либо уже закрыта" });
@@ -139,8 +152,9 @@ namespace WebApi.Controllers
             {
                 await this.context.SaveChangesAsync().ConfigureAwait(false);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                //this.loger.Fatal(e, $"Сломались {nameof(this.EndSession)}");
                 return this.BadRequest(new { message = "Что-то пошло не так" });
             }
 
@@ -178,8 +192,9 @@ namespace WebApi.Controllers
             {
                 await this.context.SaveChangesAsync().ConfigureAwait(false);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+              //  this.loger.Fatal(e, $"Сломались {nameof(this.SetMark)}");
                 return this.BadRequest(new { message = "Что-то пошло не так" });
             }
 
@@ -199,9 +214,18 @@ namespace WebApi.Controllers
         {
             var date = DateTime.UtcNow;
 
-            var user = await this.User.GetUserFromDbInContextAsync(this.context).ConfigureAwait(false);
+            User user = null;
+            try
+            {
+                user = await this.User.GetUserFromDbInContextAsync(this.context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
 
-            var session = await (from s in this.context.Sessions where s.CloseTime == null && s.User.Id == user.Id select s)
+            var session =
+                await (from s in this.context.Sessions where s.CloseTime == null && s.User.Id == user.Id select s)
                     .FirstOrDefaultAsync().ConfigureAwait(false);
 
             if (session != null) return this.Ok(new { SessionId = session.Id, User = user.Login });
@@ -213,13 +237,43 @@ namespace WebApi.Controllers
             {
                 await this.context.SaveChangesAsync().ConfigureAwait(false);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                //this.loger.Fatal(e, $"Сломались {nameof(this.StartSession)}");
                 return this.BadRequest(new { message = "Что-то пошло не так" });
             }
 
             return this.Ok(new { SessionId = session.Id, User = user.Login });
         }
+
+
+
+        /// <summary>
+        /// The get marks.
+        /// </summary>
+        /// <param name="n">
+        /// The n.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        [HttpGet]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(100)]
+        public async Task<IActionResult> GetSupportMessageTitle()
+        {
+            try
+            {
+                var title = await(from m in this.context.AskTitle select m.Text)
+                                .ToListAsync().ConfigureAwait(false);
+                return this.Ok(title);
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new { message = "Что-то пошло не так" });
+            }
+        }
+
 
         /// <summary>
         /// The send support messages.
@@ -245,7 +299,7 @@ namespace WebApi.Controllers
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                   // this.loger.Fatal(e, $"Сломались {nameof(this.SendSupportMessages)}");
                 }
         }
     }

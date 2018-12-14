@@ -16,10 +16,10 @@ namespace WebApi.Controllers
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Logging;
 
     using WebApi.EF.Models;
     using WebApi.Infrastructer;
@@ -33,7 +33,7 @@ namespace WebApi.Controllers
     /// </summary>
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ArticleController : ControllerBase
     {
         /// <summary>
@@ -41,10 +41,10 @@ namespace WebApi.Controllers
         /// </summary>
         private readonly EFContext context;
 
-        /// <summary>
+        // <summary>
         ///     The logger.
         /// </summary>
-        private readonly ILogger logger;
+        // private readonly ILogger logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArticleController"/> class.
@@ -52,13 +52,11 @@ namespace WebApi.Controllers
         /// <param name="context">
         /// The context.
         /// </param>
-        /// <param name="logger">
-        /// The logger.
-        /// </param>
-        public ArticleController(EFContext context, ILogger logger)
+        public ArticleController(EFContext context)
         {
             this.context = context;
-            this.logger = logger;
+
+            // this.logger = logger;
         }
 
         /// <summary>
@@ -93,7 +91,7 @@ namespace WebApi.Controllers
             var user = await this.User.GetUserFromDbInContextAsync(this.context).ConfigureAwait(false);
 
             var userSessionQuary =
-                await (from q in this.context.SessionQueries
+                await(from q in this.context.SessionQueries
                        where q.Session.User.Id == user.Id && q.Session.CloseTime == null
                        select q).FirstOrDefaultAsync().ConfigureAwait(false);
 
@@ -115,6 +113,7 @@ namespace WebApi.Controllers
             }
             catch (Exception e)
             {
+                // this.logger.LogCritical(e, $"Сломались {nameof(this.GetArticle)}");
                 return this.BadRequest(new { id, message = "Данной статьи не было найдено" });
             }
         }
@@ -136,8 +135,7 @@ namespace WebApi.Controllers
         [ProducesResponseType(100)]
         public async Task<IActionResult> GetArticlesByQuery(
             [FromQuery] [Required] string query,
-            [FromQuery] [Required] [Range(0, int.MaxValue)]
-            int sessionId)
+            [FromQuery] [Required] [Range(0, int.MaxValue)]int sessionId)
         {
             var articles = await Task.Run(
                                () =>
@@ -178,6 +176,7 @@ namespace WebApi.Controllers
             }
             catch (Exception e)
             {
+                // this.logger.Log(LogLevel.Critical, e, $"Сломались {nameof(this.GetArticlesByQuery)}");
                 return this.BadRequest(new { message = "Что-то пошло не так" });
             }
 
@@ -206,7 +205,7 @@ namespace WebApi.Controllers
             }
             catch (Exception e)
             {
-                this.logger.Log(LogLevel.Critical, e, "Сломались MArks");
+                // this.logger.Log(LogLevel.Critical, e, "Сломались MArks");
                 return this.BadRequest(new { message = "Что-то пошло не так" });
             }
         }

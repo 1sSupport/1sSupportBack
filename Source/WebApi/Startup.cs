@@ -95,14 +95,15 @@ namespace WebApi
             app.UseCors();
             app.UseStaticFiles();
             app.UseMvc();
+            
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseRequestLocalization();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "1cSupport V1"); c.RoutePrefix = "swagger"; });
             if (this.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "1cSupport V1"); c.RoutePrefix = "swagger"; });
             }
             else
             {
@@ -138,7 +139,7 @@ namespace WebApi
                         // else
                         options.UseSqlServer(
                             this.Configuration["Connection:String"],
-                            b => b.MigrationsAssembly("WebApi"));
+                            b => b.MigrationsAssembly("WebApi").CommandTimeout(5 * 1000));
                     });
 
             services.AddSingleton(tokenParams);

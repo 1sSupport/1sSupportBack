@@ -54,7 +54,7 @@ namespace WebApi.Tools.Deserializer
             foreach (var myObject in this.objects)
             {
                 var path = $"{myObject.Id}.json";
-                this.context.Articles.Add(new Article(myObject.Title, path) { EditDate = DateTime.UtcNow, Preview = myObject.Response.Take(300).ToString() });
+                this.context.Articles.Add(new Article(myObject.Title, path) { EditDate = DateTime.UtcNow, Preview = new string(myObject.Response?.Take(300).ToArray()) });
             }
         }
     }

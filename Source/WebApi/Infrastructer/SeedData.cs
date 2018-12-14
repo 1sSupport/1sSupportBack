@@ -107,7 +107,7 @@ namespace WebApi.Infrastructer
                     File.AppendAllText(@"d:\test.txt", $"{end} -> Article {end - start}{Environment.NewLine}");
                 }
 
-                if (!context.Tags.Any())
+                if (!context.Tags.Any() || !context.ArticleTags.Any())
                 {
                     using (var tagirator = new Tagirator(context))
                     {

@@ -98,7 +98,7 @@ namespace WebApi.Controllers
                                         u.Login,
                                         info.Login,
                                         StringComparison.OrdinalIgnoreCase)
-                              select u).FirstOrDefaultAsync().ConfigureAwait(false);
+                              select new { u.INN, u.Login }).FirstOrDefaultAsync().ConfigureAwait(false);
 
             if (user == null) return null;
 
@@ -130,13 +130,15 @@ namespace WebApi.Controllers
                         var now = DateTime.UtcNow;
                         var key = this.tokenParameters.IssuerSigningKey;
                         var credantials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                        var handler = new JwtSecurityTokenHandler();
                         var token = new JwtSecurityToken(
                             claims: claims,
                             issuer: this.tokenParameters.ValidIssuer,
                             audience: this.tokenParameters.ValidAudience,
                             signingCredentials: credantials,
                             notBefore: now,
-                            expires: now.AddMinutes(5));
+                            
+                            expires: now.AddMinutes(15));
                         return new JwtSecurityTokenHandler().WriteToken(token);
                     });
         }
