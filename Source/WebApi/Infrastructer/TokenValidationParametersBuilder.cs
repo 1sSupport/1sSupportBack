@@ -33,8 +33,8 @@ namespace WebApi.Infrastructer
         {
             return new TokenValidationParameters
                        {
-                           //ValidateIssuer = true,
-                           //ValidateAudience = true,
+                           ValidateIssuer = true,
+                           ValidateAudience = true,
                            ClockSkew = TimeSpan.FromMinutes(0),
                            ValidateLifetime = true,
                            ValidIssuer = $"{configuration["JWT:issuer"]}",

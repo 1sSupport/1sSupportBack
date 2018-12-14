@@ -12,7 +12,6 @@ namespace WebApi.Controllers
     #region
 
     using System;
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
@@ -25,12 +24,9 @@ namespace WebApi.Controllers
 
     using NETCore.MailKit.Core;
 
-    using NLog;
-
     using WebApi.EF.Models;
     using WebApi.Infrastructer;
     using WebApi.Models;
-    using WebApi.Tools.Finder;
 
     #endregion
 
@@ -53,10 +49,10 @@ namespace WebApi.Controllers
         /// </summary>
         private readonly IEmailService emailService;
 
-        /// <summary>
+        // <summary>
         ///     The loger.
         /// </summary>
-       // private readonly ILogger loger;
+        // private readonly ILogger loger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SessionController"/> class.
@@ -67,14 +63,12 @@ namespace WebApi.Controllers
         /// <param name="emailService">
         /// The email service.
         /// </param>
-        /// <param name="logger">
-        /// The logger.
-        /// </param>
         public SessionController(EFContext context, IEmailService emailService)
         {
             this.context = context;
             this.emailService = emailService;
-            //this.loger = logger;
+
+            // this.loger = logger;
         }
 
         /// <summary>
@@ -105,7 +99,7 @@ namespace WebApi.Controllers
             }
             catch (Exception e)
             {
-                //this.loger.Fatal(e, $"Сломались {nameof(this.CreateSupportMessage)}");
+                // this.loger.Fatal(e, $"Сломались {nameof(this.CreateSupportMessage)}");
                 return this.BadRequest(new { message = "Что-то пошло не так" });
             }
 
@@ -154,11 +148,33 @@ namespace WebApi.Controllers
             }
             catch (Exception e)
             {
-                //this.loger.Fatal(e, $"Сломались {nameof(this.EndSession)}");
+                // this.loger.Fatal(e, $"Сломались {nameof(this.EndSession)}");
                 return this.BadRequest(new { message = "Что-то пошло не так" });
             }
 
             return this.Ok(id);
+        }
+
+        /// <summary>
+        /// The get support message title.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        [HttpGet]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(100)]
+        public async Task<IActionResult> GetSupportMessageTitle()
+        {
+            try
+            {
+                var title = await (from m in this.context.AskTitle select m.Text).ToListAsync().ConfigureAwait(false);
+                return this.Ok(title);
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new { message = "Что-то пошло не так" });
+            }
         }
 
         /// <summary>
@@ -194,7 +210,7 @@ namespace WebApi.Controllers
             }
             catch (Exception e)
             {
-              //  this.loger.Fatal(e, $"Сломались {nameof(this.SetMark)}");
+                // this.loger.Fatal(e, $"Сломались {nameof(this.SetMark)}");
                 return this.BadRequest(new { message = "Что-то пошло не так" });
             }
 
@@ -239,41 +255,12 @@ namespace WebApi.Controllers
             }
             catch (Exception e)
             {
-                //this.loger.Fatal(e, $"Сломались {nameof(this.StartSession)}");
+                // this.loger.Fatal(e, $"Сломались {nameof(this.StartSession)}");
                 return this.BadRequest(new { message = "Что-то пошло не так" });
             }
 
             return this.Ok(new { SessionId = session.Id, User = user.Login });
         }
-
-
-
-        /// <summary>
-        /// The get marks.
-        /// </summary>
-        /// <param name="n">
-        /// The n.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
-        [HttpGet]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(100)]
-        public async Task<IActionResult> GetSupportMessageTitle()
-        {
-            try
-            {
-                var title = await(from m in this.context.AskTitle select m.Text)
-                                .ToListAsync().ConfigureAwait(false);
-                return this.Ok(title);
-            }
-            catch (Exception e)
-            {
-                return this.BadRequest(new { message = "Что-то пошло не так" });
-            }
-        }
-
 
         /// <summary>
         /// The send support messages.
@@ -299,7 +286,7 @@ namespace WebApi.Controllers
                 }
                 catch (Exception e)
                 {
-                   // this.loger.Fatal(e, $"Сломались {nameof(this.SendSupportMessages)}");
+                    // this.loger.Fatal(e, $"Сломались {nameof(this.SendSupportMessages)}");
                 }
         }
     }
