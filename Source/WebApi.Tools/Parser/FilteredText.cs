@@ -49,6 +49,8 @@ namespace WebApi.Tools.Parser
             return uniqueValues;
         }
 
+
+
         /// <summary>
         /// The clean.
         /// </summary>
@@ -64,7 +66,8 @@ namespace WebApi.Tools.Parser
             if (text == null) return string.Empty;
 
             var fixtext = Regex.Replace(text.ToLower(), @"[\\pP\\d]", " ");
-            fixtext = Regex.Replace(fixtext, @"[.,\/#!$%\^&\*;:{}=\-_`~()]", " ");
+
+            fixtext = Regex.Replace(fixtext, @"[.,\/#!$%\^&\*;:{}=\-_`~()?\""?«»]", " ");
             return fixtext;
         }
     }

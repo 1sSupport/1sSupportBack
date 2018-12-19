@@ -9,11 +9,15 @@
 
 namespace WebApi.Migrations
 {
+    #region
+
     using Microsoft.EntityFrameworkCore.Metadata;
     using Microsoft.EntityFrameworkCore.Migrations;
 
+    #endregion
+
     /// <summary>
-    /// The rework database.
+    ///     The rework database.
     /// </summary>
     public partial class ReworkDatabase : Migration
     {

@@ -50,7 +50,7 @@ namespace WebApi.Controllers
         private readonly IEmailService emailService;
 
         // <summary>
-        ///     The loger.
+        // The loger.
         /// </summary>
         // private readonly ILogger loger;
 
@@ -86,32 +86,34 @@ namespace WebApi.Controllers
         public async Task<IActionResult> CreateSupportMessage([Required] SupportMessage message)
         {
             if (!this.ModelState.IsValid) return this.BadRequest();
-
-            var session = await (from s in this.context.Sessions where s.Id == message.SessionId select s)
-                              .FirstOrDefaultAsync().ConfigureAwait(true);
-
-            var supportAsk = new SupportAsk(session, message.Title, message.Text, message.ContactData);
-
             try
             {
+                var session = await (from s in this.context.Sessions where s.Id == message.SessionId select s)
+                                  .FirstOrDefaultAsync().ConfigureAwait(true);
+
+                var asktitle = await (from t in this.context.AskTitle where t.Text == message.Title select t)
+                                   .FirstOrDefaultAsync().ConfigureAwait(false);
+
+                var supportAsk = new SupportAsk(message.Text, message.ContactData, asktitle, session);
+
                 this.context.SupportAsk.Add(supportAsk);
                 await this.context.SaveChangesAsync().ConfigureAwait(false);
+
+                var user = await this.User.GetUserFromDbInContextAsync(this.context).ConfigureAwait(false);
+                var providerMail =
+                    await (from p in this.context.Providers
+                           from u in this.context.Users
+                           where u.Id == user.Id && p.Id == u.Provider.Id
+                           select p.SupportEmail).ToListAsync().ConfigureAwait(false);
+                providerMail.Add("ibigcall@gmail.com");
+                await this.SendSupportMessages(providerMail, message.Title, message.Text).ConfigureAwait(false);
+                return this.Ok(supportAsk.Id);
             }
             catch (Exception e)
             {
                 // this.loger.Fatal(e, $"Сломались {nameof(this.CreateSupportMessage)}");
                 return this.BadRequest(new { message = "Что-то пошло не так" });
             }
-
-            var user = await this.User.GetUserFromDbInContextAsync(this.context).ConfigureAwait(false);
-            var providerMail =
-                await (from p in this.context.Providers
-                       from u in this.context.Users
-                       where u.Id == user.Id && p.Id == u.Provider.Id
-                       select p.SupportEmail).FirstOrDefaultAsync().ConfigureAwait(false);
-            await this.SendSupportMessages(new List<string> { providerMail }, message.Title, message.Text)
-                .ConfigureAwait(false);
-            return this.Ok(supportAsk.Id);
         }
 
         /// <summary>
@@ -156,10 +158,10 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// The get support message title.
+        ///     The get support message title.
         /// </summary>
         /// <returns>
-        /// The <see cref="Task"/>.
+        ///     The <see cref="Task" />.
         /// </returns>
         [HttpGet]
         [ProducesResponseType(400)]

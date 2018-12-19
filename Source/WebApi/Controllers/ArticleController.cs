@@ -41,11 +41,6 @@ namespace WebApi.Controllers
         /// </summary>
         private readonly EFContext context;
 
-        // <summary>
-        ///     The logger.
-        /// </summary>
-        // private readonly ILogger logger;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ArticleController"/> class.
         /// </summary>
@@ -55,8 +50,6 @@ namespace WebApi.Controllers
         public ArticleController(EFContext context)
         {
             this.context = context;
-
-            // this.logger = logger;
         }
 
         /// <summary>
@@ -91,7 +84,7 @@ namespace WebApi.Controllers
             var user = await this.User.GetUserFromDbInContextAsync(this.context).ConfigureAwait(false);
 
             var userSessionQuary =
-                await(from q in this.context.SessionQueries
+                await (from q in this.context.SessionQueries
                        where q.Session.User.Id == user.Id && q.Session.CloseTime == null
                        select q).FirstOrDefaultAsync().ConfigureAwait(false);
 
@@ -133,9 +126,11 @@ namespace WebApi.Controllers
         [HttpGet]
         [ProducesResponseType(400)]
         [ProducesResponseType(100)]
+        [ProducesResponseType(204)]
         public async Task<IActionResult> GetArticlesByQuery(
             [FromQuery] [Required] string query,
-            [FromQuery] [Required] [Range(0, int.MaxValue)]int sessionId)
+            [FromQuery] [Required] [Range(0, int.MaxValue)]
+            int sessionId)
         {
             var articles = await Task.Run(
                                () =>
@@ -144,7 +139,7 @@ namespace WebApi.Controllers
                                        return finder.GetArticlesByQuery(query);
                                    }).ConfigureAwait(false);
 
-            if (!articles.Any()) return this.Ok(null);
+            if (articles == null || !articles.Any()) return this.Ok(null);
 
             var session = await (from s in this.context.Sessions where s.Id == sessionId select s).FirstOrDefaultAsync()
                               .ConfigureAwait(false);
@@ -199,7 +194,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                var marks = await(from m in this.context.SearchingQueryes where m.Amount >= n select m.Text)
+                var marks = await (from m in this.context.SearchingQueryes where m.Amount >= n select m.Text)
                                 .ToListAsync().ConfigureAwait(false);
                 return this.Ok(marks);
             }

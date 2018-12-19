@@ -121,6 +121,11 @@ namespace WebApi.EF.Models
          modelBuilder.Entity<WebApi.EF.Models.AskTitle>()
                      .Property(t => t.Text)
                      .IsRequired();
+         modelBuilder.Entity<WebApi.EF.Models.AskTitle>()
+                     .HasMany(x => x.SupportAsk)
+                     .WithOne(x => x.AskTitle)
+                     .HasForeignKey("AskTitle_Id")
+                     .IsRequired();
 
          modelBuilder.Entity<WebApi.EF.Models.Configuration1C>()
                      .ToTable("Configuration1C")
@@ -234,10 +239,6 @@ namespace WebApi.EF.Models
                      .IsRequired();
          modelBuilder.Entity<WebApi.EF.Models.SupportAsk>()
                      .Property(t => t.ContactInfo)
-                     .IsRequired();
-         modelBuilder.Entity<WebApi.EF.Models.SupportAsk>()
-                     .HasMany(x => x.AskTitle)
-                     .WithOne()
                      .IsRequired();
 
          modelBuilder.Entity<WebApi.EF.Models.Tag>()

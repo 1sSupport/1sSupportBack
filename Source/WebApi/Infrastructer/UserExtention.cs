@@ -1,14 +1,16 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SessionController.cs" company="">
+// <copyright file="UserExtention.cs" company="">
 //   
 // </copyright>
 // <summary>
-//   Defines the SessionController type.
+//   The user extention.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace WebApi.Infrastructer
 {
+    #region
+
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -18,8 +20,10 @@ namespace WebApi.Infrastructer
     using WebApi.EF.Models;
     using WebApi.Models;
 
+    #endregion
+
     /// <summary>
-    /// The user extention.
+    ///     The user extention.
     /// </summary>
     public static class UserExtention
     {
@@ -39,13 +43,11 @@ namespace WebApi.Infrastructer
         {
             var userInfo = new UserInfo
                                {
-                                   Inn = claims.FindFirst("Inn").Value,
-                                   Login = claims.FindFirst("Login").Value
+                                   Inn = claims.FindFirst("Inn").Value, Login = claims.FindFirst("Login").Value
                                };
 
             return (from u in context.Users where u.INN == userInfo.Inn || u.Login == userInfo.Login select u)
                 .FirstOrDefaultAsync();
         }
-
     }
 }

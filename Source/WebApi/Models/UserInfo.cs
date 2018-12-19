@@ -9,7 +9,11 @@
 
 namespace WebApi.Models
 {
+    #region
+
     using System.ComponentModel.DataAnnotations;
+
+    #endregion
 
     /// <summary>
     ///     The user info.

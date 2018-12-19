@@ -9,6 +9,8 @@
 
 namespace WebApi.Controllers
 {
+    #region
+
     using System;
     using System.Collections.Generic;
     using System.IdentityModel.Tokens.Jwt;
@@ -22,6 +24,8 @@ namespace WebApi.Controllers
 
     using WebApi.EF.Models;
     using WebApi.Models;
+
+    #endregion
 
     /// <inheritdoc />
     /// <summary>
@@ -137,7 +141,6 @@ namespace WebApi.Controllers
                             audience: this.tokenParameters.ValidAudience,
                             signingCredentials: credantials,
                             notBefore: now,
-                            
                             expires: now.AddMinutes(15));
                         return new JwtSecurityTokenHandler().WriteToken(token);
                     });

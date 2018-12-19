@@ -30,6 +30,8 @@ namespace WebApi.EF.Models
       /// </summary>
       protected AskTitle()
       {
+         SupportAsk = new System.Collections.Generic.HashSet<WebApi.EF.Models.SupportAsk>();
+
          Init();
       }
 
@@ -37,14 +39,11 @@ namespace WebApi.EF.Models
       /// Public constructor with required data
       /// </summary>
       /// <param name="_text"></param>
-      /// <param name="_supportask0"></param>
-      public AskTitle(string _text, WebApi.EF.Models.SupportAsk _supportask0)
+      public AskTitle(string _text)
       {
          if (string.IsNullOrEmpty(_text)) throw new ArgumentNullException(nameof(_text));
          Text = _text;
-         if (_supportask0 == null) throw new ArgumentNullException(nameof(_supportask0));
-         _supportask0.AskTitle.Add(this);
-
+         SupportAsk = new HashSet<WebApi.EF.Models.SupportAsk>();
          Init();
       }
 
@@ -52,10 +51,9 @@ namespace WebApi.EF.Models
       /// Static create function (for use in LINQ queries, etc.)
       /// </summary>
       /// <param name="_text"></param>
-      /// <param name="_supportask0"></param>
-      public static AskTitle Create(string _text, WebApi.EF.Models.SupportAsk _supportask0)
+      public static AskTitle Create(string _text)
       {
-         return new AskTitle(_text, _supportask0);
+         return new AskTitle(_text);
       }
 
       /*************************************************************************
@@ -78,6 +76,8 @@ namespace WebApi.EF.Models
       /*************************************************************************
        * Persistent navigation properties
        *************************************************************************/
+
+      public virtual ICollection<WebApi.EF.Models.SupportAsk> SupportAsk { get; set; }
 
    }
 }

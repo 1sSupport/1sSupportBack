@@ -21,9 +21,12 @@ namespace WebApi
 
     using Newtonsoft.Json;
 
+    using NLog;
     using NLog.Web;
 
     using Swashbuckle.AspNetCore.Swagger;
+
+    using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
     #endregion
 
@@ -43,12 +46,12 @@ namespace WebApi
         /// </returns>
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
-            return WebHost.CreateDefaultBuilder(args).UseStartup<Startup>().ConfigureLogging(logging =>
+            return WebHost.CreateDefaultBuilder(args).UseStartup<Startup>().ConfigureLogging(
+                logging =>
                     {
                         logging.ClearProviders();
-                        logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
-                    })
-                .UseNLog();
+                        logging.SetMinimumLevel(LogLevel.Trace);
+                    }).UseNLog();
         }
 
         /// <summary>
@@ -67,12 +70,9 @@ namespace WebApi
 
             var build = CreateWebHostBuilder(args).Build();
 
-            var logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 
-            if (args.Length > 0  && args.Contains("swagger"))
-            {
-                logger.Debug(GenerateSwagger(build, args[1]));
-                }
+            if (args.Length > 0 && args.Contains("swagger")) logger.Debug(GenerateSwagger(build, args[1]));
 
             try
             {
@@ -86,7 +86,7 @@ namespace WebApi
             finally
             {
                 // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
-                NLog.LogManager.Shutdown();
+                LogManager.Shutdown();
             }
         }
 

@@ -9,9 +9,13 @@
 
 namespace WebApi.Migrations
 {
+    #region
+
     using System;
 
     using Microsoft.EntityFrameworkCore.Migrations;
+
+    #endregion
 
     /// <summary>
     ///     The fix query.

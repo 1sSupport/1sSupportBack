@@ -9,10 +9,14 @@
 
 namespace WebApi.Migrations
 {
+    #region
+
     using System;
 
     using Microsoft.EntityFrameworkCore.Metadata;
     using Microsoft.EntityFrameworkCore.Migrations;
+
+    #endregion
 
     /// <summary>
     ///     The initial.

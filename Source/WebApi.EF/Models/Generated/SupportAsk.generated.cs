@@ -30,8 +30,6 @@ namespace WebApi.EF.Models
       /// </summary>
       protected SupportAsk()
       {
-         AskTitle = new System.Collections.Generic.HashSet<WebApi.EF.Models.AskTitle>();
-
          Init();
       }
 
@@ -40,17 +38,20 @@ namespace WebApi.EF.Models
       /// </summary>
       /// <param name="_text"></param>
       /// <param name="_contactinfo"></param>
+      /// <param name="_asktitle"></param>
       /// <param name="_session0"></param>
-      public SupportAsk(string _text, string _contactinfo, WebApi.EF.Models.Session _session0)
+      public SupportAsk(string _text, string _contactinfo, WebApi.EF.Models.AskTitle _asktitle, WebApi.EF.Models.Session _session0)
       {
          if (string.IsNullOrEmpty(_text)) throw new ArgumentNullException(nameof(_text));
          Text = _text;
          if (string.IsNullOrEmpty(_contactinfo)) throw new ArgumentNullException(nameof(_contactinfo));
          ContactInfo = _contactinfo;
+         if (_asktitle == null) throw new ArgumentNullException(nameof(_asktitle));
+         AskTitle = _asktitle;
+
          if (_session0 == null) throw new ArgumentNullException(nameof(_session0));
          _session0.SupportAsk.Add(this);
 
-         AskTitle = new HashSet<WebApi.EF.Models.AskTitle>();
          Init();
       }
 
@@ -59,10 +60,11 @@ namespace WebApi.EF.Models
       /// </summary>
       /// <param name="_text"></param>
       /// <param name="_contactinfo"></param>
+      /// <param name="_asktitle"></param>
       /// <param name="_session0"></param>
-      public static SupportAsk Create(string _text, string _contactinfo, WebApi.EF.Models.Session _session0)
+      public static SupportAsk Create(string _text, string _contactinfo, WebApi.EF.Models.AskTitle _asktitle, WebApi.EF.Models.Session _session0)
       {
-         return new SupportAsk(_text, _contactinfo, _session0);
+         return new SupportAsk(_text, _contactinfo, _asktitle, _session0);
       }
 
       /*************************************************************************
@@ -92,7 +94,10 @@ namespace WebApi.EF.Models
        * Persistent navigation properties
        *************************************************************************/
 
-      public virtual ICollection<WebApi.EF.Models.AskTitle> AskTitle { get; set; }
+      /// <summary>
+      /// Required
+      /// </summary>
+      public virtual WebApi.EF.Models.AskTitle AskTitle { get; set; }
 
    }
 }

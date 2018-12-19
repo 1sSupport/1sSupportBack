@@ -9,11 +9,15 @@
 
 namespace WebApi.Infrastructer
 {
+    #region
+
     using System;
     using System.Text;
 
     using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Tokens;
+
+    #endregion
 
     /// <summary>
     ///     The token validation parameters builder.

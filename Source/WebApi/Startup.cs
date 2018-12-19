@@ -9,7 +9,10 @@
 
 namespace WebApi
 {
+    #region
+
     using System;
+    using System.IO;
     using System.Text.Encodings.Web;
     using System.Text.Unicode;
 
@@ -30,6 +33,8 @@ namespace WebApi
 
     using WebApi.EF.Models;
     using WebApi.Infrastructer;
+
+    #endregion
 
     /// <summary>
     ///     The startup.
@@ -55,6 +60,9 @@ namespace WebApi
                     .AddJsonFile("MyJson.json", false).AddEnvironmentVariables();
                 config = builder.Build();
             }
+
+            if (string.IsNullOrWhiteSpace(environment.WebRootPath))
+                environment.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
 
             this.Configuration = config;
             this.Environment = environment;
@@ -92,23 +100,23 @@ namespace WebApi
             ILoggerFactory loggerFactory,
             IServiceProvider serviceProvider)
         {
-            app.UseCors();
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseMvc();
-            
+
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseRequestLocalization();
             app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "1cSupport V1"); c.RoutePrefix = "swagger"; });
-            if (this.Environment.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
+            app.UseSwaggerUI(
+                c =>
+                    {
+                        c.SwaggerEndpoint("/swagger/v1/swagger.json", "1cSupport V1");
+                        c.RoutePrefix = "swagger";
+                    });
+            if (this.Environment.IsDevelopment()) app.UseDeveloperExceptionPage();
+            else app.UseHsts();
 
             SeedData.EnsurePopulated(app);
         }

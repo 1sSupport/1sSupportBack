@@ -34,9 +34,23 @@ namespace WebApi.Tools.Deserializer.Models
         /// </summary>
         public string Link { get; set; }
 
+
+        public int Status { get; set; }
+
         /// <summary>
         ///     Gets or sets the title.
         /// </summary>
         public string Title { get; set; }
     }
+
+
+    public class ArticleContent
+    {
+        public string Title { get; set; }
+        public string Link { get; set; }
+        public int Status { get; set; }
+
+        public List<Content> Versions { get; set; }
+    }
+
 }
