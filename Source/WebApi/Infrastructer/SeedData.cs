@@ -73,6 +73,7 @@ namespace WebApi.Infrastructer
                     var serializator = new ArticleDeserializer(path, context);
 
                     serializator.Deserialize();
+
                     await context.SaveChangesAsync();
 
                     var end = DateTime.Now;

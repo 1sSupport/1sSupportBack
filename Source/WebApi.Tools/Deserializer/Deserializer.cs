@@ -35,6 +35,16 @@ namespace WebApi.Tools.Deserializer
         protected ICollection<T> objects = new List<T>();
 
         /// <summary>
+        ///     The error list.
+        /// </summary>
+        private readonly List<string> errorList = new List<string>();
+
+        /// <summary>
+        ///     The file error writer sync.
+        /// </summary>
+        private readonly object fileErrorWriterSync = new object();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Deserializer{T}"/> class.
         /// </summary>
         /// <param name="pathToFolder">
@@ -56,6 +66,11 @@ namespace WebApi.Tools.Deserializer
         protected virtual DirectoryInfo Directory { get; }
 
         /// <summary>
+        ///     Gets the file error.
+        /// </summary>
+        protected virtual FileInfo FileError { get; private set; }
+
+        /// <summary>
         ///     The deserialize async.
         /// </summary>
         /// <exception cref="DirectoryNotFoundException">
@@ -63,6 +78,7 @@ namespace WebApi.Tools.Deserializer
         public void Deserialize()
         {
             if (!this.Directory.Exists) throw new DirectoryNotFoundException();
+            this.FileError = new FileInfo(Path.Combine(this.Directory.FullName, "DeserializerError.txt"));
 
             var files = this.Directory.GetFiles(string.Empty).ToList();
 
@@ -85,6 +101,7 @@ namespace WebApi.Tools.Deserializer
             Task.WaitAll(tasks);
 
             this.SaveObjects();
+            this.WriteErrors();
         }
 
         /// <summary>
@@ -102,10 +119,22 @@ namespace WebApi.Tools.Deserializer
                 {
                     using (var jsonTextReader = new JsonTextReader(reader))
                     {
-                        var item = serializer.Deserialize<T>(jsonTextReader);
-                        lock (this.objects)
+                        try
                         {
-                            this.objects.Add(item);
+                            var item = serializer.Deserialize<T>(jsonTextReader);
+
+                            lock (this.objects)
+                            {
+                                this.objects.Add(item);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            lock (this.fileErrorWriterSync)
+                            {
+                                this.errorList.Add(
+                                    $@"Что-то сломалось при сериализации {file.Name} -> {ex.Message}{Environment.NewLine}");
+                            }
                         }
                     }
                 }
@@ -116,6 +145,18 @@ namespace WebApi.Tools.Deserializer
         ///     The save objects.
         /// </summary>
         protected abstract void SaveObjects();
+
+        /// <summary>
+        ///     The write errors.
+        /// </summary>
+        protected virtual void WriteErrors()
+        {
+            lock (this.fileErrorWriterSync)
+            {
+                if (this.errorList.Any())
+                    File.WriteAllLines(this.FileError.FullName, this.errorList);
+            }
+        }
 
         /// <summary>
         /// The deserialize from files.

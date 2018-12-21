@@ -1,32 +1,47 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Content.cs" company="">
+// <copyright file="Article.cs" company="">
 //   
 // </copyright>
 // <summary>
-//   The content.
+//   The article.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace WebApi.Tools.Deserializer.Models
 {
     /// <summary>
-    ///     The content.
+    ///     The article.
     /// </summary>
-    public class Content
+    public class Article
     {
+        /// <summary>
+        ///     Gets or sets the content.
+        /// </summary>
+        public string Content { get; set; }
+
         /// <summary>
         ///     Gets or sets the link.
         /// </summary>
         public string Link { get; set; }
 
         /// <summary>
-        ///     Gets or sets the response.
+        ///     Gets or sets the repeated.
         /// </summary>
-        public string Response { get; set; }
+        public Repeated Repeated { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the status.
+        /// </summary>
+        public int Status { get; set; }
 
         /// <summary>
         ///     Gets or sets the title.
         /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the versions.
+        /// </summary>
+        public Version[] Versions { get; set; }
     }
 }

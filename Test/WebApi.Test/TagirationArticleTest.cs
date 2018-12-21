@@ -15,11 +15,12 @@ namespace WebApi.Test
 
     using Newtonsoft.Json;
 
-    using WebApi.EF.Models;
     using WebApi.Tools.Deserializer.Models;
     using WebApi.Tools.Tagirator;
 
     using Xunit;
+
+    using Article = WebApi.EF.Models.Article;
 
     /// <summary>
     ///     The tagiration article test.

@@ -25,6 +25,8 @@ namespace WebApi.Test
 
     using Xunit;
 
+    using Article = WebApi.EF.Models.Article;
+
     /// <inheritdoc />
     /// <summary>
     ///     The tagirator test.

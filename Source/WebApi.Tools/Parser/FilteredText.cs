@@ -30,10 +30,10 @@ namespace WebApi.Tools.Parser
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public static IEnumerable<string> GetWords(string text, bool useEnglish = false)
+        public static IEnumerable<string> GetWords(string text, bool useEnglish = true)
         {
             // get all significant words
-            var words = Regex.Split(Clean(text), $@"[ \n\t\r$+<>№=]");
+            var words = Regex.Split(Clean(text.CleanTag()), $@"[ \n\t\r$+<>№=]");
 
             var containsRegex = useEnglish ? @"[а-яА-ЯЁёa-zA-Z]" : @"[а-яА-ЯЁё]";
 
@@ -69,6 +69,13 @@ namespace WebApi.Tools.Parser
 
             fixtext = Regex.Replace(fixtext, @"[.,\/#!$%\^&\*;:{}=\-_`~()?\""?«»]", " ");
             return fixtext;
+        }
+
+
+        public static string CleanTag(this string str)
+        {
+            var filterdtext = Regex.Replace(str, @"/(<script.*>[\S\s]*?<\/script>)|(<style.*>[\S\s]*?<\/style>)|(<[\/a-zA-Z][\S\s]*?>)|(<!(.+))|(&(.*?);)/gim", string.Empty, RegexOptions.ECMAScript);
+            return str;
         }
     }
 }

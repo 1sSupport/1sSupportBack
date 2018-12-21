@@ -9,32 +9,44 @@
 
 namespace WebApi.Tools.Deserializer.Models
 {
-    using System.Collections.Generic;
-
-    using Newtonsoft.Json;
-
     /// <summary>
     ///     The chapter.
     /// </summary>
     public class Chapter
     {
         /// <summary>
-        ///     Gets or sets the contents.
+        ///     Gets or sets a value indicating whether contents.
         /// </summary>
-        public List<Content> Contents { get; set; }
+        public bool Contents { get; set; }
 
         /// <summary>
-        ///     Gets or sets the file name.
+        ///     Gets or sets the folder.
         /// </summary>
-        [JsonIgnore]
-        public string FileName { get; set; }
+        public string Folder { get; set; }
 
         /// <summary>
         ///     Gets or sets the link.
         /// </summary>
         public string Link { get; set; }
 
+        /// <summary>
+        ///     Gets or sets the page without contents.
+        /// </summary>
+        public string PageWithoutContents { get; set; }
 
+        /// <summary>
+        ///     Gets or sets a value indicating whether repeated.
+        /// </summary>
+        public bool Repeated { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the repeating links.
+        /// </summary>
+        public ChapterRepeatinglinks RepeatingLinks { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the status.
+        /// </summary>
         public int Status { get; set; }
 
         /// <summary>
@@ -42,15 +54,4 @@ namespace WebApi.Tools.Deserializer.Models
         /// </summary>
         public string Title { get; set; }
     }
-
-
-    public class ArticleContent
-    {
-        public string Title { get; set; }
-        public string Link { get; set; }
-        public int Status { get; set; }
-
-        public List<Content> Versions { get; set; }
-    }
-
 }

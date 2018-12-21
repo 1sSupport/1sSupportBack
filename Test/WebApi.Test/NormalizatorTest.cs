@@ -36,7 +36,7 @@ namespace WebApi.Test
         /// </summary>
         public NormalizatorTest()
         {
-            this.dumpsFolder = @"D:\Загрузки\testDump";
+            this.dumpsFolder = @"D:\Загрузки\testdumps";
             this.saveFodler = @"D:\Normalizator";
         }
 

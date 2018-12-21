@@ -16,6 +16,7 @@ namespace WebApi.Tools.Normalizator
 
     using Newtonsoft.Json;
 
+    using WebApi.Tools.Deserializer;
     using WebApi.Tools.Deserializer.Models;
 
     /// <summary>
@@ -79,11 +80,11 @@ namespace WebApi.Tools.Normalizator
             if (!dumpDir.Exists) throw new DirectoryNotFoundException(this.DumpsFolder);
             if (!this.saveDir.Exists) this.saveDir.Create();
 
-            var dumpsFiles = dumpDir.GetFiles();
+            var dumpsFiles = dumpDir.GetFiles("*.json", SearchOption.TopDirectoryOnly);
 
             var tasks = new Task[Environment.ProcessorCount];
 
-            var elementsPerTask = dumpsFiles.Length / Environment.ProcessorCount + 1;
+            var elementsPerTask = (dumpsFiles.Length / Environment.ProcessorCount) + 1;
 
             for (var k = 0; k < Environment.ProcessorCount; k++)
             {
@@ -163,41 +164,55 @@ namespace WebApi.Tools.Normalizator
         /// </param>
         private void SaveArticleFromSaveDirectory(Chapter chapter)
         {
-            foreach (var content in chapter.Contents)
+            if (chapter.Contents == false || chapter.Repeated) return;
+
+            var chapterArticleFolder = new DirectoryInfo(Path.Combine(this.DumpsFolder, chapter.Folder));
+
+            if(!chapterArticleFolder.Exists) return;
+
+
+            var serializer = new DumpArticleDeserializer(chapterArticleFolder.FullName);
+
+            serializer.Deserialize();
+
+            foreach (var dumpArticle in serializer.GetObjects())
             {
-                uint id;
-                lock (this.sync)
+                foreach (var version in dumpArticle.Versions)
                 {
-                    id = this.articleId;
-                    this.articleId = this.articleId + 1;
-                }
-
-                var newContetn = new NewArticle()
-                                     {
-                                         Id = id,
-                                         Title = content.Title,
-                                         Link = content.Link,
-                                         Response = content.Response
-                                     };
-                var fileName = $"{newContetn.Id}.json";
-
-                var path = Path.Combine(this.saveDir.FullName, fileName);
-                var file = new FileInfo(path);
-                if (file.Exists) continue;
-
-                using (var writer = new StringWriter())
-                {
-                    writer.Write(
-                        JsonConvert.SerializeObject(
-                            newContetn,
-                            Formatting.Indented,
-                            new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
-
-                    if (!file.Exists) file.Create().Close();
-
-                    using (var stream = new StreamWriter(file.FullName))
+                    uint id;
+                    lock (this.sync)
                     {
-                        stream.WriteLine(writer.ToString());
+                        id = this.articleId;
+                        this.articleId = this.articleId + 1;
+                    }
+
+                    var newArticle = new NewArticle()
+                                         {
+                                             Id = id,
+                                             Title = dumpArticle.Title,
+                                             Link = version.Link,
+                                             Response = version.Content
+                                         };
+                    var fileName = $"{newArticle.Id}.json";
+
+                    var path = Path.Combine(this.saveDir.FullName, fileName);
+                    var file = new FileInfo(path);
+                    if (file.Exists) continue;
+
+                    using (var writer = new StringWriter())
+                    {
+                        writer.Write(
+                            JsonConvert.SerializeObject(
+                                newArticle,
+                                Formatting.Indented,
+                                new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+
+                        if (!file.Exists) file.Create().Close();
+
+                        using (var stream = new StreamWriter(file.FullName))
+                        {
+                            stream.WriteLine(writer.ToString());
+                        }
                     }
                 }
             }
