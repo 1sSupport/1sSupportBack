@@ -54,15 +54,23 @@ namespace WebApi.Infrastructer
 
                 if (!context.AskTitle.Any())
                 {
-                    context.AskTitle.AddRange(
-                        new List<AskTitle>
+                    try
+                    {
+                        context.AskTitle.AddRange(
+                            new List<AskTitle>
                             {
-                                new AskTitle("tema1"),
-                                new AskTitle("tema2"),
-                                new AskTitle("tema3"),
-                                new AskTitle("tema4")
+                                new AskTitle("Тема 1"),
+                                new AskTitle("Тема 2"),
+                                new AskTitle("Тема 3"),
+                                new AskTitle("Тема 4")
                             });
-                    await context.SaveChangesAsync();
+                        context.SaveChanges();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                    
                 }
 
                 if (!context.Articles.Any())
@@ -93,7 +101,7 @@ namespace WebApi.Infrastructer
                     }
             }
 
-            GC.Collect();
+            GC.Collect(GC.MaxGeneration);
             GC.WaitForPendingFinalizers();
         }
     }

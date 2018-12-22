@@ -33,7 +33,7 @@ namespace WebApi.Tools.Deserializer.Models
         public NewArticle(string title, string text)
         {
             this.Title = title;
-            this.Response = text;
+            this.Content = text;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace WebApi.Tools.Deserializer.Models
         /// <summary>
         ///     Gets or sets the response.
         /// </summary>
-        public string Response { get; set; }
+        public string Content { get; set; }
 
         /// <summary>
         ///     Gets or sets the title.

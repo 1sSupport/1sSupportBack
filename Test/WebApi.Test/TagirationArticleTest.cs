@@ -131,7 +131,7 @@ namespace WebApi.Test
                                  {
                                      Id = 1,
                                      Link = "Test@test",
-                                     Response = "тест тест тест жопа жопа я я я тест",
+                                     Content = "тест тест тест жопа жопа я я я тест",
                                      Title = "Test"
                                  };
 

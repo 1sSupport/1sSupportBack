@@ -30,7 +30,7 @@ namespace WebApi.Tools.Parser
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public static IEnumerable<string> GetWords(string text, bool useEnglish = true)
+        public static IEnumerable<string> GetWords(string text, bool useEnglish = false)
         {
             // get all significant words
             var words = Regex.Split(Clean(text.CleanTag()), $@"[ \n\t\r$+<>№=]");

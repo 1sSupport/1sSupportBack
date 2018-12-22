@@ -177,6 +177,7 @@ namespace WebApi.Tools.Normalizator
 
             foreach (var dumpArticle in serializer.GetObjects())
             {
+               // if(dumpArticle.Repeated != null) continue;
                 foreach (var version in dumpArticle.Versions)
                 {
                     uint id;
@@ -185,22 +186,22 @@ namespace WebApi.Tools.Normalizator
                         id = this.articleId;
                         this.articleId = this.articleId + 1;
                     }
-
-                    var newArticle = new NewArticle()
-                                         {
-                                             Id = id,
-                                             Title = dumpArticle.Title,
-                                             Link = version.Link,
-                                             Response = version.Content
-                                         };
-                    var fileName = $"{newArticle.Id}.json";
-
+                    
+                    var fileName = $"{id}.json";
                     var path = Path.Combine(this.saveDir.FullName, fileName);
                     var file = new FileInfo(path);
                     if (file.Exists) continue;
 
                     using (var writer = new StringWriter())
                     {
+                        var newArticle = new NewArticle()
+                        {
+                            Id = id,
+                            Title = $"{dumpArticle.Title} - {version.Title}",
+                            Link = version.Link,
+                            Content = version.Content
+                        };
+
                         writer.Write(
                             JsonConvert.SerializeObject(
                                 newArticle,
