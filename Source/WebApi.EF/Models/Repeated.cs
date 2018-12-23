@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace WebApi.Tools.Deserializer.Models
+namespace WebApi.EF.Models
 {
     /// <summary>
     ///     The repeated.

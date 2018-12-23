@@ -36,8 +36,8 @@ namespace WebApi.Test
         /// </summary>
         public NormalizatorTest()
         {
-            this.dumpsFolder = @"D:\Загрузки\testdumps";
-            this.saveFodler = @"D:\Normalizator";
+            this.dumpsFolder = @"D:\Загрузки\dumps";
+            this.saveFodler = @"D:\articles";
         }
 
         /// <summary>
@@ -60,11 +60,11 @@ namespace WebApi.Test
         /// </summary>
         public void Dispose()
         {
-            var saveDir = new DirectoryInfo(this.saveFodler);
-            if (saveDir.Exists)
-            {
-                saveDir.Delete(true);
-            }
+            //var saveDir = new DirectoryInfo(this.saveFodler);
+            //if (saveDir.Exists)
+            //{
+            //    saveDir.Delete(true);
+            //}
         }
     }
 }

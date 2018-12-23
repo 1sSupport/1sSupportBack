@@ -80,20 +80,20 @@ namespace WebApi.Tools.Deserializer
             if (!this.Directory.Exists) throw new DirectoryNotFoundException();
             this.FileError = new FileInfo(Path.Combine(this.Directory.FullName, "DeserializerError.txt"));
 
-            var files = this.Directory.GetFiles(string.Empty).ToList();
+            var files = this.Directory.GetFiles(string.Empty);
 
             if (!files.Any()) throw new NullReferenceException();
 
             var tasks = new Task[this.ThreadCount];
 
-            var elementsPerTask = files.Count / this.ThreadCount + 1;
+            var elementsPerTask = files.Length / this.ThreadCount + 1;
 
             for (var k = 0; k < this.ThreadCount; k++)
             {
                 var start = k * elementsPerTask;
                 var indexlastElementPerTask = (k + 1) * elementsPerTask;
 
-                var finish = indexlastElementPerTask < files.Count ? indexlastElementPerTask : files.Count;
+                var finish = indexlastElementPerTask < files.Length ? indexlastElementPerTask : files.Length;
 
                 tasks[k] = this.DeserializeFromFilesAsync(start, finish, files);
             }

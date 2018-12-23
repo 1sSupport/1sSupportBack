@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="NewArticle.cs" company="">
+// <copyright file="SaveArticle.cs" company="">
 //   
 // </copyright>
 // <summary>
@@ -7,22 +7,22 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace WebApi.Tools.Deserializer.Models
+namespace WebApi.EF.Models
 {
     /// <summary>
     ///     The new article.
     /// </summary>
-    public class NewArticle
+    public class SaveArticle
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="NewArticle" /> class.
+        ///     Initializes a new instance of the <see cref="SaveArticle" /> class.
         /// </summary>
-        public NewArticle()
+        public SaveArticle()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NewArticle"/> class.
+        /// Initializes a new instance of the <see cref="SaveArticle"/> class.
         /// </summary>
         /// <param name="title">
         /// The title.
@@ -30,7 +30,7 @@ namespace WebApi.Tools.Deserializer.Models
         /// <param name="text">
         /// The text.
         /// </param>
-        public NewArticle(string title, string text)
+        public SaveArticle(string title, string text)
         {
             this.Title = title;
             this.Content = text;

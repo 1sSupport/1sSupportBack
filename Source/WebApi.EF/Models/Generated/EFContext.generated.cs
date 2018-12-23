@@ -22,19 +22,19 @@ namespace WebApi.EF.Models
    public partial class EFContext : Microsoft.EntityFrameworkCore.DbContext
    {
       #region DbSets
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Article> Articles { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.ArticleDependencies> ArticleDependencies { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.ArticleTag> ArticleTags { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.AskTitle> AskTitle { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Configuration1C> Configurations1C { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.OpenedArticle> OpenedArticles { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Provider> Providers { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.SearchingQuery> SearchingQueryes { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Session> Sessions { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.SessionQuery> SessionQueries { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.SupportAsk> SupportAsk { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Tag> Tags { get; set; }
-      public Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.User> Users { get; set; }
+      public virtual Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Article> Articles { get; set; }
+      public virtual Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.ArticleDependencies> ArticleDependencies { get; set; }
+      public virtual Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.ArticleTag> ArticleTags { get; set; }
+      public virtual Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.AskTitle> AskTitle { get; set; }
+      public virtual Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Configuration1C> Configurations1C { get; set; }
+      public virtual Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.OpenedArticle> OpenedArticles { get; set; }
+      public virtual Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Provider> Providers { get; set; }
+      public virtual Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.SearchingQuery> SearchingQueryes { get; set; }
+      public virtual Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Session> Sessions { get; set; }
+      public virtual Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.SessionQuery> SessionQueries { get; set; }
+      public virtual Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.SupportAsk> SupportAsk { get; set; }
+      public virtual Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.Tag> Tags { get; set; }
+      public virtual Microsoft.EntityFrameworkCore.DbSet<WebApi.EF.Models.User> Users { get; set; }
       #endregion DbSets
 
       /// <inheritdoc />

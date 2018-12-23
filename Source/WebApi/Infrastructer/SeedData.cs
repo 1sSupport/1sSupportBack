@@ -86,7 +86,7 @@ namespace WebApi.Infrastructer
 
                     var end = DateTime.Now;
                     Console.WriteLine($"{end}Article {end - start}");
-                    File.AppendAllText(@"d:\test.txt", $"{end} -> Article {end - start}{Environment.NewLine}");
+                    File.AppendAllText(@"d:\test.txt", $"{end} -> DumpArticle {end - start}{Environment.NewLine}");
                 }
 
                 if (!context.Tags.Any() || !context.ArticleTags.Any())

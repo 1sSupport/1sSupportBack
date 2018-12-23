@@ -104,7 +104,7 @@ namespace WebApi.Controllers
             {
                 return this.Ok(new { article.Id, article.Title, Text = article.GetText() });
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 // this.logger.LogCritical(e, $"Сломались {nameof(this.GetArticle)}");
                 return this.BadRequest(new { id, message = "Данной статьи не было найдено" });

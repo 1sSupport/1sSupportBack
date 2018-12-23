@@ -10,8 +10,8 @@ using WebApi.EF.Models;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(EFContext))]
-    [Migration("20181125132902_ReworkDatabase")]
-    partial class ReworkDatabase
+    [Migration("20181222235439_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -93,15 +93,10 @@ namespace WebApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("SupportAskId")
-                        .IsRequired();
-
                     b.Property<string>("Text")
                         .IsRequired();
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SupportAskId");
 
                     b.ToTable("AskTitle");
                 });
@@ -177,16 +172,12 @@ namespace WebApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("SessionId");
+                    b.Property<int>("Amount");
 
                     b.Property<string>("Text")
                         .IsRequired();
 
-                    b.Property<DateTime>("Time");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("SessionId");
 
                     b.ToTable("SearchingQuery");
                 });
@@ -210,11 +201,35 @@ namespace WebApi.Migrations
                     b.ToTable("Session");
                 });
 
+            modelBuilder.Entity("WebApi.EF.Models.SessionQuery", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("SearchingQueryId");
+
+                    b.Property<int?>("SessionId");
+
+                    b.Property<DateTime>("Time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SearchingQueryId");
+
+                    b.HasIndex("SessionId");
+
+                    b.ToTable("SessionQuery");
+                });
+
             modelBuilder.Entity("WebApi.EF.Models.SupportAsk", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AskTitle_Id")
+                        .IsRequired();
 
                     b.Property<string>("ContactInfo")
                         .IsRequired();
@@ -226,6 +241,8 @@ namespace WebApi.Migrations
                         .IsRequired();
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AskTitle_Id");
 
                     b.HasIndex("SessionId");
 
@@ -297,30 +314,15 @@ namespace WebApi.Migrations
                         .HasForeignKey("TagId");
                 });
 
-            modelBuilder.Entity("WebApi.EF.Models.AskTitle", b =>
-                {
-                    b.HasOne("WebApi.EF.Models.SupportAsk")
-                        .WithMany("AskTitle")
-                        .HasForeignKey("SupportAskId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("WebApi.EF.Models.OpenedArticle", b =>
                 {
                     b.HasOne("WebApi.EF.Models.Article", "Article")
                         .WithMany("OpenedArticle")
                         .HasForeignKey("ArticleId");
 
-                    b.HasOne("WebApi.EF.Models.SearchingQuery", "SearchingQuery")
+                    b.HasOne("WebApi.EF.Models.SessionQuery", "SearchingQuery")
                         .WithMany("OpenedArticle")
                         .HasForeignKey("SearchingQueryId");
-                });
-
-            modelBuilder.Entity("WebApi.EF.Models.SearchingQuery", b =>
-                {
-                    b.HasOne("WebApi.EF.Models.Session", "Session")
-                        .WithMany("SearchingQuery")
-                        .HasForeignKey("SessionId");
                 });
 
             modelBuilder.Entity("WebApi.EF.Models.Session", b =>
@@ -330,8 +332,24 @@ namespace WebApi.Migrations
                         .HasForeignKey("UserId");
                 });
 
+            modelBuilder.Entity("WebApi.EF.Models.SessionQuery", b =>
+                {
+                    b.HasOne("WebApi.EF.Models.SearchingQuery", "SearchingQuery")
+                        .WithMany("SessionQuery")
+                        .HasForeignKey("SearchingQueryId");
+
+                    b.HasOne("WebApi.EF.Models.Session", "Session")
+                        .WithMany("SearchingQuery")
+                        .HasForeignKey("SessionId");
+                });
+
             modelBuilder.Entity("WebApi.EF.Models.SupportAsk", b =>
                 {
+                    b.HasOne("WebApi.EF.Models.AskTitle", "AskTitle")
+                        .WithMany("SupportAsk")
+                        .HasForeignKey("AskTitle_Id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("WebApi.EF.Models.Session")
                         .WithMany("SupportAsk")
                         .HasForeignKey("SessionId")

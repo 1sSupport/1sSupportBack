@@ -1,18 +1,18 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Version.cs" company="">
+// <copyright file="Article.cs" company="">
 //   
 // </copyright>
 // <summary>
-//   The version.
+//   The article.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace WebApi.Tools.Deserializer.Models
+namespace WebApi.EF.Models
 {
     /// <summary>
-    ///     The version.
+    ///     The article.
     /// </summary>
-    public class Version
+    public class DumpArticle
     {
         /// <summary>
         ///     Gets or sets the content.
@@ -25,6 +25,11 @@ namespace WebApi.Tools.Deserializer.Models
         public string Link { get; set; }
 
         /// <summary>
+        ///     Gets or sets the repeated.
+        /// </summary>
+        public Repeated Repeated { get; set; }
+
+        /// <summary>
         ///     Gets or sets the status.
         /// </summary>
         public int Status { get; set; }
@@ -33,5 +38,10 @@ namespace WebApi.Tools.Deserializer.Models
         ///     Gets or sets the title.
         /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the versions.
+        /// </summary>
+        public Version[] Versions { get; set; }
     }
 }

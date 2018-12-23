@@ -7,21 +7,22 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using WebApi.EF.Models;
+
 namespace WebApi.Tools.Deserializer
 {
     #region
 
     using System;
     using System.Collections.Generic;
-
-    using WebApi.Tools.Deserializer.Models;
+    
 
     #endregion
 
     /// <summary>
     ///     The dump article deserializer.
     /// </summary>
-    internal class DumpArticleDeserializer : Deserializer<Article>
+    internal class DumpArticleDeserializer : Deserializer<DumpArticle>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DumpArticleDeserializer"/> class.
@@ -40,7 +41,7 @@ namespace WebApi.Tools.Deserializer
         /// <returns>
         /// The <see cref="ICollection"/>.
         /// </returns>
-        public ICollection<Article> GetObjects()
+        public ICollection<DumpArticle> GetObjects()
         {
             return this.objects;
         }

@@ -7,6 +7,8 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using WebApi.EF.Models;
+
 namespace WebApi.Tools.Normalizator
 {
     using System;
@@ -17,7 +19,6 @@ namespace WebApi.Tools.Normalizator
     using Newtonsoft.Json;
 
     using WebApi.Tools.Deserializer;
-    using WebApi.Tools.Deserializer.Models;
 
     /// <summary>
     ///     The normalizator.
@@ -177,7 +178,7 @@ namespace WebApi.Tools.Normalizator
 
             foreach (var dumpArticle in serializer.GetObjects())
             {
-               // if(dumpArticle.Repeated != null) continue;
+                if (dumpArticle.Repeated.Index != 0) continue;
                 foreach (var version in dumpArticle.Versions)
                 {
                     uint id;
@@ -194,7 +195,7 @@ namespace WebApi.Tools.Normalizator
 
                     using (var writer = new StringWriter())
                     {
-                        var newArticle = new NewArticle()
+                        var newArticle = new SaveArticle()
                         {
                             Id = id,
                             Title = $"{dumpArticle.Title} - {version.Title}",

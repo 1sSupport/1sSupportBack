@@ -7,6 +7,8 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Newtonsoft.Json;
+
 namespace WebApi.EF.Models
 {
     using System;
@@ -19,6 +21,9 @@ namespace WebApi.EF.Models
     /// </summary>
     public partial class Article
     {
+
+       private static JsonSerializer serializer = new JsonSerializer();
+
         /// <summary>
         ///     The get text.
         /// </summary>
@@ -34,9 +39,11 @@ namespace WebApi.EF.Models
             {
                 using (var reader = new StreamReader(stream))
                 {
-                    var jsonReader = reader.ReadToEnd();
-                    var jo = JObject.Parse(jsonReader);
-                    text = jo["Response"].ToString();
+                    using (var jsonTextReader = new JsonTextReader(reader))
+                    {
+                            var item = serializer.Deserialize<SaveArticle>(jsonTextReader);
+                            text = item.Content;
+                    }
                 }
             }
 

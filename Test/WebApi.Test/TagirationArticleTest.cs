@@ -7,6 +7,8 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using WebApi.EF.Models;
+
 namespace WebApi.Test
 {
     using System;
@@ -14,8 +16,7 @@ namespace WebApi.Test
     using System.Linq;
 
     using Newtonsoft.Json;
-
-    using WebApi.Tools.Deserializer.Models;
+    
     using WebApi.Tools.Tagirator;
 
     using Xunit;
@@ -127,7 +128,7 @@ namespace WebApi.Test
             this.Subdir = dir.CreateSubdirectory("TestArticle");
             var path = Path.Combine(this.Subdir.FullName, "test.json");
 
-            var newArticle = new NewArticle()
+            var newArticle = new SaveArticle()
                                  {
                                      Id = 1,
                                      Link = "Test@test",

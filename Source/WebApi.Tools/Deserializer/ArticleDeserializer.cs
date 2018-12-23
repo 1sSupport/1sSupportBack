@@ -15,7 +15,6 @@ namespace WebApi.Tools.Deserializer
     using System.Linq;
 
     using WebApi.EF.Models;
-    using WebApi.Tools.Deserializer.Models;
     using WebApi.Tools.Parser;
 
     using Article = WebApi.EF.Models.Article;
@@ -26,7 +25,7 @@ namespace WebApi.Tools.Deserializer
     /// <summary>
     ///     The article deserializator.
     /// </summary>
-    public class ArticleDeserializer : Deserializer<NewArticle>
+    public class ArticleDeserializer : Deserializer<SaveArticle>
     {
         /// <summary>
         ///     The context.
@@ -60,7 +59,7 @@ namespace WebApi.Tools.Deserializer
 
                 var article = new Article(myObject.Title, path) { EditDate = DateTime.UtcNow };
 
-                article.Preview = new string(article.GetText().CleanTag().Take(300).ToArray());
+                article.Preview = new string(article.GetText().TextWithoutHtmlTag().Take(300).ToArray());
 
                 this.context.Articles.Add(article);
             }

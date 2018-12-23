@@ -7,6 +7,8 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
+
 namespace WebApi.Tools.Parser
 {
     using System.Collections.Generic;
@@ -30,10 +32,10 @@ namespace WebApi.Tools.Parser
         /// <returns>
         /// The <see cref="IEnumerable{T}"/>.
         /// </returns>
-        public static IEnumerable<string> GetWords(string text, bool useEnglish = false)
+        public static IEnumerable<string> GetWords(string text, bool useEnglish = true)
         {
             // get all significant words
-            var words = Regex.Split(Clean(text.CleanTag()), $@"[ \n\t\r$+<>№=]");
+            var words = Regex.Split(Clean(text.TextWithoutHtmlTag()), $@"[ \n\t\r$+<>№=]");
 
             var containsRegex = useEnglish ? @"[а-яА-ЯЁёa-zA-Z]" : @"[а-яА-ЯЁё]";
 
@@ -65,16 +67,16 @@ namespace WebApi.Tools.Parser
             // remove all digits and punctuation marks
             if (text == null) return string.Empty;
 
-            var fixtext = Regex.Replace(text.ToLower(), @"[\\pP\\d]", " ");
+            var fixtext = Regex.Replace(text.ToLower(), @"[\\pP\\d]", string.Intern(" "));
 
-            fixtext = Regex.Replace(fixtext, @"[.,\/#!$%\^&\*;:{}=\-_`~()?\""?«»]", " ");
+            fixtext = Regex.Replace(fixtext, @"[.,\/#!$%\^&\*;:{}=\-_`~()?\""?«»]", string.Intern(" "));
             return fixtext;
         }
 
 
-        public static string CleanTag(this string str)
+        public static string TextWithoutHtmlTag(this string str)
         {
-            var filterdtext = Regex.Replace(str, @"/(<script.*>[\S\s]*?<\/script>)|(<style.*>[\S\s]*?<\/style>)|(<[\/a-zA-Z][\S\s]*?>)|(<!(.+))|(&(.*?);)/gim", string.Empty, RegexOptions.ECMAScript);
+            str = Regex.Replace(str, @"(<script.*>[\S\s]*?<\/script>)|(<style.*>[\S\s]*?<\/style>)|(<head>(.*?)<\/head>)|(<[\/a-zA-Z][\S\s]*?>)", string.Intern(" "), RegexOptions.ECMAScript);
             return str;
         }
     }
