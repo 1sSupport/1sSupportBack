@@ -50,25 +50,30 @@ namespace WebApi.Infrastructer
 
                 await normalizator.NormalizeAsync();
 
-                //Parallel.ForEach(path.GetFiles("*.json"), f =>
-                //{
-                //    var line = string.Empty;
+                Parallel.ForEach(
+                    path.GetFiles("*.json"),
+                    f =>
+                        {
+                            var line = string.Empty;
 
-                //    using (var stream = f.OpenRead())
-                //    {
-                //        using (var reader = new StreamReader(stream))
-                //        {
-                //            line = reader.ReadToEnd();
-                //            line = line.Replace("\\\"", "\"");
-                //        }
-                //    }
+                    using (var stream = f.OpenRead())
+                    {
+                        using (var reader = new StreamReader(stream))
+                        {
+                            line = reader.ReadToEnd();
+                            if (line.Contains("&#x2661;"))
+                            {
+                                line = line.Replace("&#x2661;", "\"");
+                            }
+                        }
+                    }
 
-                //    f.Delete();
-                //    using (var stream = new StreamWriter(f.Create()))
-                //    {
-                //        stream.WriteLine(line);
-                //    }
-                //});
+                    f.Delete();
+                    using (var stream = new StreamWriter(f.Create()))
+                    {
+                        stream.WriteLine(line);
+                    }
+                });
 
                 end = DateTime.Now;
                 File.AppendAllText(@"d:\test.txt", $"{end} -> ArticleNormalize {end - start}{Environment.NewLine}");

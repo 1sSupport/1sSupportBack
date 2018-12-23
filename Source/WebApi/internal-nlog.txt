@@ -550,3 +550,27 @@
 2018-12-23 20:06:45.2155 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
 2018-12-23 20:06:46.1592 Info Shutting down logging...
 2018-12-23 20:06:46.1762 Info Logger has been shut down.
+2018-12-23 23:28:39.0145 Info Message Template Auto Format enabled
+2018-12-23 23:28:39.0145 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 23:28:39.0660 Info Adding target File Target[allfile]
+2018-12-23 23:28:39.0660 Info Adding target File Target[ownFile-web]
+2018-12-23 23:28:39.0660 Info Adding target Console Target[console]
+2018-12-23 23:28:39.0660 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 23:28:39.0850 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 23:28:39.0850 Info Found 60 configuration items
+2018-12-23 23:28:39.1050 Info Configuration initialized.
+2018-12-23 23:28:39.1085 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 23:28:42.0719 Info Shutting down logging...
+2018-12-23 23:28:42.0843 Info Logger has been shut down.
+2018-12-23 23:28:48.9643 Info Message Template Auto Format enabled
+2018-12-23 23:28:48.9709 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 23:28:49.0084 Info Adding target File Target[allfile]
+2018-12-23 23:28:49.0084 Info Adding target File Target[ownFile-web]
+2018-12-23 23:28:49.0084 Info Adding target Console Target[console]
+2018-12-23 23:28:49.0161 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 23:28:49.0161 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 23:28:49.0308 Info Found 60 configuration items
+2018-12-23 23:28:49.0460 Info Configuration initialized.
+2018-12-23 23:28:49.0460 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 23:28:59.7161 Info Shutting down logging...
+2018-12-23 23:28:59.7381 Info Logger has been shut down.

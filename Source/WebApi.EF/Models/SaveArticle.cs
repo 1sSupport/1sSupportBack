@@ -47,6 +47,14 @@ namespace WebApi.EF.Models
         public string Link { get; set; }
 
         /// <summary>
+        /// Gets or sets the preview.
+        /// </summary>
+        public string Preview { get; set; }
+        
+
+        public string From { get; set; }
+
+        /// <summary>
         ///     Gets or sets the response.
         /// </summary>
         public string Response { get; set; }
