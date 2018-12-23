@@ -33,7 +33,7 @@ namespace WebApi.EF.Models
         public SaveArticle(string title, string text)
         {
             this.Title = title;
-            this.Content = text;
+            this.Response = text;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace WebApi.EF.Models
         /// <summary>
         ///     Gets or sets the response.
         /// </summary>
-        public string Content { get; set; }
+        public string Response { get; set; }
 
         /// <summary>
         ///     Gets or sets the title.

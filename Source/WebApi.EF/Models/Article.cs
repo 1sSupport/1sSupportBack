@@ -42,7 +42,7 @@ namespace WebApi.EF.Models
                     using (var jsonTextReader = new JsonTextReader(reader))
                     {
                             var item = serializer.Deserialize<SaveArticle>(jsonTextReader);
-                            text = item.Content;
+                            text = item.Response;
                     }
                 }
             }

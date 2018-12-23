@@ -1,30 +1,25 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Normalizator.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The normalizator.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿#region
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 using WebApi.EF.Models;
+using WebApi.Tools.Deserializer;
+
+#endregion
 
 namespace WebApi.Tools.Normalizator
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Threading.Tasks;
-
-    using Newtonsoft.Json;
-
-    using WebApi.Tools.Deserializer;
-
     /// <summary>
     ///     The normalizator.
     /// </summary>
     public class Normalizator
     {
+        private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings
+            {NullValueHandling = NullValueHandling.Ignore};
+
         /// <summary>
         ///     The sync.
         /// </summary>
@@ -41,18 +36,18 @@ namespace WebApi.Tools.Normalizator
         private DirectoryInfo saveDir;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Normalizator"/> class.
+        ///     Initializes a new instance of the <see cref="Normalizator" /> class.
         /// </summary>
         /// <param name="dumpsFolderPath">
-        /// The dumps folder path.
+        ///     The dumps folder path.
         /// </param>
         /// <param name="saveFolderPath">
-        /// The save folder path.
+        ///     The save folder path.
         /// </param>
         public Normalizator(string dumpsFolderPath, string saveFolderPath)
         {
-            this.DumpsFolder = dumpsFolderPath;
-            this.SaveFolder = saveFolderPath;
+            DumpsFolder = dumpsFolderPath;
+            SaveFolder = saveFolderPath;
         }
 
         /// <summary>
@@ -75,17 +70,17 @@ namespace WebApi.Tools.Normalizator
         /// </returns>
         public Task NormalizeAsync()
         {
-            var dumpDir = new DirectoryInfo(this.DumpsFolder);
-            this.saveDir = new DirectoryInfo(this.SaveFolder);
+            var dumpDir = new DirectoryInfo(DumpsFolder);
+            saveDir = new DirectoryInfo(SaveFolder);
 
-            if (!dumpDir.Exists) throw new DirectoryNotFoundException(this.DumpsFolder);
-            if (!this.saveDir.Exists) this.saveDir.Create();
+            if (!dumpDir.Exists) throw new DirectoryNotFoundException(DumpsFolder);
+            if (!saveDir.Exists) saveDir.Create();
 
             var dumpsFiles = dumpDir.GetFiles("*.json", SearchOption.TopDirectoryOnly);
 
             var tasks = new Task[Environment.ProcessorCount];
 
-            var elementsPerTask = (dumpsFiles.Length / Environment.ProcessorCount) + 1;
+            var elementsPerTask = dumpsFiles.Length / Environment.ProcessorCount + 1;
 
             for (var k = 0; k < Environment.ProcessorCount; k++)
             {
@@ -94,20 +89,20 @@ namespace WebApi.Tools.Normalizator
 
                 var finish = indexlastElementPerTask < dumpsFiles.Length ? indexlastElementPerTask : dumpsFiles.Length;
 
-                tasks[k] = this.ConvertDumpsFilesAsync(start, finish, dumpsFiles);
+                tasks[k] = ConvertDumpsFilesAsync(start, finish, dumpsFiles);
             }
 
             return Task.WhenAll(tasks);
         }
 
         /// <summary>
-        /// The get chapter from file.
+        ///     The get chapter from file.
         /// </summary>
         /// <param name="dumpFile">
-        /// The dump file.
+        ///     The dump file.
         /// </param>
         /// <returns>
-        /// The <see cref="Chapter"/>.
+        ///     The <see cref="Chapter" />.
         /// </returns>
         private static Chapter GetChapterFromFile(FileInfo dumpFile)
         {
@@ -128,48 +123,48 @@ namespace WebApi.Tools.Normalizator
         }
 
         /// <summary>
-        /// The deserialize from files async.
+        ///     The deserialize from files async.
         /// </summary>
         /// <param name="start">
-        /// The start.
+        ///     The start.
         /// </param>
         /// <param name="last">
-        /// The last.
+        ///     The last.
         /// </param>
         /// <param name="files">
-        /// The files.
+        ///     The files.
         /// </param>
         /// <returns>
-        /// The <see cref="Task"/>.
+        ///     The <see cref="Task" />.
         /// </returns>
         private Task ConvertDumpsFilesAsync(int start, int last, IReadOnlyList<FileInfo> files)
         {
             return Task.Factory.StartNew(
                 () =>
+                {
+                    for (var i = start; i < last; i++)
                     {
-                        for (var i = start; i < last; i++)
-                        {
-                            var chapter = GetChapterFromFile(files[i]);
+                        var chapter = GetChapterFromFile(files[i]);
 
-                            this.SaveArticleFromSaveDirectory(chapter);
-                        }
-                    },
+                        SaveArticleFromSaveDirectory(chapter);
+                    }
+                },
                 TaskCreationOptions.LongRunning);
         }
 
         /// <summary>
-        /// The save article from save directory.
+        ///     The save article from save directory.
         /// </summary>
         /// <param name="chapter">
-        /// The chapter.
+        ///     The chapter.
         /// </param>
         private void SaveArticleFromSaveDirectory(Chapter chapter)
         {
             if (chapter.Contents == false || chapter.Repeated) return;
 
-            var chapterArticleFolder = new DirectoryInfo(Path.Combine(this.DumpsFolder, chapter.Folder));
+            var chapterArticleFolder = new DirectoryInfo(Path.Combine(DumpsFolder, chapter.Folder));
 
-            if(!chapterArticleFolder.Exists) return;
+            if (!chapterArticleFolder.Exists) return;
 
 
             var serializer = new DumpArticleDeserializer(chapterArticleFolder.FullName);
@@ -182,32 +177,33 @@ namespace WebApi.Tools.Normalizator
                 foreach (var version in dumpArticle.Versions)
                 {
                     uint id;
-                    lock (this.sync)
+                    lock (sync)
                     {
-                        id = this.articleId;
-                        this.articleId = this.articleId + 1;
+                        id = articleId;
+                        articleId = articleId + 1;
                     }
-                    
+
                     var fileName = $"{id}.json";
-                    var path = Path.Combine(this.saveDir.FullName, fileName);
+                    var path = Path.Combine(saveDir.FullName, fileName);
                     var file = new FileInfo(path);
                     if (file.Exists) continue;
 
                     using (var writer = new StringWriter())
                     {
-                        var newArticle = new SaveArticle()
+                        var newArticle = new SaveArticle
                         {
                             Id = id,
                             Title = $"{dumpArticle.Title} - {version.Title}",
                             Link = version.Link,
-                            Content = version.Content
+                            Response = version.Content
                         };
 
                         writer.Write(
                             JsonConvert.SerializeObject(
                                 newArticle,
                                 Formatting.Indented,
-                                new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
+                                JsonSerializerSettings));
+
 
                         if (!file.Exists) file.Create().Close();
 

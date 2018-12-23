@@ -226,3 +226,327 @@
 2018-12-23 03:28:22.2396 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
 2018-12-23 03:28:28.8250 Info Shutting down logging...
 2018-12-23 03:28:28.8250 Info Logger has been shut down.
+2018-12-23 14:05:55.8497 Info Message Template Auto Format enabled
+2018-12-23 14:05:55.8568 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 14:05:55.8928 Info Adding target File Target[allfile]
+2018-12-23 14:05:55.8928 Info Adding target File Target[ownFile-web]
+2018-12-23 14:05:55.8928 Info Adding target Console Target[console]
+2018-12-23 14:05:55.8928 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 14:05:55.9081 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 14:05:55.9081 Info Found 60 configuration items
+2018-12-23 14:05:55.9283 Info Configuration initialized.
+2018-12-23 14:05:55.9283 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 14:06:06.5446 Info Shutting down logging...
+2018-12-23 14:06:06.5634 Info Logger has been shut down.
+2018-12-23 14:34:26.1928 Info Message Template Auto Format enabled
+2018-12-23 14:34:26.1928 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 14:34:26.2357 Info Adding target File Target[allfile]
+2018-12-23 14:34:26.2357 Info Adding target File Target[ownFile-web]
+2018-12-23 14:34:26.2357 Info Adding target Console Target[console]
+2018-12-23 14:34:26.2357 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 14:34:26.2510 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 14:34:26.2510 Info Found 60 configuration items
+2018-12-23 14:34:26.2706 Info Configuration initialized.
+2018-12-23 14:34:26.2706 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 14:34:29.7499 Info Shutting down logging...
+2018-12-23 14:34:29.7499 Info Logger has been shut down.
+2018-12-23 14:35:48.0895 Info Message Template Auto Format enabled
+2018-12-23 14:35:48.0956 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 14:35:48.1329 Info Adding target File Target[allfile]
+2018-12-23 14:35:48.1329 Info Adding target File Target[ownFile-web]
+2018-12-23 14:35:48.1329 Info Adding target Console Target[console]
+2018-12-23 14:35:48.1406 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 14:35:48.1406 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 14:35:48.1538 Info Found 60 configuration items
+2018-12-23 14:35:48.1538 Info Configuration initialized.
+2018-12-23 14:35:48.1700 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 14:35:58.8004 Info Shutting down logging...
+2018-12-23 14:35:58.8112 Info Logger has been shut down.
+2018-12-23 15:27:08.8372 Info Message Template Auto Format enabled
+2018-12-23 15:27:08.8434 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 15:27:08.8809 Info Adding target File Target[allfile]
+2018-12-23 15:27:08.8809 Info Adding target File Target[ownFile-web]
+2018-12-23 15:27:08.8809 Info Adding target Console Target[console]
+2018-12-23 15:27:08.8891 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 15:27:08.8891 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 15:27:08.8891 Info Found 60 configuration items
+2018-12-23 15:27:08.9156 Info Configuration initialized.
+2018-12-23 15:27:08.9156 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 15:27:13.0135 Info Shutting down logging...
+2018-12-23 15:27:13.0135 Info Logger has been shut down.
+2018-12-23 15:27:18.1979 Info Message Template Auto Format enabled
+2018-12-23 15:27:18.2048 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 15:27:18.2399 Info Adding target File Target[allfile]
+2018-12-23 15:27:18.2399 Info Adding target File Target[ownFile-web]
+2018-12-23 15:27:18.2399 Info Adding target Console Target[console]
+2018-12-23 15:27:18.2487 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 15:27:18.2487 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 15:27:18.2626 Info Found 60 configuration items
+2018-12-23 15:27:18.2626 Info Configuration initialized.
+2018-12-23 15:27:18.2626 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 15:27:28.9723 Info Shutting down logging...
+2018-12-23 15:27:28.9830 Info Logger has been shut down.
+2018-12-23 15:46:57.8572 Info Message Template Auto Format enabled
+2018-12-23 15:46:57.8572 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 15:46:57.9043 Info Adding target File Target[allfile]
+2018-12-23 15:46:57.9043 Info Adding target File Target[ownFile-web]
+2018-12-23 15:46:57.9043 Info Adding target Console Target[console]
+2018-12-23 15:46:57.9043 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 15:46:57.9211 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 15:46:57.9211 Info Found 60 configuration items
+2018-12-23 15:46:57.9423 Info Configuration initialized.
+2018-12-23 15:46:57.9423 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 15:46:58.3598 Info Shutting down logging...
+2018-12-23 15:46:58.3598 Info Logger has been shut down.
+2018-12-23 16:46:50.1681 Info Message Template Auto Format enabled
+2018-12-23 16:46:50.1745 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 16:46:50.2153 Info Adding target File Target[allfile]
+2018-12-23 16:46:50.2169 Info Adding target File Target[ownFile-web]
+2018-12-23 16:46:50.2169 Info Adding target Console Target[console]
+2018-12-23 16:46:50.2169 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 16:46:50.2317 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 16:46:50.2317 Info Found 60 configuration items
+2018-12-23 16:46:50.2502 Info Configuration initialized.
+2018-12-23 16:46:50.2502 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 16:46:55.7275 Info Shutting down logging...
+2018-12-23 16:46:55.7391 Info Logger has been shut down.
+2018-12-23 16:47:03.2556 Info Message Template Auto Format enabled
+2018-12-23 16:47:03.2628 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 16:47:03.3007 Info Adding target File Target[allfile]
+2018-12-23 16:47:03.3007 Info Adding target File Target[ownFile-web]
+2018-12-23 16:47:03.3007 Info Adding target Console Target[console]
+2018-12-23 16:47:03.3007 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 16:47:03.3168 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 16:47:03.3168 Info Found 60 configuration items
+2018-12-23 16:47:03.3368 Info Configuration initialized.
+2018-12-23 16:47:03.3368 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 16:47:13.9973 Info Shutting down logging...
+2018-12-23 16:47:14.0205 Info Logger has been shut down.
+2018-12-23 17:24:30.1146 Info Message Template Auto Format enabled
+2018-12-23 17:24:30.1236 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 17:24:30.1601 Info Adding target File Target[allfile]
+2018-12-23 17:24:30.1601 Info Adding target File Target[ownFile-web]
+2018-12-23 17:24:30.1601 Info Adding target Console Target[console]
+2018-12-23 17:24:30.1691 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 17:24:30.1859 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 17:24:30.1859 Info Found 60 configuration items
+2018-12-23 17:24:30.2049 Info Configuration initialized.
+2018-12-23 17:24:30.2049 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 17:24:35.7344 Info Shutting down logging...
+2018-12-23 17:24:35.7469 Info Logger has been shut down.
+2018-12-23 17:24:43.2646 Info Message Template Auto Format enabled
+2018-12-23 17:24:43.2646 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 17:24:43.3088 Info Adding target File Target[allfile]
+2018-12-23 17:24:43.3104 Info Adding target File Target[ownFile-web]
+2018-12-23 17:24:43.3104 Info Adding target Console Target[console]
+2018-12-23 17:24:43.3104 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 17:24:43.3104 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 17:24:43.3300 Info Found 60 configuration items
+2018-12-23 17:24:43.3434 Info Configuration initialized.
+2018-12-23 17:24:43.3434 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 17:24:54.0615 Info Shutting down logging...
+2018-12-23 17:24:54.0615 Info Logger has been shut down.
+2018-12-23 17:27:04.8705 Info Message Template Auto Format enabled
+2018-12-23 17:27:04.8769 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 17:27:04.9141 Info Adding target File Target[allfile]
+2018-12-23 17:27:04.9141 Info Adding target File Target[ownFile-web]
+2018-12-23 17:27:04.9182 Info Adding target Console Target[console]
+2018-12-23 17:27:04.9182 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 17:27:04.9182 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 17:27:04.9377 Info Found 60 configuration items
+2018-12-23 17:27:04.9510 Info Configuration initialized.
+2018-12-23 17:27:04.9510 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 17:27:07.1689 Info Shutting down logging...
+2018-12-23 17:27:07.1689 Info Logger has been shut down.
+2018-12-23 17:27:14.1762 Info Message Template Auto Format enabled
+2018-12-23 17:27:14.1762 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 17:27:14.2232 Info Adding target File Target[allfile]
+2018-12-23 17:27:14.2232 Info Adding target File Target[ownFile-web]
+2018-12-23 17:27:14.2232 Info Adding target Console Target[console]
+2018-12-23 17:27:14.2315 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 17:27:14.2315 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 17:27:14.2315 Info Found 60 configuration items
+2018-12-23 17:27:14.2606 Info Configuration initialized.
+2018-12-23 17:27:14.2634 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 17:27:24.9525 Info Shutting down logging...
+2018-12-23 17:27:24.9656 Info Logger has been shut down.
+2018-12-23 18:00:01.9688 Info Message Template Auto Format enabled
+2018-12-23 18:00:01.9688 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 18:00:02.0221 Info Adding target File Target[allfile]
+2018-12-23 18:00:02.0221 Info Adding target File Target[ownFile-web]
+2018-12-23 18:00:02.0221 Info Adding target Console Target[console]
+2018-12-23 18:00:02.0323 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 18:00:02.0323 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 18:00:02.0483 Info Found 60 configuration items
+2018-12-23 18:00:02.0622 Info Configuration initialized.
+2018-12-23 18:00:02.0622 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 18:00:03.9609 Info Shutting down logging...
+2018-12-23 18:00:03.9729 Info Logger has been shut down.
+2018-12-23 18:00:10.0933 Info Message Template Auto Format enabled
+2018-12-23 18:00:10.0933 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 18:00:10.1382 Info Adding target File Target[allfile]
+2018-12-23 18:00:10.1382 Info Adding target File Target[ownFile-web]
+2018-12-23 18:00:10.1382 Info Adding target Console Target[console]
+2018-12-23 18:00:10.1382 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 18:00:10.1573 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 18:00:10.1573 Info Found 60 configuration items
+2018-12-23 18:00:10.1782 Info Configuration initialized.
+2018-12-23 18:00:10.1782 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 18:00:12.7566 Info Shutting down logging...
+2018-12-23 18:00:12.7710 Info Logger has been shut down.
+2018-12-23 18:00:18.5957 Info Message Template Auto Format enabled
+2018-12-23 18:00:18.5957 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 18:00:18.6459 Info Adding target File Target[allfile]
+2018-12-23 18:00:18.6459 Info Adding target File Target[ownFile-web]
+2018-12-23 18:00:18.6459 Info Adding target Console Target[console]
+2018-12-23 18:00:18.6546 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 18:00:18.6546 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 18:00:18.6712 Info Found 60 configuration items
+2018-12-23 18:00:18.6846 Info Configuration initialized.
+2018-12-23 18:00:18.6846 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 18:00:29.4703 Info Shutting down logging...
+2018-12-23 18:00:29.4815 Info Logger has been shut down.
+2018-12-23 18:38:38.7625 Info Message Template Auto Format enabled
+2018-12-23 18:38:38.7625 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 18:38:38.8067 Info Adding target File Target[allfile]
+2018-12-23 18:38:38.8067 Info Adding target File Target[ownFile-web]
+2018-12-23 18:38:38.8100 Info Adding target Console Target[console]
+2018-12-23 18:38:38.8100 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 18:38:38.8252 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 18:38:38.8252 Info Found 60 configuration items
+2018-12-23 18:38:38.8446 Info Configuration initialized.
+2018-12-23 18:38:38.8446 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 18:38:39.2156 Info Shutting down logging...
+2018-12-23 18:38:39.2156 Info Logger has been shut down.
+2018-12-23 18:38:44.7746 Info Message Template Auto Format enabled
+2018-12-23 18:38:44.7826 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 18:38:44.8177 Info Adding target File Target[allfile]
+2018-12-23 18:38:44.8177 Info Adding target File Target[ownFile-web]
+2018-12-23 18:38:44.8177 Info Adding target Console Target[console]
+2018-12-23 18:38:44.8254 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 18:38:44.8254 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 18:38:44.8254 Info Found 60 configuration items
+2018-12-23 18:38:44.8528 Info Configuration initialized.
+2018-12-23 18:38:44.8528 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 18:38:50.6953 Info Shutting down logging...
+2018-12-23 18:38:50.7081 Info Logger has been shut down.
+2018-12-23 18:39:23.5308 Info Message Template Auto Format enabled
+2018-12-23 18:39:23.5308 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 18:39:23.5721 Info Adding target File Target[allfile]
+2018-12-23 18:39:23.5721 Info Adding target File Target[ownFile-web]
+2018-12-23 18:39:23.5758 Info Adding target Console Target[console]
+2018-12-23 18:39:23.5758 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 18:39:23.5758 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 18:39:23.5946 Info Found 60 configuration items
+2018-12-23 18:39:23.6076 Info Configuration initialized.
+2018-12-23 18:39:23.6076 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 18:39:34.2237 Info Shutting down logging...
+2018-12-23 18:39:34.2343 Info Logger has been shut down.
+2018-12-23 19:37:43.7837 Info Message Template Auto Format enabled
+2018-12-23 19:37:43.7837 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 19:37:43.8272 Info Adding target File Target[allfile]
+2018-12-23 19:37:43.8272 Info Adding target File Target[ownFile-web]
+2018-12-23 19:37:43.8272 Info Adding target Console Target[console]
+2018-12-23 19:37:43.8272 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 19:37:43.8441 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 19:37:43.8441 Info Found 60 configuration items
+2018-12-23 19:37:43.8629 Info Configuration initialized.
+2018-12-23 19:37:43.8629 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 19:38:00.4814 Info Shutting down logging...
+2018-12-23 19:38:00.4814 Info Logger has been shut down.
+2018-12-23 19:38:08.7256 Info Message Template Auto Format enabled
+2018-12-23 19:38:08.7315 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 19:38:08.7701 Info Adding target File Target[allfile]
+2018-12-23 19:38:08.7701 Info Adding target File Target[ownFile-web]
+2018-12-23 19:38:08.7701 Info Adding target Console Target[console]
+2018-12-23 19:38:08.7701 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 19:38:08.7864 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 19:38:08.7864 Info Found 60 configuration items
+2018-12-23 19:38:08.8071 Info Configuration initialized.
+2018-12-23 19:38:08.8095 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 19:38:19.4424 Info Shutting down logging...
+2018-12-23 19:38:19.4533 Info Logger has been shut down.
+2018-12-23 19:44:29.4221 Info Message Template Auto Format enabled
+2018-12-23 19:44:29.4221 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 19:44:29.4669 Info Adding target File Target[allfile]
+2018-12-23 19:44:29.4669 Info Adding target File Target[ownFile-web]
+2018-12-23 19:44:29.4669 Info Adding target Console Target[console]
+2018-12-23 19:44:29.4669 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 19:44:29.4842 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 19:44:29.4842 Info Found 60 configuration items
+2018-12-23 19:44:29.5049 Info Configuration initialized.
+2018-12-23 19:44:29.5049 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 19:44:34.9503 Info Shutting down logging...
+2018-12-23 19:44:34.9503 Info Logger has been shut down.
+2018-12-23 19:44:40.6542 Info Message Template Auto Format enabled
+2018-12-23 19:44:40.6542 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 19:44:40.6979 Info Adding target File Target[allfile]
+2018-12-23 19:44:40.6979 Info Adding target File Target[ownFile-web]
+2018-12-23 19:44:40.7017 Info Adding target Console Target[console]
+2018-12-23 19:44:40.7017 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 19:44:40.7162 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 19:44:40.7162 Info Found 60 configuration items
+2018-12-23 19:44:40.7422 Info Configuration initialized.
+2018-12-23 19:44:40.7422 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 19:44:51.4820 Info Shutting down logging...
+2018-12-23 19:44:51.4820 Info Logger has been shut down.
+2018-12-23 19:45:21.7709 Info Message Template Auto Format enabled
+2018-12-23 19:45:21.7790 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 19:45:21.8150 Info Adding target File Target[allfile]
+2018-12-23 19:45:21.8150 Info Adding target File Target[ownFile-web]
+2018-12-23 19:45:21.8265 Info Adding target Console Target[console]
+2018-12-23 19:45:21.8265 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 19:45:21.8411 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 19:45:21.8561 Info Found 60 configuration items
+2018-12-23 19:45:21.8561 Info Configuration initialized.
+2018-12-23 19:45:21.8721 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 19:45:27.7043 Info Shutting down logging...
+2018-12-23 19:45:27.7167 Info Logger has been shut down.
+2018-12-23 19:45:32.7199 Info Message Template Auto Format enabled
+2018-12-23 19:45:32.7199 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 19:45:32.7640 Info Adding target File Target[allfile]
+2018-12-23 19:45:32.7640 Info Adding target File Target[ownFile-web]
+2018-12-23 19:45:32.7640 Info Adding target Console Target[console]
+2018-12-23 19:45:32.7640 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 19:45:32.7805 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 19:45:32.7805 Info Found 60 configuration items
+2018-12-23 19:45:32.8012 Info Configuration initialized.
+2018-12-23 19:45:32.8012 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 19:45:43.4569 Info Shutting down logging...
+2018-12-23 19:45:43.4672 Info Logger has been shut down.
+2018-12-23 19:54:48.7497 Info Message Template Auto Format enabled
+2018-12-23 19:54:48.7497 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 19:54:48.7946 Info Adding target File Target[allfile]
+2018-12-23 19:54:48.7946 Info Adding target File Target[ownFile-web]
+2018-12-23 19:54:48.7946 Info Adding target Console Target[console]
+2018-12-23 19:54:48.7946 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 19:54:48.8100 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 19:54:48.8100 Info Found 60 configuration items
+2018-12-23 19:54:48.8303 Info Configuration initialized.
+2018-12-23 19:54:48.8303 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 19:54:56.1899 Info Shutting down logging...
+2018-12-23 19:54:56.2044 Info Logger has been shut down.
+2018-12-23 19:55:02.0441 Info Message Template Auto Format enabled
+2018-12-23 19:55:02.0441 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 19:55:02.0878 Info Adding target File Target[allfile]
+2018-12-23 19:55:02.0878 Info Adding target File Target[ownFile-web]
+2018-12-23 19:55:02.0907 Info Adding target Console Target[console]
+2018-12-23 19:55:02.0907 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 19:55:02.0907 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 19:55:02.1087 Info Found 60 configuration items
+2018-12-23 19:55:02.1218 Info Configuration initialized.
+2018-12-23 19:55:02.1218 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 19:55:12.8249 Info Shutting down logging...
+2018-12-23 19:55:12.8458 Info Logger has been shut down.
+2018-12-23 20:06:45.1329 Info Message Template Auto Format enabled
+2018-12-23 20:06:45.1391 Info Loading assembly: NLog.Web.AspNetCore
+2018-12-23 20:06:45.1767 Info Adding target File Target[allfile]
+2018-12-23 20:06:45.1767 Info Adding target File Target[ownFile-web]
+2018-12-23 20:06:45.1767 Info Adding target Console Target[console]
+2018-12-23 20:06:45.1844 Info Configured from an XML element in C:\Users\raein\Documents\repo\Study\1sSupportBack\Source\WebApi\bin\Debug\netcoreapp2.1\NLog.config...
+2018-12-23 20:06:45.1844 Warn Unused target detected. Add a rule for this target to the configuration. TargetName: allfile
+2018-12-23 20:06:45.1844 Info Found 60 configuration items
+2018-12-23 20:06:45.2129 Info Configuration initialized.
+2018-12-23 20:06:45.2155 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.5.11.8645. Product version: 4.5.11.
+2018-12-23 20:06:46.1592 Info Shutting down logging...
+2018-12-23 20:06:46.1762 Info Logger has been shut down.

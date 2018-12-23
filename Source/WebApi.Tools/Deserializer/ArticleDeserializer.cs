@@ -59,7 +59,7 @@ namespace WebApi.Tools.Deserializer
 
                 var article = new Article(myObject.Title, path) { EditDate = DateTime.UtcNow };
 
-                article.Preview = new string(article.GetText().TextWithoutHtmlTag().Take(300).ToArray());
+                article.Preview = new string(article.GetText().TextWithoutHtmlTag().RemoveSpaces().Take(300).ToArray());
 
                 this.context.Articles.Add(article);
             }
