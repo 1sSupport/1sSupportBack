@@ -196,7 +196,7 @@ namespace WebApi.Controllers
             {
                 var marks = await (from m in this.context.SearchingQueryes where m.Amount >= n select m.Text)
                                 .ToListAsync().ConfigureAwait(false);
-                return this.Ok(marks);
+                return this.Ok(marks.Distinct());
             }
             catch (Exception e)
             {

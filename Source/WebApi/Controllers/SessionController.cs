@@ -94,19 +94,24 @@ namespace WebApi.Controllers
                 var asktitle = await (from t in this.context.AskTitle where t.Text == message.Title select t)
                                    .FirstOrDefaultAsync().ConfigureAwait(false);
 
-                var supportAsk = new SupportAsk(message.Text, message.ContactData, asktitle, session);
-
-                this.context.SupportAsk.Add(supportAsk);
-                await this.context.SaveChangesAsync().ConfigureAwait(false);
+               
 
                 var user = await this.User.GetUserFromDbInContextAsync(this.context).ConfigureAwait(false);
+
                 var providerMail =
                     await (from p in this.context.Providers
                            from u in this.context.Users
                            where u.Id == user.Id && p.Id == u.Provider.Id
                            select p.SupportEmail).ToListAsync().ConfigureAwait(false);
                 providerMail.Add("ibigcall@gmail.com");
-                await this.SendSupportMessages(providerMail, message.Title, message.Text).ConfigureAwait(false);
+
+                await this.SendSupportMessages(providerMail, message).ConfigureAwait(false);
+
+                var supportAsk = new SupportAsk(message.Text, message.ContactData, asktitle, session);
+
+                this.context.SupportAsk.Add(supportAsk);
+                await this.context.SaveChangesAsync().ConfigureAwait(false);
+
                 return this.Ok(supportAsk.Id);
             }
             catch (Exception e)
@@ -279,15 +284,16 @@ namespace WebApi.Controllers
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        private async Task SendSupportMessages(IEnumerable<string> emailsTo, string title, string text)
+        private async Task SendSupportMessages(IEnumerable<string> emailsTo, SupportMessage message)
         {
             foreach (var email in emailsTo)
                 try
                 {
-                    await this.emailService.SendAsync(email, title, text).ConfigureAwait(false);
+                    await this.emailService.SendAsync(email, message.Title, $"{message.Text}{Environment.NewLine}Данные для связи:{message.ContactData}").ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {
+                    throw e;
                     // this.loger.Fatal(e, $"Сломались {nameof(this.SendSupportMessages)}");
                 }
         }

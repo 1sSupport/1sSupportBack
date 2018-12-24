@@ -82,6 +82,8 @@ namespace WebApi.Infrastructer
 
             using (var context = app.ApplicationServices.GetRequiredService<EFContext>())
             {
+                
+
                 if (!context.Users.Any())
                 {
                     var provider = new Provider("testProvieder", DateTime.Now.AddYears(10), "govjadkoilja@yandex.ru");
