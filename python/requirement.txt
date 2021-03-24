@@ -11,7 +11,7 @@ python-dateutil==2.7.3
 pytz==2018.5
 PyYAML==3.13
 requests==2.19.1
-rsa==4.0
+rsa==4.1
 shellescape==3.4.1
 six==1.11.0
 urllib3==1.23
