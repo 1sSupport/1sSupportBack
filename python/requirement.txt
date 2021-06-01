@@ -14,5 +14,5 @@ requests==2.19.1
 rsa==4.0
 shellescape==3.4.1
 six==1.11.0
-urllib3==1.23
+urllib3==1.26.5
 xlrd==1.1.0
